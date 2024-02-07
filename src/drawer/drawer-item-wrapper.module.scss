@@ -1,0 +1,24 @@
+.drawerItemWrapper {
+  display: flex;
+}
+
+.drawerItemComponentWrapper {
+  // pointer-events: none;
+  display: flex;
+  flex-direction: column;
+
+  user-select: none;
+
+  > * {
+    pointer-events: none;
+  }
+}
+
+.drawerItemGhost {
+  pointer-events: none;
+  opacity: 0.8;
+
+  user-select: none;
+
+  position: fixed;
+}

@@ -1,0 +1,13 @@
+export type NodeName =
+  // | 'ActionSheet'
+  // | 'Null'
+  // | 'Pagination'
+  | 'Badge'
+  | 'Button'
+  | 'Container'
+  | 'Flex'
+  | 'Fragment'
+  | 'Page'
+  | 'Switch'
+  | 'Text'
+  | 'View'

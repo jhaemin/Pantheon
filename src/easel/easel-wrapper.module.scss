@@ -1,0 +1,36 @@
+.easelWrapper {
+  position: absolute;
+  display: inline-flex;
+
+  &:hover {
+    .resizer {
+      opacity: 1;
+    }
+  }
+}
+
+.resizer {
+  position: absolute;
+  z-index: 10;
+
+  transform-origin: top left;
+
+  top: 100%;
+  left: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  opacity: 0;
+
+  transition: opacity 200ms ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  svg {
+    transform: scale(0.5);
+  }
+}

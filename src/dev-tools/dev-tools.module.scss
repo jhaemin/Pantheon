@@ -1,0 +1,36 @@
+.devTools {
+  position: fixed;
+  z-index: 99999999;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+
+  textarea {
+    font-size: 10px;
+    padding: 10px;
+
+    width: 400px;
+    height: 500px;
+
+    resize: horizontal;
+
+    background-color: aquamarine;
+
+    &.nodeAtoms {
+      width: 250px;
+      background-color: coral;
+    }
+  }
+}
+
+.toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: black;
+  color: white;
+  padding: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}

@@ -1,0 +1,10 @@
+.selectionGuide {
+  box-shadow: 0 0 0 1.8px #0c58fc;
+
+  position: fixed;
+  z-index: 1;
+
+  pointer-events: none;
+
+  // transition: all 200ms cubic-bezier(0.76, 0.11, 0, 0.99);
+}
