@@ -10,7 +10,7 @@ export type SwitchNodeProps = {
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
 }
 
-class SwitchNode extends Node {
+export class SwitchNode extends Node {
   readonly nodeName = 'Switch' satisfies NodeName
 
   defaultProps = {
@@ -23,4 +23,8 @@ export function SwitchNodeComponent({ node }: { node: SwitchNode }) {
   const props = useStore(node.$props)
 
   return <Switch {...props} />
+}
+
+export function SwitchNodeControls({ nodes }: { nodes: SwitchNode[] }) {
+  return <></>
 }

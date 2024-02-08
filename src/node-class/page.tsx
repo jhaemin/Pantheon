@@ -35,6 +35,10 @@ export class PageNode extends Node {
     }
   }
 
+  get isMovable(): boolean {
+    return false
+  }
+
   static attachIframeElement(
     pageNode: PageNode,
     iframeElement: HTMLIFrameElement,

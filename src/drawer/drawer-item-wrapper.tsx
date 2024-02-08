@@ -3,7 +3,6 @@ import { commandInsertNodes } from '@/command'
 import { dataAttributes } from '@/constants'
 import { onMouseDownForDragAndDropNode } from '@/events'
 import { Node } from '@/node-class/node'
-import { isDroppableNode } from '@/node-lib'
 import { ReactNode, useRef } from 'react'
 import styles from './drawer-item-wrapper.module.scss'
 
@@ -41,7 +40,7 @@ export function DrawerItemWrapper({
         onClick={() => {
           const selectedNodes = $selectedNodes.get()
           if (selectedNodes.length !== 1) return
-          if (isDroppableNode(selectedNodes[0])) {
+          if (selectedNodes[0].isDroppable) {
             commandInsertNodes(selectedNodes[0], [createNode()], null)
           }
         }}

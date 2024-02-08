@@ -1,22 +1,14 @@
+import { generatedNodeNameNodeMap } from './__generated__/generated-node-name-node-map'
 import { PageNode } from './node-class/page'
 import { ViewNode } from './node-class/view'
 import { NodeName } from './node-name'
-import { BadgeNode } from './nodes/badge'
-import { ButtonNode } from './nodes/button'
-import { ContainerNode } from './nodes/container'
-import { FlexNode } from './nodes/flex'
 import { FragmentNode } from './nodes/fragment'
-import { SwitchNode } from './nodes/switch'
 import { TextNode } from './nodes/text'
 
 export const nodeNameNodeMap = {
-  Badge: BadgeNode,
-  Button: ButtonNode,
-  Container: ContainerNode,
-  Flex: FlexNode,
+  ...generatedNodeNameNodeMap,
   Fragment: FragmentNode,
   Page: PageNode,
-  Switch: SwitchNode,
   Text: TextNode,
   View: ViewNode,
 } satisfies Record<NodeName, any>

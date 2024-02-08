@@ -1,20 +1,20 @@
 import { expect, test } from 'bun:test'
+import { FlexNode } from './__generated__/flex'
 import { commandInsertNodes } from './command'
 import { History } from './history'
 import { PageNode } from './node-class/page'
-import { ButtonNode } from './nodes/button'
-import { FlexNode } from './nodes/flex'
+import { TextNode } from './nodes/text'
 
 test('Command insert nodes', () => {
   const page = new PageNode()
-  const button1 = new ButtonNode()
-  const button2 = new ButtonNode()
+  const text1 = new TextNode()
+  const text2 = new TextNode()
 
-  commandInsertNodes(page, [button1, button2], null)
+  commandInsertNodes(page, [text1, text2], null)
 
   expect(page.children.length).toBe(2)
-  expect(page.children[0]).toBe(button1)
-  expect(page.children[1]).toBe(button2)
+  expect(page.children[0]).toBe(text1)
+  expect(page.children[1]).toBe(text2)
 
   expect(History.$historyStack.get().length).toBe(1)
   expect(History.$historyPointer.get()).toBe(0)
@@ -33,26 +33,26 @@ test('Command insert nodes', () => {
 
   History.undo()
 
-  expect(button1.parent).toBe(null)
-  expect(button2.parent).toBe(null)
+  expect(text1.parent).toBe(null)
+  expect(text2.parent).toBe(null)
   expect(page.children.length).toBe(0)
 
-  commandInsertNodes(page, [button1], null)
-  commandInsertNodes(page, [button2], button1)
+  commandInsertNodes(page, [text1], null)
+  commandInsertNodes(page, [text2], text1)
 
   expect(page.children.length).toBe(2)
-  expect(page.children[0]).toBe(button2)
-  expect(page.children[1]).toBe(button1)
+  expect(page.children[0]).toBe(text2)
+  expect(page.children[1]).toBe(text1)
 
   expect(History.$historyStack.get().length).toBe(2)
   expect(History.$historyPointer.get()).toBe(1)
 
   const flex = new FlexNode()
-  commandInsertNodes(page, [flex], button2)
+  commandInsertNodes(page, [flex], text2)
 
   expect(page.children[0]).toBe(flex)
 
-  commandInsertNodes(flex, [button1], null)
+  commandInsertNodes(flex, [text1], null)
 
   History.undo()
 

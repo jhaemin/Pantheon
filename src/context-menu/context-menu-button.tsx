@@ -27,7 +27,9 @@ export function ContextMenuButton({
       }}
     >
       <Flex align="center" justify="between" width="100%" gap="6">
-        <Text style={{ color: '#000' }}>{label}</Text>
+        <Text style={{ color: '#000' }} size="2">
+          {label}
+        </Text>
         <Text color="gray" style={{ opacity: 0.8 }}>
           ⌘ K
         </Text>

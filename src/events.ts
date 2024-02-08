@@ -26,12 +26,21 @@ import {
   getClosestMoveableNodeSet,
   getClosestSelectableNodeSet,
   getRenderedNodeById,
-  isDroppableNode,
 } from './node-lib'
 import { selectNode } from './ui-guides/selection-guide'
 
 const TEMP_DROP_ZONE_CLASS_NAME = 'studio-temp-dropzone'
 
+/**
+ * TODO:
+ * - Callback for dual rendering of drag target node.
+ * - Dual rendered element selector.
+ * - Callback for removing dual rendered element.
+ *
+ * Or
+ *
+ * - Deep copy element and mount inside main instead of body.
+ */
 export function onMouseDownForDragAndDropNode(
   e: React.MouseEvent,
   data: {
@@ -98,8 +107,9 @@ export function onMouseDownForDragAndDropNode(
     clone.style.left = e.clientX - elmX + 'px'
     clone.style.top = e.clientY - elmY + 'px'
     clone.style.opacity = '0.5'
+    clone.style.zIndex = '1000'
 
-    document.body.appendChild(clone)
+    document.querySelector('main')!.appendChild(clone)
 
     const onMouseMoveAfterDrag = (e: MouseEvent) => {
       clone.style.left = e.clientX - elmX + 'px'
@@ -156,7 +166,7 @@ export function onMouseDownForDragAndDropNode(
             closestNode &&
             !(closestNode instanceof PageNode) && // Do not add temporary drop zones to page node
             parent &&
-            isDroppableNode(parent)
+            parent.isDroppable
           ) {
             appendTemporaryDropZone(closestNode, closestNodeElm)
           }

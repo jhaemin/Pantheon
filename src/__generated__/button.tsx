@@ -40,7 +40,7 @@ export type ButtonNodeProps = {
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
 }
 
-class ButtonNode extends Node {
+export class ButtonNode extends Node {
   readonly nodeName = 'Button' satisfies NodeName
 
   defaultProps = {
@@ -62,4 +62,8 @@ export function ButtonNodeComponent({ node }: { node: ButtonNode }) {
       )}
     </Button>
   )
+}
+
+export function ButtonNodeControls({ nodes }: { nodes: ButtonNode[] }) {
+  return <></>
 }

@@ -1,98 +1,96 @@
 import { PageNode } from '@/node-class/page'
-import { ButtonNode } from '@/nodes/button'
-import { ContainerNode } from '@/nodes/container'
-import { FlexNode } from '@/nodes/flex'
+import { FragmentNode } from '@/nodes/fragment'
 import { TextNode } from '@/nodes/text'
 import { StudioApp } from '@/studio-app'
 import { expect, test } from 'bun:test'
 
 test('Node creation', () => {
-  const flex = new FlexNode()
-  expect(flex.children.length).toBe(0)
-  expect(flex.parent).toBe(null)
-  expect(flex.previousSibling).toBe(null)
-  expect(flex.nextSibling).toBe(null)
+  const frag = new FragmentNode()
+  expect(frag.children.length).toBe(0)
+  expect(frag.parent).toBe(null)
+  expect(frag.previousSibling).toBe(null)
+  expect(frag.nextSibling).toBe(null)
 })
 
 test('Append children', () => {
-  const flex = new FlexNode()
-  const button1 = new ButtonNode()
-  flex.append(button1)
-  expect(flex.children.length).toBe(1)
+  const frag = new FragmentNode()
+  const text1 = new TextNode()
+  frag.append(text1)
+  expect(frag.children.length).toBe(1)
 
-  const button2 = new ButtonNode()
-  flex.append(button2)
-  expect(flex.children.length).toBe(2)
+  const text2 = new TextNode()
+  frag.append(text2)
+  expect(frag.children.length).toBe(2)
 
-  expect(flex.children[0]).toBe(button1)
-  expect(flex.children[1]).toBe(button2)
+  expect(frag.children[0]).toBe(text1)
+  expect(frag.children[1]).toBe(text2)
 
-  expect(flex.children[0].previousSibling).toBe(null)
-  expect(flex.children[0].nextSibling).toBe(button2)
-  expect(flex.children[1].previousSibling).toBe(button1)
-  expect(flex.children[1].nextSibling).toBe(null)
+  expect(frag.children[0].previousSibling).toBe(null)
+  expect(frag.children[0].nextSibling).toBe(text2)
+  expect(frag.children[1].previousSibling).toBe(text1)
+  expect(frag.children[1].nextSibling).toBe(null)
 })
 
 test('Remove children', () => {
-  const flex = new FlexNode()
-  const button1 = new ButtonNode()
-  const button2 = new ButtonNode()
-  flex.append(button1, button2)
-  expect(flex.children.length).toBe(2)
+  const frag = new FragmentNode()
+  const text1 = new TextNode()
+  const text2 = new TextNode()
+  frag.append(text1, text2)
+  expect(frag.children.length).toBe(2)
 
-  flex.removeChild(button1)
-  expect(flex.children.length).toBe(1)
-  expect(flex.children[0]).toBe(button2)
-  expect(button1.parent).toBe(null)
+  frag.removeChild(text1)
+  expect(frag.children.length).toBe(1)
+  expect(frag.children[0]).toBe(text2)
+  expect(text1.parent).toBe(null)
 
-  flex.removeChild(button2)
-  expect(flex.children.length).toBe(0)
-  expect(button2.parent).toBe(null)
+  frag.removeChild(text2)
+  expect(frag.children.length).toBe(0)
+  expect(text2.parent).toBe(null)
 })
 
 test('Remove', () => {
-  const flex = new FlexNode()
-  const button1 = new ButtonNode()
-  const button2 = new ButtonNode()
-  flex.append(button1, button2)
-  expect(flex.children.length).toBe(2)
+  const frag = new FragmentNode()
+  const text1 = new TextNode()
+  const text2 = new TextNode()
+  frag.append(text1, text2)
+  expect(frag.children.length).toBe(2)
 
-  button1.remove()
-  expect(flex.children.length).toBe(1)
-  expect(flex.children[0]).toBe(button2)
-  expect(button1.parent).toBe(null)
+  text1.remove()
+  expect(frag.children.length).toBe(1)
+  expect(frag.children[0]).toBe(text2)
+  expect(text1.parent).toBe(null)
 
-  button2.remove()
-  expect(flex.children.length).toBe(0)
-  expect(button2.parent).toBe(null)
+  text2.remove()
+  expect(frag.children.length).toBe(0)
+  expect(text2.parent).toBe(null)
 })
 
 test('Insert before', () => {
-  const flex = new FlexNode()
-  const button1 = new ButtonNode()
-  const button2 = new ButtonNode()
-  flex.append(button1)
-  flex.insertBefore([button2], button1)
-  expect(flex.children.length).toBe(2)
-  expect(flex.children[0]).toBe(button2)
-  expect(flex.children[1]).toBe(button1)
-  expect(button2.nextSibling).toBe(button1)
-  expect(button1.previousSibling).toBe(button2)
+  const frag = new FragmentNode()
+  const text1 = new TextNode()
+  const text2 = new TextNode()
+  frag.append(text1)
+  frag.insertBefore([text2], text1)
+  expect(frag.children.length).toBe(2)
+  expect(frag.children[0]).toBe(text2)
+  expect(frag.children[1]).toBe(text1)
+  expect(text2.nextSibling).toBe(text1)
+  expect(text1.previousSibling).toBe(text2)
 
-  const button3 = new ButtonNode()
-  flex.append(button3)
-  flex.insertBefore([button3], button3.previousSibling)
-  expect(flex.children.length).toBe(3)
-  expect(flex.children[0]).toBe(button2)
-  expect(flex.children[1]).toBe(button3)
-  expect(flex.children[2]).toBe(button1)
+  const text3 = new TextNode()
+  frag.append(text3)
+  frag.insertBefore([text3], text3.previousSibling)
+  expect(frag.children.length).toBe(3)
+  expect(frag.children[0]).toBe(text2)
+  expect(frag.children[1]).toBe(text3)
+  expect(frag.children[2]).toBe(text1)
 
-  flex.removeChild(button1)
+  frag.removeChild(text1)
 
-  flex.insertBefore([button3], button3)
-  expect(flex.children.length).toBe(2)
-  expect(flex.children[0]).toBe(button2)
-  expect(flex.children[1]).toBe(button3)
+  frag.insertBefore([text3], text3)
+  expect(frag.children.length).toBe(2)
+  expect(frag.children[0]).toBe(text2)
+  expect(frag.children[1]).toBe(text3)
 })
 
 test('Page creation, removal', () => {
@@ -124,53 +122,53 @@ test('Page creation, removal', () => {
 })
 
 test('Owner page', () => {
-  const flex = new FlexNode()
-  const button = new ButtonNode()
-  flex.append(button)
+  const frag = new FragmentNode()
+  const text = new TextNode()
+  frag.append(text)
 
-  expect(flex.ownerPage).toBe(null)
-  expect(button.ownerPage).toBe(null)
+  expect(frag.ownerPage).toBe(null)
+  expect(text.ownerPage).toBe(null)
 
   const page = new PageNode()
-  page.append(flex)
+  page.append(frag)
 
-  expect(flex.ownerPage).toBe(page)
+  expect(frag.ownerPage).toBe(page)
   expect(page.ownerPage).toBe(page)
 
-  flex.remove()
-  expect(flex.ownerPage).toBe(null)
+  frag.remove()
+  expect(frag.ownerPage).toBe(null)
 })
 
 test('Siblings', () => {
-  const container = new ContainerNode()
-  const text = new TextNode()
-  const button = new ButtonNode()
+  const frag = new FragmentNode()
+  const text1 = new TextNode()
+  const text2 = new TextNode()
 
-  container.append(text, button)
+  frag.append(text1, text2)
 
-  expect(text.previousSibling).toBe(null)
-  expect(text.nextSibling).toBe(button)
-  expect(button.previousSibling).toBe(text)
-  expect(button.nextSibling).toBe(null)
+  expect(text1.previousSibling).toBe(null)
+  expect(text1.nextSibling).toBe(text2)
+  expect(text2.previousSibling).toBe(text1)
+  expect(text2.nextSibling).toBe(null)
 })
 
 test('Tree', () => {
   const page = new PageNode()
-  const flex = new FlexNode()
+  const frag = new FragmentNode()
 
-  page.append(flex)
+  page.append(frag)
 
-  const button = new ButtonNode()
+  const text = new TextNode()
 
-  flex.append(button)
+  frag.append(text)
 
   expect(page.ownerPage).toBe(page)
-  expect(flex.ownerPage).toBe(page)
-  expect(button.ownerPage).toBe(page)
+  expect(frag.ownerPage).toBe(page)
+  expect(text.ownerPage).toBe(page)
 
-  flex.remove()
+  frag.remove()
 
-  expect(flex.ownerPage).toBe(null)
-  expect(button.ownerPage).toBe(null)
-  expect(button.parent).toBe(flex)
+  expect(frag.ownerPage).toBe(null)
+  expect(text.ownerPage).toBe(null)
+  expect(text.parent).toBe(frag)
 })

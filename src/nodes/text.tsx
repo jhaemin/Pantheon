@@ -18,6 +18,10 @@ export class TextNode extends Node {
     }
   }
 
+  get isDroppable() {
+    return false
+  }
+
   get value() {
     return this.$value.get()
   }

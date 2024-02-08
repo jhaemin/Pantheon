@@ -1,13 +1,3 @@
-export type NodeName =
-  // | 'ActionSheet'
-  // | 'Null'
-  // | 'Pagination'
-  | 'Badge'
-  | 'Button'
-  | 'Container'
-  | 'Flex'
-  | 'Fragment'
-  | 'Page'
-  | 'Switch'
-  | 'Text'
-  | 'View'
+import { GeneratedNodeName } from '@/__generated__/generated-node-name'
+
+export type NodeName = 'Fragment' | 'Page' | 'Text' | 'View' | GeneratedNodeName

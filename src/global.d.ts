@@ -1,7 +1,6 @@
 import { WritableAtom } from 'nanostores'
 import { $allRenderedNodes } from './atoms'
 import { PageNode } from './node-class/node'
-import { isDroppableNode } from './node-lib'
 
 type Shared = {
   /**
@@ -12,9 +11,6 @@ type Shared = {
    */
   $designMode: WritableAtom<boolean>
   $allRenderedNodes: typeof $allRenderedNodes
-
-  // Shared utils
-  isDroppableNode: typeof isDroppableNode
 }
 
 declare global {

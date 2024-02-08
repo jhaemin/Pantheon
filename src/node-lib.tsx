@@ -3,9 +3,7 @@ import { dataAttributes } from '@/constants'
 import { getEaselIframeId } from './easel/easel-wrapper'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
-import { SlotMachineNode } from './node-class/slot-machine-node'
 import { NodeName } from './node-name'
-import { ButtonNode } from './nodes/button'
 import { TextNode } from './nodes/text'
 
 /**
@@ -195,7 +193,7 @@ export function getClosestMoveableNodeSet(elm: Element):
     }
   }
 
-  if (!isMovableNode(closestNode)) {
+  if (!closestNode.isMovable) {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
     return getClosestMoveableNodeSet(
@@ -222,34 +220,6 @@ export function isSelectableNode(node: Node) {
   }
 
   if (!$textNodeEditing.get() && node instanceof TextNode) {
-    return false
-  }
-
-  return true
-}
-
-export function isMovableNode(node: Node) {
-  if (node instanceof PageNode || node instanceof TextNode) {
-    return false
-  }
-
-  if (node.parent instanceof SlotMachineNode) {
-    return false
-  }
-
-  return true
-}
-
-export function isDroppableNode(node: Node) {
-  if (node instanceof TextNode) {
-    return false
-  }
-
-  if (node instanceof ButtonNode) {
-    return false
-  }
-
-  if (node instanceof SlotMachineNode) {
     return false
   }
 

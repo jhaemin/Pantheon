@@ -8,6 +8,8 @@ export function NodeComponent({ node }: { node: Node }) {
   const nodeWrapperElementRef = useRef<HTMLDivElement>(null!)
   const Component = nodeComponentMap[node.nodeName]
 
+  console.log(node.isDroppable)
+
   const commonNodeElementProps = {
     [dataAttributes.node]: true,
 
@@ -18,7 +20,7 @@ export function NodeComponent({ node }: { node: Node }) {
       e.stopPropagation()
     },
 
-    ...(window.shared.isDroppableNode(node)
+    ...(node.isDroppable
       ? {
           [dataAttributes.dropZone]: true,
           [dataAttributes.dropZoneId]: node.id,

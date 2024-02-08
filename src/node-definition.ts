@@ -10,7 +10,7 @@ export type NodeDefinition = {
     string,
     {
       type: 'string' | 'number' | 'boolean' | string[]
-      required: boolean
+      required?: boolean
       default?: any
     }
   >
@@ -18,7 +18,7 @@ export type NodeDefinition = {
     string,
     {
       slotNodeName: string
-      required: boolean
+      required?: boolean
     }
   >
 }

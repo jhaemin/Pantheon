@@ -65,6 +65,18 @@ export abstract class Node {
     this.$props?.set(any)
   }
 
+  get isDroppable() {
+    return true
+  }
+
+  get isMovable() {
+    return true
+  }
+
+  get ownerPage(): PageNode | null {
+    return this.parent?.ownerPage ?? null
+  }
+
   /** Only root node(PageNode)'s parent is null */
   private _parent: Node | null = null
 
@@ -78,10 +90,6 @@ export abstract class Node {
 
   protected static assignParent(node: Node, parent: Node) {
     node._parent = parent
-  }
-
-  get ownerPage(): PageNode | null {
-    return this.parent?.ownerPage ?? null
   }
 
   protected _$children = atom<Node[]>([])

@@ -23,13 +23,59 @@ async function main() {
     )
   })
 
-  await Bun.write(
-    'src/__generated__/node-name.ts',
+  Bun.write(
+    'src/__generated__/generated-node-name.ts',
     await format(
-      `export type NodeName = ${nodeNames
+      `export type GeneratedNodeName = ${nodeNames
         .sort()
         .map((name) => `'${name}'`)
         .join(' | ')}`,
+    ),
+  )
+
+  Bun.write(
+    'src/__generated__/generated-node-map.ts',
+    await format(
+      `
+      ${Object.values(mod)
+        .map(
+          (def) =>
+            `import { ${def.nodeName}NodeComponent, ${def.nodeName}NodeControls } from './${kebabCase(def.nodeName)}'`,
+        )
+        .join('\n')}
+
+      export const generatedNodeComponentMap = {
+        ${Object.values(mod)
+          .map((def) => `${def.nodeName}: ${def.nodeName}NodeComponent`)
+          .join(',\n')}
+      }
+
+      export const generatedNodeControlsMap = {
+        ${Object.values(mod)
+          .map((def) => `${def.nodeName}: ${def.nodeName}NodeControls`)
+          .join(',\n')}
+      }
+`,
+    ),
+  )
+
+  Bun.write(
+    'src/__generated__/generated-node-name-node-map.ts',
+    await format(
+      `
+      ${Object.values(mod)
+        .map(
+          (def) =>
+            `import { ${def.nodeName}Node } from './${kebabCase(def.nodeName)}'`,
+        )
+        .join('\n')}
+
+      export const generatedNodeNameNodeMap = {
+        ${Object.values(mod)
+          .map((def) => `${def.nodeName}: ${def.nodeName}Node`)
+          .join(',\n')}
+      }
+`,
     ),
   )
 }
@@ -78,7 +124,7 @@ export type ${nodeName}NodeProps = ${
       : '{}'
   }
 
-class ${nodeName}Node extends Node {
+export class ${nodeName}Node extends Node {
   readonly nodeName = '${nodeName}' satisfies NodeName
 
   defaultProps = ${
@@ -117,6 +163,10 @@ export function ${nodeName}NodeComponent({ node }: { node: ${nodeName}Node }) {
     </${importDefinition.named}>
   `
   }
+}
+
+export function ${nodeName}NodeControls({ nodes }: { nodes: ${nodeName}Node[] }) {
+  return <></>
 }
   `
 }

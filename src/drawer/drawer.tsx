@@ -1,5 +1,8 @@
-import { Flex, Text } from '@radix-ui/themes'
-import { ButtonDrawerItem } from './drawer-items/button-drawer-item'
+import { ButtonNode } from '@/__generated__/button'
+import { SwitchNode } from '@/__generated__/switch'
+import { TextNode } from '@/nodes/text'
+import { Button, Flex, Switch, Text } from '@radix-ui/themes'
+import { DrawerItemWrapper } from './drawer-item-wrapper'
 
 export function Drawer() {
   return (
@@ -20,7 +23,21 @@ export function Drawer() {
       <Text size="5" weight="bold" mb="4">
         Drawer
       </Text>
-      <ButtonDrawerItem />
+
+      <DrawerItemWrapper
+        createNode={() => {
+          const button = new ButtonNode()
+          const text = new TextNode()
+          button.append(text)
+          return button
+        }}
+      >
+        <Button>Button</Button>
+      </DrawerItemWrapper>
+
+      <DrawerItemWrapper createNode={() => new SwitchNode()}>
+        <Switch />
+      </DrawerItemWrapper>
     </Flex>
   )
 }

@@ -11,7 +11,7 @@ import { onMouseDownIframe } from '@/events'
 import { Ground } from '@/ground'
 import { Node } from '@/node-class/node'
 import { PageNode } from '@/node-class/page'
-import { getClosestSelectableNodeSet, isDroppableNode } from '@/node-lib'
+import { getClosestSelectableNodeSet } from '@/node-lib'
 import { useStore } from '@nanostores/react'
 import clsx from 'clsx'
 import { useEffect, useRef } from 'react'
@@ -60,7 +60,6 @@ export function EaselWrapper({ page }: { page: PageNode }) {
     iframeWindow.shared = {
       $allRenderedNodes,
       $designMode,
-      isDroppableNode,
     }
 
     return () => {
