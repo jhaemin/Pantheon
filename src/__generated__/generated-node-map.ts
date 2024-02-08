@@ -1,18 +1,33 @@
-import { ButtonNodeComponent, ButtonNodeControls } from './button'
-import { ContainerNodeComponent, ContainerNodeControls } from './container'
-import { FlexNodeComponent, FlexNodeControls } from './flex'
-import { SwitchNodeComponent, SwitchNodeControls } from './switch'
+import {
+  RadixBlockquoteNodeComponent,
+  RadixBlockquoteNodeControls,
+} from './radix-blockquote'
+import {
+  RadixButtonNodeComponent,
+  RadixButtonNodeControls,
+} from './radix-button'
+import {
+  RadixContainerNodeComponent,
+  RadixContainerNodeControls,
+} from './radix-container'
+import { RadixFlexNodeComponent, RadixFlexNodeControls } from './radix-flex'
+import {
+  RadixSwitchNodeComponent,
+  RadixSwitchNodeControls,
+} from './radix-switch'
 
 export const generatedNodeComponentMap = {
-  Button: ButtonNodeComponent,
-  Container: ContainerNodeComponent,
-  Flex: FlexNodeComponent,
-  Switch: SwitchNodeComponent,
+  RadixBlockquote: RadixBlockquoteNodeComponent,
+  RadixButton: RadixButtonNodeComponent,
+  RadixContainer: RadixContainerNodeComponent,
+  RadixFlex: RadixFlexNodeComponent,
+  RadixSwitch: RadixSwitchNodeComponent,
 }
 
 export const generatedNodeControlsMap = {
-  Button: ButtonNodeControls,
-  Container: ContainerNodeControls,
-  Flex: FlexNodeControls,
-  Switch: SwitchNodeControls,
+  RadixBlockquote: RadixBlockquoteNodeControls,
+  RadixButton: RadixButtonNodeControls,
+  RadixContainer: RadixContainerNodeControls,
+  RadixFlex: RadixFlexNodeControls,
+  RadixSwitch: RadixSwitchNodeControls,
 }

@@ -87,6 +87,14 @@ export function useGlobalEvents() {
         ;(document.activeElement as HTMLElement).blur()
       }
 
+      // Radix Themes' Select component disables body pointer events
+      // and make cursor click html element when click outside options.
+      // This behavior makes the selection disappear.
+      // So, ignore the event when the target is html element.
+      if (e.target === document.documentElement) {
+        return
+      }
+
       if (e.target instanceof Element && !shouldKeepNodeSelection(e.target)) {
         $selectedNodes.set([])
       }

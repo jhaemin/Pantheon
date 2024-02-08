@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test'
-import { FlexNode } from './__generated__/flex'
+import { RadixFlexNode } from './__generated__/radix-flex'
 import { commandInsertNodes } from './command'
 import { History } from './history'
 import { PageNode } from './node-class/page'
@@ -47,7 +47,7 @@ test('Command insert nodes', () => {
   expect(History.$historyStack.get().length).toBe(2)
   expect(History.$historyPointer.get()).toBe(1)
 
-  const flex = new FlexNode()
+  const flex = new RadixFlexNode()
   commandInsertNodes(page, [flex], text2)
 
   expect(page.children[0]).toBe(flex)

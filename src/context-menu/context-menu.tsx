@@ -140,7 +140,10 @@ export function ContextMenu() {
               label="Wrap with Container"
               icon={ChevronDownIcon}
               onClick={() => {
-                const flexNode = commandWrapNodes(selectedNodes, 'Container')
+                const flexNode = commandWrapNodes(
+                  selectedNodes,
+                  'RadixContainer',
+                )
 
                 if (flexNode) {
                   $selectedNodes.set([flexNode])
@@ -151,7 +154,7 @@ export function ContextMenu() {
               label="Wrap with Flex"
               icon={ChevronDownIcon}
               onClick={() => {
-                const flexNode = commandWrapNodes(selectedNodes, 'Flex')
+                const flexNode = commandWrapNodes(selectedNodes, 'RadixFlex')
 
                 if (flexNode) {
                   $selectedNodes.set([flexNode])
@@ -240,6 +243,7 @@ export function ContextMenu() {
         {canSelectChildren && (
           <ContextMenuButton
             label="Remove All Children"
+            shortcut="⌫"
             icon={ChevronDownIcon}
             onClick={() => commandDeleteNodes(selectedNodes[0].children)}
           />
@@ -248,6 +252,7 @@ export function ContextMenu() {
         {canRemove && (
           <ContextMenuButton
             label="Remove"
+            shortcut="⌫"
             icon={ChevronDownIcon}
             onClick={() => commandDeleteNodes(selectedNodes)}
           />

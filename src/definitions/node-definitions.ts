@@ -3,25 +3,29 @@ import { NodeDefinition } from '@/node-definition'
 const importFrom = '@radix-ui/themes'
 
 export const buttonDef: NodeDefinition = {
-  nodeName: 'Button',
+  nodeName: 'RadixButton',
   importDefinition: {
     named: 'Button',
     from: importFrom,
   },
-  propsDefinition: {
-    asChild: {
+  propsDefinition: [
+    {
+      key: 'asChild',
       type: 'boolean',
       default: false,
     },
-    size: {
+    {
+      key: 'size',
       type: ['1', '2', '3'],
       default: '2',
     },
-    variant: {
+    {
+      key: 'variant',
       type: ['classic', 'solid', 'soft', 'surface', 'outline', 'ghost'],
       default: 'solid',
     },
-    color: {
+    {
+      key: 'color',
       type: [
         'tomato',
         'red',
@@ -51,84 +55,151 @@ export const buttonDef: NodeDefinition = {
         'gray',
       ],
     },
-    radius: {
+    {
+      key: 'radius',
       type: ['none', 'small', 'medium', 'large', 'full'],
     },
-  },
+  ],
 }
 
 export const switchDef: NodeDefinition = {
-  nodeName: 'Switch',
+  nodeName: 'RadixSwitch',
   importDefinition: {
     named: 'Switch',
     from: importFrom,
   },
   leaf: true,
-  propsDefinition: {
-    size: {
+  propsDefinition: [
+    {
+      key: 'size',
       type: ['1', '2', '3'],
       default: '2',
     },
-    variant: {
+    {
+      key: 'variant',
       type: ['classic', 'surface', 'soft'],
       default: 'surface',
     },
-    highContrast: {
+    {
+      key: 'highContrast',
       type: 'boolean',
     },
-    radius: {
+    {
+      key: 'radius',
       type: ['none', 'small', 'medium', 'large', 'full'],
     },
-  },
+  ],
 }
 
 export const flexDef: NodeDefinition = {
-  nodeName: 'Flex',
+  nodeName: 'RadixFlex',
   importDefinition: {
     named: 'Flex',
     from: importFrom,
   },
-  propsDefinition: {
-    asChild: {
+  propsDefinition: [
+    {
+      key: 'asChild',
       type: 'boolean',
       default: false,
     },
-    display: {
+    {
+      key: 'display',
       type: ['none', 'inline-flex', 'flex'],
       default: 'flex',
     },
-    direction: {
+    {
+      key: 'direction',
       type: ['row', 'row-reverse', 'column', 'column-reverse'],
     },
-    align: {
+    {
+      key: 'align',
       type: ['start', 'center', 'end', 'stretch', 'baseline'],
     },
-    justify: {
+    {
+      key: 'justify',
       type: ['start', 'center', 'end', 'between'],
       default: 'start',
     },
-    wrap: {
+    {
+      key: 'wrap',
       type: ['wrap', 'nowrap', 'wrap-reverse'],
     },
-    gap: {
+    {
+      key: 'gap',
       type: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     },
-  },
+  ],
 }
 
 export const containerDef: NodeDefinition = {
-  nodeName: 'Container',
+  nodeName: 'RadixContainer',
   importDefinition: {
     named: 'Container',
     from: importFrom,
   },
-  propsDefinition: {
-    size: {
+  propsDefinition: [
+    {
+      key: 'size',
       type: ['1', '2', '3', '4'],
       default: '4',
     },
-    display: {
+    {
+      key: 'display',
       type: ['none', 'block'],
     },
+  ],
+}
+
+export const blockquoteDef: NodeDefinition = {
+  nodeName: 'RadixBlockquote',
+  importDefinition: {
+    named: 'Blockquote',
+    from: importFrom,
   },
+  propsDefinition: [
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'weight',
+      type: ['light', 'regular', 'medium', 'bold'],
+    },
+    {
+      key: 'color',
+      type: [
+        'tomato',
+        'red',
+        'ruby',
+        'crimson',
+        'pink',
+        'plum',
+        'purple',
+        'violet',
+        'iris',
+        'indigo',
+        'blue',
+        'cyan',
+        'teal',
+        'jade',
+        'green',
+        'grass',
+        'brown',
+        'orange',
+        'sky',
+        'mint',
+        'lime',
+        'yellow',
+        'amber',
+        'gold',
+        'bronze',
+        'gray',
+      ],
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
 }

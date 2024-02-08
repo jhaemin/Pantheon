@@ -2,7 +2,7 @@ import { $selectedNodes } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { useStore } from '@nanostores/react'
-import { Flex, Text } from '@radix-ui/themes'
+import { Flex, Separator, Text } from '@radix-ui/themes'
 import { AppControls } from './app-controls'
 import { TSX } from './tsx'
 
@@ -45,6 +45,8 @@ export function ControlCenter() {
           </Text>
           <Flex direction="column" gap="4">
             <Controls nodes={selectedNodes as never} />
+
+            <Separator size="4" />
 
             {selectedNodes.length === 1 && firstSelectedNode && (
               <TSX node={firstSelectedNode} />

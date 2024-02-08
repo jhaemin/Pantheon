@@ -1,7 +1,9 @@
-import { ButtonNode } from '@/__generated__/button'
-import { SwitchNode } from '@/__generated__/switch'
+import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
+import { RadixButtonNode } from '@/__generated__/radix-button'
+import { RadixFlexNode } from '@/__generated__/radix-flex'
+import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { TextNode } from '@/nodes/text'
-import { Button, Flex, Switch, Text } from '@radix-ui/themes'
+import { Blockquote, Button, Flex, Switch, Text } from '@radix-ui/themes'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
 
 export function Drawer() {
@@ -24,20 +26,39 @@ export function Drawer() {
         Drawer
       </Text>
 
-      <DrawerItemWrapper
-        createNode={() => {
-          const button = new ButtonNode()
-          const text = new TextNode()
-          button.append(text)
-          return button
-        }}
-      >
-        <Button>Button</Button>
-      </DrawerItemWrapper>
+      <Flex direction="column" gap="4">
+        <DrawerItemWrapper createNode={() => new RadixFlexNode()}>
+          <Flex
+            align="center"
+            justify="center"
+            style={{
+              backgroundColor: 'var(--gray-3)',
+              padding: 'var(--space-4) var(--space-8)',
+            }}
+          >
+            Flex
+          </Flex>
+        </DrawerItemWrapper>
 
-      <DrawerItemWrapper createNode={() => new SwitchNode()}>
-        <Switch />
-      </DrawerItemWrapper>
+        <DrawerItemWrapper
+          createNode={() => {
+            const button = new RadixButtonNode()
+            const text = new TextNode()
+            button.append(text)
+            return button
+          }}
+        >
+          <Button>Button</Button>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixSwitchNode()}>
+          <Switch />
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixBlockquoteNode()}>
+          <Blockquote>Blockquote</Blockquote>
+        </DrawerItemWrapper>
+      </Flex>
     </Flex>
   )
 }

@@ -231,7 +231,7 @@ export function isUnwrappableNode(node: Node) {
   if (node.children.length === 0) return false
 
   const nodeName = node.nodeName
-  const unwrappableNodeNames: NodeName[] = ['Flex', 'Container']
+  const unwrappableNodeNames: NodeName[] = ['RadixFlex', 'RadixContainer']
 
   return unwrappableNodeNames.includes(nodeName)
 }

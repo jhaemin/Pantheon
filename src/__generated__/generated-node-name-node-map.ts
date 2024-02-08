@@ -1,11 +1,13 @@
-import { ButtonNode } from './button'
-import { ContainerNode } from './container'
-import { FlexNode } from './flex'
-import { SwitchNode } from './switch'
+import { RadixBlockquoteNode } from './radix-blockquote'
+import { RadixButtonNode } from './radix-button'
+import { RadixContainerNode } from './radix-container'
+import { RadixFlexNode } from './radix-flex'
+import { RadixSwitchNode } from './radix-switch'
 
 export const generatedNodeNameNodeMap = {
-  Button: ButtonNode,
-  Container: ContainerNode,
-  Flex: FlexNode,
-  Switch: SwitchNode,
+  RadixBlockquote: RadixBlockquoteNode,
+  RadixButton: RadixButtonNode,
+  RadixContainer: RadixContainerNode,
+  RadixFlex: RadixFlexNode,
+  RadixSwitch: RadixSwitchNode,
 }

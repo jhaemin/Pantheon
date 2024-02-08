@@ -1,15 +1,21 @@
+import { triggerRerenderGuides } from '@/atoms'
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { Node } from '@/node-class/node'
 import { ExtractMapStoreGeneric } from '@/types/extract-generic'
 import { useStore } from '@nanostores/react'
-import { Container, Flex, Text } from '@radix-ui/themes'
+import { Flex, Select, Text } from '@radix-ui/themes'
+import { map } from 'nanostores'
 
 function useCommonValue<
   N extends Node,
   K extends keyof ExtractMapStoreGeneric<N['$props']>,
 >(nodes: N[], key: K) {
   // TODO: use `keys` of useStore options
-  const firstProps = useStore(nodes[0].$props!)
+  const firstProps = useStore(nodes[0]?.$props ?? map({}))
   const firstNode = nodes[0]
+
+  if (!firstNode) return undefined
+
   const firstValue = firstProps[key] ?? firstNode.defaultProps[key]
   const allSame = nodes.every(
     (node) => (node.props[key] ?? node.defaultProps[key]) === firstValue,
@@ -32,7 +38,7 @@ export type Option<V> = {
   value: V
 }
 
-export function ControlsRadioGroupForm<
+export function SelectControls<
   N extends Node,
   K extends keyof ExtractMapStoreGeneric<N['$props']>,
 >({
@@ -43,79 +49,34 @@ export function ControlsRadioGroupForm<
 }: ControlsCommonFormProps<N, K> & {
   options: Option<ExtractMapStoreGeneric<N['$props']>[K]>[]
 }) {
-  const value = useCommonValue(nodes, key)
+  const commonValue = useCommonValue(nodes, key)
 
   return (
-    <Flex direction="column">
-      <Text>{controlsLabel}</Text>
-      <Container>
-        {/* <RadioGroup.Root
-          name={controlsLabel}
-          small
-          value={value}
-          onChange={(e) => {
-            nodes.forEach((node) => {
-              node.props = {
-                ...node.props,
-                [key]: e.target.value,
-              }
-            })
+    <Flex direction="row" align="center" justify="between">
+      <Text size="2">{controlsLabel}</Text>
+      <Select.Root
+        {...keepNodeSelectionAttribute}
+        defaultValue={commonValue}
+        onValueChange={(value) => {
+          nodes.forEach((node) => {
+            node.props = {
+              ...node.props,
+              [key]: value,
+            }
+          })
 
-            triggerRerenderGuides(true)
-          }}
-        >
-          {options.map((option) => (
-            <RadioButtonGroup.Item
-              key={option.value}
-              value={option.value}
-              label={option.label}
-            />
+          triggerRerenderGuides(true)
+        }}
+      >
+        <Select.Trigger />
+        <Select.Content {...keepNodeSelectionAttribute}>
+          {options.map(({ value, label }) => (
+            <Select.Item key={value ?? '-1'} value={value}>
+              {label}
+            </Select.Item>
           ))}
-        </RadioGroup.Root> */}
-      </Container>
-    </Flex>
-  )
-}
-
-export function ControlsSelectForm<
-  N extends Node,
-  K extends keyof ExtractMapStoreGeneric<N['$props']>,
->({
-  controlsLabel,
-  nodes,
-  propertyKey: key,
-  options,
-}: ControlsCommonFormProps<N, K> & {
-  options: Option<ExtractMapStoreGeneric<N['$props']>[K]>[]
-}) {
-  const value = useCommonValue(nodes, key)
-
-  return (
-    <Flex>
-      <Flex>{controlsLabel}</Flex>
-      <Flex>
-        {/* <Select
-          native
-          value={value}
-          onChange={(e) => {
-            nodes.forEach((node) => {
-              node.props = {
-                ...node.props,
-                [key]: e.target.value,
-              }
-            })
-
-            triggerRerenderGuides(true)
-          }}
-          small
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select> */}
-      </Flex>
+        </Select.Content>
+      </Select.Root>
     </Flex>
   )
 }

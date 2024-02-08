@@ -1,1 +1,6 @@
-export type GeneratedNodeName = 'Button' | 'Container' | 'Flex' | 'Switch'
+export type GeneratedNodeName =
+  | 'RadixBlockquote'
+  | 'RadixButton'
+  | 'RadixContainer'
+  | 'RadixFlex'
+  | 'RadixSwitch'

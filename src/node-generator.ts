@@ -92,6 +92,8 @@ function generateNode(nodeDef: NodeDefinition) {
     slotsDefinition,
   } = nodeDef
 
+  const hasProps = propsDefinition && propsDefinition.length > 0
+
   return `
 ${
   leaf
@@ -105,13 +107,14 @@ import { Node } from '@/node-class/node'
 import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { ${importDefinition.named} } from '${importDefinition.from}'
+${hasProps ? `import { SelectControls } from '@/control-center/controls-template'` : ''}
 
 export type ${nodeName}NodeProps = ${
     propsDefinition
       ? `
 {
-  ${Object.keys(propsDefinition).map((key) => {
-    const { type, required } = propsDefinition[key]
+  ${propsDefinition.map((prop) => {
+    const { key, type, required } = prop
 
     const tsType = Array.isArray(type)
       ? type.map((t) => `'${t}'`).join(' | ')
@@ -130,14 +133,14 @@ export class ${nodeName}Node extends Node {
   defaultProps = ${
     propsDefinition
       ? JSON.stringify(
-          Object.keys(propsDefinition).reduce((acc, key) => {
-            const defaultValue = propsDefinition[key].default
+          propsDefinition.reduce((acc, prop) => {
+            const defaultValue = prop.default
 
             if (!defaultValue) return acc
 
             return {
               ...acc,
-              [key]: defaultValue,
+              [prop.key]: defaultValue,
             }
           }, {}),
           null,
@@ -176,7 +179,25 @@ export function ${nodeName}NodeComponent({ node }: { node: ${nodeName}Node }) {
 }
 
 export function ${nodeName}NodeControls({ nodes }: { nodes: ${nodeName}Node[] }) {
-  return <></>
+  return <>${
+    hasProps
+      ? propsDefinition
+          .map(
+            (prop) => `
+    <SelectControls
+      controlsLabel="${prop.key}"
+      nodes={nodes}
+      propertyKey="${prop.key}"
+      options={[
+        ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
+        ${Array.isArray(prop.type) ? prop.type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
+      ]}
+    />`,
+          )
+          .join('')
+      : ''
+  }
+  </>
 }
   `
 }

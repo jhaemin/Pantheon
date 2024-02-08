@@ -7,6 +7,7 @@ export type ContextMenuButtonProps = {
   color?: ComponentProps<typeof Button>['color']
   onClick: () => void
   icon: React.FC
+  shortcut?: string
 }
 
 export function ContextMenuButton({
@@ -14,6 +15,7 @@ export function ContextMenuButton({
   onClick,
   color,
   icon,
+  shortcut,
 }: ContextMenuButtonProps) {
   const Icon = icon as React.FC<{ size: number; color: string }>
 
@@ -31,7 +33,7 @@ export function ContextMenuButton({
           {label}
         </Text>
         <Text color="gray" style={{ opacity: 0.8 }}>
-          ⌘ K
+          {shortcut}
         </Text>
       </Flex>
     </Button>
