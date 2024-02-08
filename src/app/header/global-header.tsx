@@ -1,4 +1,4 @@
-import { $designMode, $interactionMode, $textNodeEditing } from '@/atoms'
+import { $designMode, $interactionMode } from '@/atoms'
 import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
 import { useStore } from '@nanostores/react'
 import {
@@ -15,7 +15,6 @@ import {
 export function GlobalHeader() {
   const interactionMode = useStore($interactionMode)
   const designMode = useStore($designMode)
-  const textNodeEditing = useStore($textNodeEditing)
 
   return (
     <Flex
@@ -39,20 +38,6 @@ export function GlobalHeader() {
       </Flex>
 
       <Flex align="center" gap="4">
-        <Text as="label" size="2">
-          <Flex align="center" gap="2">
-            Text Editing
-            <Switch
-              checked={textNodeEditing}
-              onCheckedChange={(checked) => {
-                $textNodeEditing.set(checked)
-              }}
-            />
-          </Flex>
-        </Text>
-
-        <Separator orientation="vertical" />
-
         <Text as="label" size="2">
           <Flex align="center" gap="2">
             Interaction Mode

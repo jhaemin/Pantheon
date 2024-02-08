@@ -1,6 +1,9 @@
-import { dataAttributes } from '@/constants'
 import { nodeComponentMap } from '@/node-map'
 import { useEffect, useRef } from 'react'
+import {
+  makeNodeAttributes,
+  makeNodeDropZoneAttributes,
+} from './data-attributes'
 import { Node } from './node-class/node'
 import styles from './node-component.module.scss'
 
@@ -8,26 +11,15 @@ export function NodeComponent({ node }: { node: Node }) {
   const nodeWrapperElementRef = useRef<HTMLDivElement>(null!)
   const Component = nodeComponentMap[node.nodeName]
 
-  console.log(node.isDroppable)
-
   const commonNodeElementProps = {
-    [dataAttributes.node]: true,
-
-    [dataAttributes.nodeId]: node.id,
+    ...makeNodeAttributes(node),
 
     onClick: (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
     },
 
-    ...(node.isDroppable
-      ? {
-          [dataAttributes.dropZone]: true,
-          [dataAttributes.dropZoneId]: node.id,
-          [dataAttributes.dropZoneTargetNodeId]: node.id,
-          [dataAttributes.dropZoneBefore]: '',
-        }
-      : undefined),
+    ...(node.isDroppable ? makeNodeDropZoneAttributes(node) : undefined),
   }
 
   /**
@@ -45,7 +37,14 @@ export function NodeComponent({ node }: { node: Node }) {
       [node.id]: node,
     })
 
-    Node.attachWrapperElement(node, nodeWrapperElementRef.current)
+    // Page's wrapper element is the body of the iframe
+    if (node.nodeName === 'Page') {
+      Node.attachWrapperElement(node, document.body)
+    }
+    // Otherwise
+    else {
+      Node.attachWrapperElement(node, nodeWrapperElementRef.current)
+    }
 
     return () => {
       const allRenderedNodes = window.shared.$allRenderedNodes.get()
@@ -56,7 +55,13 @@ export function NodeComponent({ node }: { node: Node }) {
     }
   }, [node])
 
+  // PageNode's wrapper element is the body itself
+  if (node.nodeName === 'Page') {
+    return <Component node={node as never} />
+  }
+
   return (
+    // display: contents wrapper
     <div
       ref={nodeWrapperElementRef}
       id={node.id}

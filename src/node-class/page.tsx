@@ -20,6 +20,10 @@ export class PageNode extends Node {
     return this._iframeElement
   }
 
+  get element() {
+    return this.wrapperElement
+  }
+
   private onIframeMountCallbacks: ((
     iframeElement: HTMLIFrameElement,
   ) => void)[] = []

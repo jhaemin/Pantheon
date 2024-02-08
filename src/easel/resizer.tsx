@@ -11,6 +11,11 @@ import { useStore } from '@nanostores/react'
 import { useRef } from 'react'
 import styles from './easel-wrapper.module.scss'
 
+const MIN_EASEL_WIDTH = 100
+const MIN_EASEL_HEIGHT = 100
+
+const MAX_EASEL_WIDTH = 2560
+
 export function Resizer({ page }: { page: PageNode }) {
   const oldSize = useRef(page.$dimensions.get())
   const scale = useStore(Ground.$scale)
@@ -30,11 +35,6 @@ export function Resizer({ page }: { page: PageNode }) {
 
         const initialEaselSize = page.$dimensions.get()
 
-        const minEaselWidth = 300
-        const minEaselHeight = 300
-
-        const maxEaselWidth = 2560
-
         function onMouseMove(e: MouseEvent) {
           const deltaX = e.clientX - startX
           const deltaY = e.clientY - startY
@@ -43,12 +43,15 @@ export function Resizer({ page }: { page: PageNode }) {
 
           page.$dimensions.set({
             width: Math.min(
-              Math.max(initialEaselSize.width + deltaX / scale, minEaselWidth),
-              maxEaselWidth,
+              Math.max(
+                initialEaselSize.width + deltaX / scale,
+                MIN_EASEL_WIDTH,
+              ),
+              MAX_EASEL_WIDTH,
             ),
             height: Math.max(
               initialEaselSize.height + deltaY / scale,
-              minEaselHeight,
+              MIN_EASEL_HEIGHT,
             ),
           })
 

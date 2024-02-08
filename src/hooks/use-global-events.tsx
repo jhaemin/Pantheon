@@ -5,10 +5,9 @@ import {
   $selectedNodes,
   $selectionRerenderFlag,
   $showDevTools,
-  $textNodeEditing,
 } from '@/atoms'
 import { commandAddPage, commandDeleteNodes } from '@/command'
-import { dataAttributes } from '@/constants'
+import { shouldKeepNodeSelection } from '@/data-attributes'
 import { Ground } from '@/ground'
 import { History } from '@/history'
 import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
@@ -57,9 +56,6 @@ export function useGlobalEvents() {
       } else if (e.key === 'i' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         $interactionMode.set(!$interactionMode.get())
-      } else if (e.key === 'e' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        $textNodeEditing.set(!$textNodeEditing.get())
       } else if (e.key === 'v' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         $showDevTools.set(!$showDevTools.get())
@@ -91,10 +87,7 @@ export function useGlobalEvents() {
         ;(document.activeElement as HTMLElement).blur()
       }
 
-      if (
-        e.target instanceof Element &&
-        !e.target.closest(`[${dataAttributes.keepNodeSelection}]`)
-      ) {
+      if (e.target instanceof Element && !shouldKeepNodeSelection(e.target)) {
         $selectedNodes.set([])
       }
     }

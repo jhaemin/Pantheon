@@ -37,24 +37,24 @@ async function main() {
     'src/__generated__/generated-node-map.ts',
     await format(
       `
-      ${Object.values(mod)
-        .map(
-          (def) =>
-            `import { ${def.nodeName}NodeComponent, ${def.nodeName}NodeControls } from './${kebabCase(def.nodeName)}'`,
-        )
-        .join('\n')}
+${Object.values(mod)
+  .map(
+    (def) =>
+      `import { ${def.nodeName}NodeComponent, ${def.nodeName}NodeControls } from './${kebabCase(def.nodeName)}'`,
+  )
+  .join('\n')}
 
-      export const generatedNodeComponentMap = {
-        ${Object.values(mod)
-          .map((def) => `${def.nodeName}: ${def.nodeName}NodeComponent`)
-          .join(',\n')}
-      }
+export const generatedNodeComponentMap = {
+  ${Object.values(mod)
+    .map((def) => `${def.nodeName}: ${def.nodeName}NodeComponent`)
+    .join(',\n')}
+}
 
-      export const generatedNodeControlsMap = {
-        ${Object.values(mod)
-          .map((def) => `${def.nodeName}: ${def.nodeName}NodeControls`)
-          .join(',\n')}
-      }
+export const generatedNodeControlsMap = {
+  ${Object.values(mod)
+    .map((def) => `${def.nodeName}: ${def.nodeName}NodeControls`)
+    .join(',\n')}
+}
 `,
     ),
   )
@@ -63,18 +63,18 @@ async function main() {
     'src/__generated__/generated-node-name-node-map.ts',
     await format(
       `
-      ${Object.values(mod)
-        .map(
-          (def) =>
-            `import { ${def.nodeName}Node } from './${kebabCase(def.nodeName)}'`,
-        )
-        .join('\n')}
+${Object.values(mod)
+  .map(
+    (def) =>
+      `import { ${def.nodeName}Node } from './${kebabCase(def.nodeName)}'`,
+  )
+  .join('\n')}
 
-      export const generatedNodeNameNodeMap = {
-        ${Object.values(mod)
-          .map((def) => `${def.nodeName}: ${def.nodeName}Node`)
-          .join(',\n')}
-      }
+export const generatedNodeNameNodeMap = {
+  ${Object.values(mod)
+    .map((def) => `${def.nodeName}: ${def.nodeName}Node`)
+    .join(',\n')}
+}
 `,
     ),
   )
@@ -144,6 +144,16 @@ export class ${nodeName}Node extends Node {
           2,
         )
       : '{}'
+  }
+
+  ${
+    leaf
+      ? `
+  get isDroppable() {
+    return false
+  }
+  `
+      : ''
   }
 }
 

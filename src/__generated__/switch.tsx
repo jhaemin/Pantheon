@@ -17,6 +17,10 @@ export class SwitchNode extends Node {
     size: '2',
     variant: 'surface',
   }
+
+  get isDroppable() {
+    return false
+  }
 }
 
 export function SwitchNodeComponent({ node }: { node: SwitchNode }) {

@@ -6,7 +6,11 @@ import {
   $isDraggingNode,
   $isResizingIframe,
 } from '@/atoms'
-import { dataAttributes } from '@/constants'
+import {
+  keepNodeSelectionAttribute,
+  makeNodeAttributes,
+  makeNodeDropZoneAttributes,
+} from '@/data-attributes'
 import { onMouseDownIframe } from '@/events'
 import { Ground } from '@/ground'
 import { Node } from '@/node-class/node'
@@ -39,11 +43,9 @@ $hoveredNode.listen(() => {
 
 export function EaselWrapper({ page }: { page: PageNode }) {
   const interactionMode = useStore($interactionMode)
-  const scale = useStore(Ground.$scale)
   const iframeRef = useRef<HTMLIFrameElement>(null!)
   const dimensions = useStore(page.$dimensions)
   const coordinates = useStore(page.$coordinates)
-  const pageLabel = useStore(page.$pageLabel)
 
   useEffect(() => {
     if (!iframeRef.current) return
@@ -61,6 +63,17 @@ export function EaselWrapper({ page }: { page: PageNode }) {
       $allRenderedNodes,
       $designMode,
     }
+
+    iframeWindow.addEventListener('DOMContentLoaded', () => {
+      const attributes = {
+        ...makeNodeAttributes(page),
+        ...makeNodeDropZoneAttributes(page),
+      }
+
+      Object.entries(attributes).forEach(([key, value]) => {
+        iframeWindow.document.body.setAttribute(key, value)
+      })
+    })
 
     return () => {
       PageNode.detachIframeElement(page)
@@ -87,9 +100,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
   return (
     <div
       className={clsx(EASEL_WRAPPER_CLASS_NAME, styles.easelWrapper)}
-      {...{
-        [dataAttributes.keepNodeSelection]: true,
-      }}
+      {...keepNodeSelectionAttribute}
       style={{
         translate: `${coordinates.x}px ${coordinates.y}px`,
       }}

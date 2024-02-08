@@ -1,6 +1,6 @@
 import { $selectedNodes } from '@/atoms'
 import { commandInsertNodes } from '@/command'
-import { dataAttributes } from '@/constants'
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { onMouseDownForDragAndDropNode } from '@/events'
 import { Node } from '@/node-class/node'
 import { ReactNode, useRef } from 'react'
@@ -16,12 +16,7 @@ export function DrawerItemWrapper({
   const ref = useRef<HTMLDivElement>(null!)
 
   return (
-    <div
-      {...{
-        [dataAttributes.keepNodeSelection]: true,
-      }}
-      className={styles.drawerItemWrapper}
-    >
+    <div {...keepNodeSelectionAttribute} className={styles.drawerItemWrapper}>
       <div
         ref={ref}
         className={styles.drawerItemComponentWrapper}

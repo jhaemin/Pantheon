@@ -16,6 +16,10 @@ export abstract class Node {
    */
   private _wrapperElement: HTMLElement | null = null
 
+  get wrapperElement() {
+    return this._wrapperElement
+  }
+
   static attachWrapperElement(node: Node, wrapperElement: HTMLElement) {
     node._wrapperElement = wrapperElement
 
@@ -33,17 +37,13 @@ export abstract class Node {
   }
 
   /**
-   * For page, it is a iframe element.
+   * A real element that the node represents.
+   * For page, it is the body of the iframe.
    * Otherwise, it is the first child of the wrapper element.
    *
    * TODO: What about overlay?
    */
   get element(): HTMLElement | null {
-    if (this.nodeName === 'Page') {
-      const iframe = document.getElementById(`easel-iframe-${this.id}`)
-      return iframe
-    }
-
     return (this._wrapperElement?.firstElementChild as HTMLElement) ?? null
   }
 

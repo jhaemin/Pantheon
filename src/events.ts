@@ -6,15 +6,12 @@ import {
   $isDraggingNode,
   $selectedNodes,
 } from '@/atoms'
-import {
-  DESIGN_MODE_EDGE_SPACE,
-  DRAG_THRESHOLD,
-  dataAttributes,
-} from '@/constants'
+import { DESIGN_MODE_EDGE_SPACE, DRAG_THRESHOLD } from '@/constants'
 import { PageMoveAction } from './action'
 import { alphanumericId } from './alphanumeric'
 import { commandInsertNodes } from './command'
 import { $contextMenuPosition } from './context-menu/context-menu'
+import { dataAttributes } from './data-attributes'
 import { EASEL_WRAPPER_CLASS_NAME } from './easel/easel-wrapper'
 import { Ground } from './ground'
 import { History } from './history'
@@ -174,17 +171,14 @@ export function onMouseDownForDragAndDropNode(
           // Hover on body blank space.
           // If page node, body is drop zone.
           if (closestNode && closestNode instanceof PageNode) {
-            const pageElm = closestNodeElm.querySelector<HTMLElement>(
-              `[${dataAttributes.dropZone}]`,
-            )!
-
             $dropZone.set({
-              dropZoneElm: pageElm?.ownerDocument.body,
+              dropZoneElm: closestNode.iframeElement!,
               dropNode: draggingNode,
               targetNode: closestNode as PageNode,
               before:
-                pageElm.getAttribute(dataAttributes.dropZoneBefore) ??
-                undefined,
+                closestNode.element!.getAttribute(
+                  dataAttributes.dropZoneBefore,
+                ) ?? undefined,
             })
           }
           // Hover on element except body blank space.
@@ -220,11 +214,7 @@ export function onMouseDownForDragAndDropNode(
                 // Hover on element that is not droppable node.
                 // So that drop zone becomes body again.
                 // This situation is different from hover on body blank space.
-                if (
-                  dropZoneElm.parentElement?.isSameNode(
-                    dropZoneElm.ownerDocument.body,
-                  )
-                ) {
+                if (dropZoneElm.isSameNode(dropZoneElm.ownerDocument.body)) {
                   $dropZone.set({
                     dropZoneElm: dropZoneElm.ownerDocument.body,
                     targetNode,

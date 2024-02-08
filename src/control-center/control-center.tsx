@@ -1,5 +1,5 @@
 import { $selectedNodes } from '@/atoms'
-import { dataAttributes } from '@/constants'
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { useStore } from '@nanostores/react'
 import { Flex, Text } from '@radix-ui/themes'
@@ -21,7 +21,7 @@ export function ControlCenter() {
 
   return (
     <Flex
-      {...{ [dataAttributes.keepNodeSelection]: true }}
+      {...keepNodeSelectionAttribute}
       direction="column"
       p="5"
       style={{

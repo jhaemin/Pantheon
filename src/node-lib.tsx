@@ -1,10 +1,9 @@
-import { $allRenderedNodes, $textNodeEditing } from '@/atoms'
-import { dataAttributes } from '@/constants'
+import { $allRenderedNodes } from '@/atoms'
+import { dataAttributes } from './data-attributes'
 import { getEaselIframeId } from './easel/easel-wrapper'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 import { NodeName } from './node-name'
-import { TextNode } from './nodes/text'
 
 /**
  * Only use when you have to get node atom from HTML element
@@ -53,7 +52,7 @@ export function findNodeElm(node: Node) {
   )
 }
 
-export function getClosestNodeElm(target: EventTarget):
+export function getClosestNodeElm(target: Element):
   | {
       elm: Element
       node: Node
@@ -62,17 +61,9 @@ export function getClosestNodeElm(target: EventTarget):
       elm: null
       node: null
     } {
-  if (!isInstanceOfElement(target)) {
-    return {
-      elm: null,
-      node: null,
-    }
-  }
-
+  // If the target is the body element, it means the target is the page node itself
   if (target.isSameNode(target.ownerDocument.body)) {
-    const nodeId = target.ownerDocument.body
-      .querySelector(`[${dataAttributes.node}]`)
-      ?.getAttribute(dataAttributes.nodeId)
+    const nodeId = getNodeIdFromElement(target.ownerDocument.body)
 
     if (!nodeId) {
       return {
@@ -128,14 +119,6 @@ export function getClosestNodeElm(target: EventTarget):
     elm: elmWithAttribute.firstElementChild,
     node,
   }
-}
-
-export function getPageIframe(page: PageNode) {
-  const iframe = document.getElementById(
-    `easel-iframe-${page.id}`,
-  ) as HTMLIFrameElement | null
-
-  return iframe
 }
 
 /**
@@ -219,10 +202,6 @@ export function isSelectableNode(node: Node) {
     return false
   }
 
-  if (!$textNodeEditing.get() && node instanceof TextNode) {
-    return false
-  }
-
   return true
 }
 
@@ -255,4 +234,8 @@ export function isUnwrappableNode(node: Node) {
   const unwrappableNodeNames: NodeName[] = ['Flex', 'Container']
 
   return unwrappableNodeNames.includes(nodeName)
+}
+
+export function getNodeIdFromElement(target: Element) {
+  return target.getAttribute(dataAttributes.nodeId)
 }

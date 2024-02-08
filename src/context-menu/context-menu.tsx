@@ -5,7 +5,7 @@ import {
   commandUnwrapNode,
   commandWrapNodes,
 } from '@/command'
-import { dataAttributes } from '@/constants'
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { PageNode } from '@/node-class/page'
 import {
   getChildNodeIndex,
@@ -96,26 +96,22 @@ export function ContextMenu() {
   return (
     <>
       <div
+        {...keepNodeSelectionAttribute}
         className={clsx(styles.contextMenuOverlay, {
           [styles.open]: isContextMenuOpen,
         })}
-        {...{
-          [dataAttributes.keepNodeSelection]: '',
-        }}
         onMouseDown={() => {
           $isContextMenuOpen.set(false)
         }}
       />
       <div
+        {...keepNodeSelectionAttribute}
         className={clsx(contextMenuClassName, styles.contextMenu, {
           [styles.open]: isContextMenuOpen,
         })}
         style={{
           top: y - 6,
           left: x,
-        }}
-        {...{
-          [dataAttributes.keepNodeSelection]: true,
         }}
       >
         {canSelectChildren && (

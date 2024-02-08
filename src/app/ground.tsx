@@ -1,5 +1,5 @@
 import { commandAddPage } from '@/command'
-import { dataAttributes } from '@/constants'
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { Ground } from '@/ground'
 import { History } from '@/history'
 import { useStore } from '@nanostores/react'
@@ -113,11 +113,7 @@ function ScaleBadge() {
         }, 0)
       }}
     >
-      <div
-        {...{
-          [dataAttributes.keepNodeSelection]: true,
-        }}
-      >
+      <div {...keepNodeSelectionAttribute}>
         {scale === 1 ? (
           <Button variant="soft" color="gray">
             <MagnifyingGlassIcon />
@@ -160,11 +156,7 @@ function Actions() {
         zIndex: 100,
       }}
     >
-      <div
-        {...{
-          [dataAttributes.keepNodeSelection]: true,
-        }}
-      >
+      <div {...keepNodeSelectionAttribute}>
         <Button onClick={commandAddPage} variant="soft" color="gray">
           <PlusIcon />
           Add a Page
@@ -183,9 +175,7 @@ function UndoRedo() {
 
   return (
     <Flex
-      {...{
-        [dataAttributes.keepNodeSelection]: true,
-      }}
+      {...keepNodeSelectionAttribute}
       gap="2"
       style={{
         position: 'absolute',

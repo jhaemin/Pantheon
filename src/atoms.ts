@@ -58,9 +58,3 @@ $interactionMode.listen((interactionMode) => {
     $dropZone.set(null)
   }
 })
-
-export const $textNodeEditing = atom(false)
-
-$textNodeEditing.listen(() => {
-  $selectedNodes.set([])
-})
