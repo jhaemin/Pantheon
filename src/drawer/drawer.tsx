@@ -46,7 +46,13 @@ export function Drawer() {
           <span>Text</span>
         </DrawerItemWrapper>
 
-        <DrawerItemWrapper createNode={() => new RadixTextNode()}>
+        <DrawerItemWrapper
+          createNode={() => {
+            const radixText = new RadixTextNode()
+            radixText.append(new TextNode())
+            return radixText
+          }}
+        >
           <Text size="3">Radix Text</Text>
         </DrawerItemWrapper>
 

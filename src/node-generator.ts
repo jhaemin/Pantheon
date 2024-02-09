@@ -115,6 +115,7 @@ import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
 import { ${lib.mod} } from '${lib.from}'
 ${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls } from '@/control-center/controls-template'` : ''}
+${hasProps ? `import { Card${lib.mod !== 'Flex' ? ', Flex' : ''} } from '@radix-ui/themes'` : ''}
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
@@ -229,7 +230,28 @@ export function ${nodeComponentName}({ node }: { node: ${nodeClassName} }) {
 }
 
 export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
-  return <>${
+  return <>
+  ${
+    hasSlots
+      ? `
+      <Card size="1">
+        <Flex direction="column" gap="3">
+        ${allSlots
+          .filter((slot) => !slot.required)
+          .map((slot) => {
+            return `
+          <SlotToggleControls
+            slotKey="${slot.key}"
+            nodes={nodes}
+          />`
+          })
+          .join('')}
+        </Flex>
+      </Card>
+      `
+      : ''
+  }
+  ${
     hasProps
       ? props
           .map((prop) => {
@@ -252,20 +274,6 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
                   propertyKey="${prop.key}"
                 />`
             }
-          })
-          .join('')
-      : ''
-  }
-  ${
-    hasSlots
-      ? allSlots
-          .filter((slot) => !slot.required)
-          .map((slot) => {
-            return `
-            <SlotToggleControls
-              slotKey="${slot.key}"
-              nodes={nodes}
-            />`
           })
           .join('')
       : ''

@@ -118,21 +118,19 @@ export function PageNodeControls({ nodes }: { nodes: PageNode[] }) {
 
   return (
     <>
-      <Flex direction="column">
-        <label>
-          <Text size="2">Label</Text>
-          <TextField.Input
-            maxLength={MAX_PAGE_LABEL_LENGTH}
-            autoComplete="off"
-            value={allSame ? firstPageLabel : ''}
-            placeholder={allSame ? undefined : 'Multiple values'}
-            onChange={(e) => {
-              nodes.forEach((node) => {
-                node.$pageLabel.set(e.target.value)
-              })
-            }}
-          />
-        </label>
+      <Flex direction="row" align="center" justify="between">
+        <Text size="2">Label</Text>
+        <TextField.Input
+          maxLength={MAX_PAGE_LABEL_LENGTH}
+          autoComplete="off"
+          value={allSame ? firstPageLabel : ''}
+          placeholder={allSame ? undefined : 'Multiple values'}
+          onChange={(e) => {
+            nodes.forEach((node) => {
+              node.$pageLabel.set(e.target.value)
+            })
+          }}
+        />
       </Flex>
     </>
   )

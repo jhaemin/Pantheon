@@ -7,6 +7,7 @@ export function AppControls() {
   return (
     <Flex direction="column" align="center">
       <Button
+        variant="ghost"
         onClick={async () => {
           const sourceCode = await generateSourceCode(studioApp)
 

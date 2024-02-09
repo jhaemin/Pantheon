@@ -46,7 +46,10 @@ export function commandInsertNodes(
 }
 
 export function commandDeleteNodes(nodes: Node[]) {
-  const nextSelectedNodes: Node[] = []
+  const nextSelectionCandidate = nodes[0]?.previousSibling ?? nodes[0]?.parent
+  const nextSelectedNodes = nextSelectionCandidate
+    ? [nextSelectionCandidate]
+    : []
 
   const historyItem: HistoryStackItem = {
     actions: [],

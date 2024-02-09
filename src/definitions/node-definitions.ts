@@ -83,11 +83,11 @@ export const buttonDef: NodeDefinition = {
     from: importFrom,
   },
   props: [
-    {
-      key: 'asChild',
-      type: 'boolean',
-      default: false,
-    },
+    // {
+    //   key: 'asChild',
+    //   type: 'boolean',
+    //   default: false,
+    // },
     {
       key: 'size',
       type: ['1', '2', '3'],
@@ -145,11 +145,11 @@ export const flexDef: NodeDefinition = {
     from: importFrom,
   },
   props: [
-    {
-      key: 'asChild',
-      type: 'boolean',
-      default: false,
-    },
+    // {
+    //   key: 'asChild',
+    //   type: 'boolean',
+    //   default: false,
+    // },
     {
       key: 'display',
       type: ['none', 'inline-flex', 'flex'],

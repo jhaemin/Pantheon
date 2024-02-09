@@ -9,11 +9,11 @@ import {
   SwitchControls,
   SlotToggleControls,
 } from '@/control-center/controls-template'
+import { Card, Flex } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixButtonNodeProps = {
-  asChild?: boolean
   size?: '1' | '2' | '3'
   variant?: 'classic' | 'solid' | 'soft' | 'surface' | 'outline' | 'ghost'
   color?:
@@ -85,11 +85,6 @@ export function RadixButtonNodeControls({
 }) {
   return (
     <>
-      <SwitchControls
-        controlsLabel="asChild"
-        nodes={nodes}
-        propertyKey="asChild"
-      />
       <SelectControls
         controlsLabel="size"
         nodes={nodes}

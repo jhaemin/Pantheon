@@ -1,8 +1,17 @@
-import { $selectedNodes } from '@/atoms'
+import { $hoveredNode, $selectedNodes } from '@/atoms'
+import { commandDeleteNodes } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { useStore } from '@nanostores/react'
-import { Badge, Flex, Separator, Text } from '@radix-ui/themes'
+import { DotsHorizontalIcon, TargetIcon } from '@radix-ui/react-icons'
+import {
+  Badge,
+  DropdownMenu,
+  Flex,
+  IconButton,
+  Separator,
+  Text,
+} from '@radix-ui/themes'
 import { AppControls } from './app-controls'
 import { TSX } from './tsx'
 
@@ -19,13 +28,12 @@ export function ControlCenter() {
     ? nodeControlsMap[firstSelectedNode.nodeName]
     : null
 
-  const closestSlotOwner = firstSelectedNode?.closestSlotOwner
-  const ClosestSlotOwnerControls =
-    closestSlotOwner && closestSlotOwner !== firstSelectedNode
-      ? nodeControlsMap[closestSlotOwner.nodeName]
-      : null
+  const parents =
+    selectedNodes.length === 1 ? firstSelectedNode?.parents ?? [] : []
 
-  // TODO: show all parent node controls
+  if (firstSelectedNode) {
+    parents.unshift(firstSelectedNode)
+  }
 
   return (
     <Flex
@@ -47,29 +55,75 @@ export function ControlCenter() {
       areAllSelectedNodesTheSame &&
       Controls &&
       firstSelectedNode ? (
-        <Flex direction="column">
-          <Text size="5" weight="bold" mb="4">
-            {firstSelectedNode.nodeName}
-          </Text>
-          <Flex direction="column" gap="4">
-            <Controls nodes={selectedNodes as never} />
+        <Flex direction="column" gap="4">
+          {parents.map((parent, i) => {
+            const ParentControls = nodeControlsMap[parent.nodeName]
 
-            <Separator size="4" />
+            return (
+              <Flex
+                key={parent.id}
+                direction="column"
+                gap="4"
+                onMouseEnter={() => {
+                  $hoveredNode.set(parent)
+                }}
+                onMouseLeave={() => {
+                  $hoveredNode.set(null)
+                }}
+              >
+                {i > 0 && <Separator size="4" my="1" />}
+                <Flex align="center" justify="between">
+                  <Text size={i === 0 ? '5' : '3'} weight="bold">
+                    {parent.nodeName}
+                    {i > 0 && parent.slotsArray.length > 0 && (
+                      <Badge ml="2">slot owner</Badge>
+                    )}
+                    {i === parents.length - 1 && <Badge ml="2">root</Badge>}
+                  </Text>
+                  <Flex gap="3">
+                    {i > 0 && (
+                      <IconButton
+                        variant="ghost"
+                        onClick={() => {
+                          $selectedNodes.set([parent])
+                        }}
+                      >
+                        <TargetIcon />
+                      </IconButton>
+                    )}
+                    <DropdownMenu.Root>
+                      <DropdownMenu.Trigger>
+                        <IconButton variant="ghost" color="gray">
+                          <DotsHorizontalIcon />
+                        </IconButton>
+                      </DropdownMenu.Trigger>
+                      <DropdownMenu.Content>
+                        <DropdownMenu.Item
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                          }}
+                          onClick={() => {
+                            commandDeleteNodes([parent])
+                          }}
+                        >
+                          Remove
+                        </DropdownMenu.Item>
+                      </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                  </Flex>
+                </Flex>
+                <ParentControls nodes={[parent as never]} />
+              </Flex>
+            )
+          })}
 
-            {ClosestSlotOwnerControls && (
-              <>
-                <Text size="3" weight="bold">
-                  {closestSlotOwner?.nodeName} <Badge>slot owner</Badge>
-                </Text>
-                <ClosestSlotOwnerControls nodes={[closestSlotOwner as never]} />
-                <Separator size="4" />
-              </>
-            )}
-
-            {selectedNodes.length === 1 && firstSelectedNode && (
+          {selectedNodes.length === 1 && firstSelectedNode && (
+            <>
+              <Separator size="4" my="1" />
               <TSX node={firstSelectedNode} />
-            )}
-          </Flex>
+            </>
+          )}
         </Flex>
       ) : (
         <AppControls />

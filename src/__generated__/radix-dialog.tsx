@@ -9,6 +9,7 @@ import {
   SwitchControls,
   SlotToggleControls,
 } from '@/control-center/controls-template'
+import { Card, Flex } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
@@ -100,10 +101,14 @@ export function RadixDialogNodeControls({
 }) {
   return (
     <>
-      <SwitchControls controlsLabel="open" nodes={nodes} propertyKey="open" />
+      <Card size="1">
+        <Flex direction="column" gap="3">
+          <SlotToggleControls slotKey="title" nodes={nodes} />
+          <SlotToggleControls slotKey="description" nodes={nodes} />
+        </Flex>
+      </Card>
 
-      <SlotToggleControls slotKey="title" nodes={nodes} />
-      <SlotToggleControls slotKey="description" nodes={nodes} />
+      <SwitchControls controlsLabel="open" nodes={nodes} propertyKey="open" />
     </>
   )
 }

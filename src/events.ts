@@ -351,7 +351,7 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
       ),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3))
     `
-  leftDropZone.style.transform = 'translate(-50%, 0%)'
+  leftDropZone.style.transform = 'translate(-100%, 0%)'
   leftDropZone.style.zIndex = '1'
 
   rightDropZone.style.position = 'fixed'
@@ -374,7 +374,7 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
       ),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3))
     `
-  rightDropZone.style.transform = 'translate(-50%, 0%)'
+  rightDropZone.style.transform = 'translate(-0%, 0%)'
   rightDropZone.style.zIndex = '1'
 
   topDropZone.style.position = 'fixed'
@@ -393,7 +393,7 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
       ),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3))
     `
-  topDropZone.style.transform = 'translate(0%, -50%)'
+  topDropZone.style.transform = 'translate(0%, -100%)'
   topDropZone.style.zIndex = '1'
 
   bottomDropZone.style.position = 'fixed'
@@ -416,7 +416,7 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
       ),
       linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3))
     `
-  bottomDropZone.style.transform = 'translate(0%, -50%)'
+  bottomDropZone.style.transform = 'translate(0%, -0%)'
   bottomDropZone.style.zIndex = '1'
 
   Ground.element.appendChild(leftDropZone)

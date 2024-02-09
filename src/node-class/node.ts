@@ -106,6 +106,16 @@ export abstract class Node {
     return this._parent
   }
 
+  get parents() {
+    const parents: Node[] = []
+    let parent = this.parent
+    while (parent) {
+      parents.push(parent)
+      parent = parent.parent
+    }
+    return parents
+  }
+
   protected static releaseParent(node: Node) {
     node._parent = null
   }
@@ -238,6 +248,7 @@ export abstract class Node {
     const removableChildren = children.filter((child) => child.isRemovable)
     removableChildren.forEach((child) => Node.releaseParent(child))
     this.children = this.children.filter((c) => !removableChildren.includes(c))
+    removableChildren.forEach((child) => this.removeSlot(child))
   }
 
   public removeAllChildren() {
@@ -245,6 +256,14 @@ export abstract class Node {
   }
 
   public readonly $slots = atom<Record<string, Node | null>>({})
+
+  get slots() {
+    return this.$slots.get()
+  }
+
+  get slotsArray() {
+    return Object.values(this.$slots.get()).filter((node) => !!node) as Node[]
+  }
 
   setSlot(slotKey: string, node: Node) {
     if (this.$slots.get()[slotKey]) {

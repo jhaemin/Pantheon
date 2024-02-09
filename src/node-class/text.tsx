@@ -59,7 +59,7 @@ export function TextNodeControls({ nodes }: { nodes: TextNode[] }) {
 
   return (
     <Flex direction="row" align="center" justify="between">
-      <Text>Value</Text>
+      <Text size="2">Value</Text>
       <TextField.Root>
         <TextField.Input
           value={allSame ? value : ''}

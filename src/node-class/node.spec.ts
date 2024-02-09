@@ -172,3 +172,30 @@ test('Tree', () => {
   expect(text.ownerPage).toBe(null)
   expect(text.parent).toBe(frag)
 })
+
+test('Slot', () => {
+  const frag = new FragmentNode()
+
+  const content = new FragmentNode()
+  frag.setSlot('content', content)
+
+  expect(frag.slots.content).toBe(content)
+  expect(frag.slots.content?.parent).toBe(frag)
+
+  frag.removeSlot(content)
+  expect(frag.slots.content).toBe(null)
+
+  frag.setSlot('content', content)
+  content.remove()
+  expect(frag.slots.content).toBe(null)
+
+  frag.setSlot('content', content)
+  frag.removeChild(content)
+  expect(frag.slots.content).toBe(null)
+
+  frag.setSlot('content', content)
+  expect(frag.children.length).toBe(1)
+
+  frag.removeAllChildren()
+  expect(frag.slots.content).toBe(null)
+})

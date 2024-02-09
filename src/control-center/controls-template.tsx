@@ -54,7 +54,12 @@ export function SelectControls<
 
   return (
     <Flex direction="row" align="center" justify="between">
-      <Text size="2">{controlsLabel}</Text>
+      <Flex align="center">
+        <Text size="2">{controlsLabel}</Text>
+        {/* <IconButton variant="ghost" size="1" ml="2">
+          <ResetIcon width={12} />
+        </IconButton> */}
+      </Flex>
       <Select.Root
         {...keepNodeSelectionAttribute}
         defaultValue={commonValue}

@@ -9,11 +9,11 @@ import {
   SwitchControls,
   SlotToggleControls,
 } from '@/control-center/controls-template'
+import { Card } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixFlexNodeProps = {
-  asChild?: boolean
   display?: 'none' | 'inline-flex' | 'flex'
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
   align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
@@ -57,11 +57,6 @@ export function RadixFlexNodeComponent({ node }: { node: RadixFlexNode }) {
 export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
   return (
     <>
-      <SwitchControls
-        controlsLabel="asChild"
-        nodes={nodes}
-        propertyKey="asChild"
-      />
       <SelectControls
         controlsLabel="display"
         nodes={nodes}

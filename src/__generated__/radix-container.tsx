@@ -9,6 +9,7 @@ import {
   SwitchControls,
   SlotToggleControls,
 } from '@/control-center/controls-template'
+import { Card, Flex } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
