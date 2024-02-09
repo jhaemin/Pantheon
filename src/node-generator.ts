@@ -105,11 +105,9 @@ ${
     ? ''
     : `
 import { renderChildren } from '@/node-component'
-import { EmptyPlaceholder } from '@/empty-placeholder'
-`
+import { EmptyPlaceholder } from '@/empty-placeholder'`
 }
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { ${lib.mod} } from '${lib.from}'
 ${hasProps ? `import { SelectControls } from '@/control-center/controls-template'` : ''}
@@ -133,9 +131,9 @@ export type ${propsTypeName} = ${
   }
 
 export class ${nodeClassName} extends Node {
-  readonly nodeName = '${nodeName}' satisfies NodeName
+  readonly nodeName = '${nodeName}'
 
-  defaultProps: ${propsTypeName} = ${
+  public readonly defaultProps: ${propsTypeName} = ${
     props
       ? JSON.stringify(
           props.reduce((acc, prop) => {

@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { Box, Button, Dialog, Flex, Grid, Kbd } from '@radix-ui/themes'
+import { Box, Button, Dialog, Flex, Grid, Kbd, Text } from '@radix-ui/themes'
 import { atom } from 'nanostores'
 
 export const $shortcutsDialogOpen = atom(false)
@@ -11,7 +11,7 @@ const shortcuts: { action: string; key: string }[] = [
   },
   {
     action: 'Remove Node',
-    key: 'Backspace',
+    key: '⌫',
   },
   {
     action: 'Toggle Design Mode',
@@ -51,9 +51,9 @@ export function ShortcutsDialog() {
           {shortcuts.map((shortcut) => (
             <Box key={shortcut.action}>
               <Flex align="center" justify="between" gap="4">
-                {shortcut.action}
+                <Text size="2">{shortcut.action}</Text>
                 <Flex direction="column" align="end" gap="2">
-                  <Kbd key={shortcut.key} size="4">
+                  <Kbd key={shortcut.key} size="3">
                     {shortcut.key}
                   </Kbd>
                 </Flex>

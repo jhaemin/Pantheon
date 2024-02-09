@@ -1,8 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Container } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
@@ -13,9 +11,9 @@ export type RadixContainerNodeProps = {
 }
 
 export class RadixContainerNode extends Node {
-  readonly nodeName = 'RadixContainer' satisfies NodeName
+  readonly nodeName = 'RadixContainer'
 
-  defaultProps: RadixContainerNodeProps = {
+  public readonly defaultProps: RadixContainerNodeProps = {
     size: '4',
   }
 }

@@ -1,6 +1,6 @@
+import { FragmentNode } from '@/node-class/fragment'
 import { PageNode } from '@/node-class/page'
-import { FragmentNode } from '@/nodes/fragment'
-import { TextNode } from '@/nodes/text'
+import { TextNode } from '@/node-class/text'
 import { StudioApp } from '@/studio-app'
 import { expect, test } from 'bun:test'
 

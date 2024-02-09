@@ -1,8 +1,8 @@
 import { format } from '@/format'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
-import { CheckIcon } from '@radix-ui/react-icons'
-import { Button, Flex, Text } from '@radix-ui/themes'
+import { CheckIcon, ClipboardIcon } from '@radix-ui/react-icons'
+import { Flex, IconButton, Text } from '@radix-ui/themes'
 import hljs from 'highlight.js'
 import { useEffect, useRef, useState } from 'react'
 
@@ -40,8 +40,9 @@ export function TSX({ node }: { node: Node }) {
     <Flex direction="column">
       <Flex align="center" justify="between">
         <Text size="2">TSX</Text>
-        <Button
+        <IconButton
           variant="ghost"
+          color="gray"
           onClick={() => {
             navigator.clipboard.writeText(sourceCode.current)
             setCopied(true)
@@ -53,8 +54,8 @@ export function TSX({ node }: { node: Node }) {
             }, 2000)
           }}
         >
-          {copied ? <CheckIcon /> : 'Copy code'}
-        </Button>
+          {copied ? <CheckIcon /> : <ClipboardIcon />}
+        </IconButton>
       </Flex>
 
       <Flex direction="column" mt="4">

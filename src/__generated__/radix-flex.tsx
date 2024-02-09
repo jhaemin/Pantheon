@@ -1,8 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Flex } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
@@ -18,9 +16,9 @@ export type RadixFlexNodeProps = {
 }
 
 export class RadixFlexNode extends Node {
-  readonly nodeName = 'RadixFlex' satisfies NodeName
+  readonly nodeName = 'RadixFlex'
 
-  defaultProps: RadixFlexNodeProps = {
+  public readonly defaultProps: RadixFlexNodeProps = {
     display: 'flex',
     justify: 'start',
   }

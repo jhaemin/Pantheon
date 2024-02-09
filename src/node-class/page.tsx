@@ -1,6 +1,5 @@
 import { RemoveNodeAction } from '@/action'
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
@@ -10,7 +9,7 @@ import { renderChildren } from '../node-component'
 export const DEFAULT_PAGE_LABEL = 'New Page'
 
 export class PageNode extends Node {
-  readonly nodeName = 'Page' satisfies NodeName
+  readonly nodeName = 'Page'
 
   public $pageLabel = atom(DEFAULT_PAGE_LABEL)
 

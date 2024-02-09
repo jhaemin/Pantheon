@@ -1,8 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Blockquote } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
@@ -41,9 +39,9 @@ export type RadixBlockquoteNodeProps = {
 }
 
 export class RadixBlockquoteNode extends Node {
-  readonly nodeName = 'RadixBlockquote' satisfies NodeName
+  readonly nodeName = 'RadixBlockquote'
 
-  defaultProps: RadixBlockquoteNodeProps = {}
+  public readonly defaultProps: RadixBlockquoteNodeProps = {}
 }
 
 export function RadixBlockquoteNodeComponent({

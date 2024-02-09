@@ -1,13 +1,12 @@
 import { triggerRerenderGuides } from '@/atoms'
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom } from 'nanostores'
 import { useCallback, useEffect } from 'react'
 
 export class TextNode extends Node {
-  readonly nodeName = 'Text' satisfies NodeName
+  readonly nodeName = 'Text'
 
   readonly $value = atom('Text')
 

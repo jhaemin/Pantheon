@@ -204,39 +204,39 @@ export const blockquoteDef: NodeDefinition = {
   ],
 }
 
-export const dialogDef: NodeDefinition = {
-  nodeName: 'RadixDialog',
-  lib: {
-    mod: 'Dialog',
-    from: importFrom,
-  },
-  componentName: 'Dialog.Root',
-  portal: true,
-  props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
-  slots: [
-    {
-      key: 'trigger',
-      componentName: 'Dialog.Trigger',
-      required: true,
-    },
-    {
-      key: 'content',
-      componentName: 'Dialog.Content',
-      required: true,
-      slots: [
-        {
-          key: 'title',
-          componentName: 'Dialog.Title',
-        },
-        {
-          key: 'description',
-          componentName: 'Dialog.Description',
-        },
-        {
-          key: 'realContent',
-          componentName: 'Fragment',
-        },
-      ],
-    },
-  ],
-}
+// export const dialogDef: NodeDefinition = {
+//   nodeName: 'RadixDialog',
+//   lib: {
+//     mod: 'Dialog',
+//     from: importFrom,
+//   },
+//   componentName: 'Dialog.Root',
+//   portal: true,
+//   props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
+//   slots: [
+//     {
+//       key: 'trigger',
+//       componentName: 'Dialog.Trigger',
+//       required: true,
+//     },
+//     {
+//       key: 'content',
+//       componentName: 'Dialog.Content',
+//       required: true,
+//       slots: [
+//         {
+//           key: 'title',
+//           componentName: 'Dialog.Title',
+//         },
+//         {
+//           key: 'description',
+//           componentName: 'Dialog.Description',
+//         },
+//         {
+//           key: 'realContent',
+//           componentName: 'Fragment',
+//         },
+//       ],
+//     },
+//   ],
+// }

@@ -33,6 +33,9 @@ export function HoverGuide() {
   )
 
   useEffect(() => {
+    console.log(hoveredNode?.ownerPage)
+    console.log(hoveredNode?.parent)
+
     if (!hoveredNode || !hoveredNode.ownerPage) {
       setDimension(initialDimension)
       return

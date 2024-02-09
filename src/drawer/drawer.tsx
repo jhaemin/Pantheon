@@ -2,7 +2,8 @@ import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
 import { RadixButtonNode } from '@/__generated__/radix-button'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
-import { TextNode } from '@/nodes/text'
+import { RadixDialogNode } from '@/node-class/dialog'
+import { TextNode } from '@/node-class/text'
 import { Blockquote, Button, Flex, Switch, Text } from '@radix-ui/themes'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
 
@@ -27,6 +28,18 @@ export function Drawer() {
       </Text>
 
       <Flex direction="column" gap="4">
+        <DrawerItemWrapper createNode={() => new RadixDialogNode()}>
+          <Flex
+            align="center"
+            justify="center"
+            style={{
+              backgroundColor: 'var(--gray-3)',
+              padding: 'var(--space-4) var(--space-8)',
+            }}
+          >
+            Dialog
+          </Flex>
+        </DrawerItemWrapper>
         <DrawerItemWrapper createNode={() => new RadixFlexNode()}>
           <Flex
             align="center"

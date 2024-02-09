@@ -96,7 +96,12 @@ export abstract class Node {
   public readonly $children = computed(this._$children, (children) => children)
 
   get children() {
-    return this.$children.get()
+    const slots = this.$slots.get()
+    const slotNodes = Object.values(slots).filter(
+      (node) => node !== undefined,
+    ) as Node[]
+
+    return [...this.$children.get(), ...slotNodes]
   }
 
   set children(children: Node[]) {
@@ -211,6 +216,22 @@ export abstract class Node {
   public removeAllChildren() {
     this.children.forEach((child) => Node.releaseParent(child))
     this.children = []
+  }
+
+  public readonly $slots = atom<Record<string, Node | null>>({})
+
+  setSlot(slotName: string, node: Node) {
+    Node.assignParent(node, this)
+    this.$slots.set({ ...this.$slots.get(), [slotName]: node })
+  }
+
+  removeSlot(slotName: string) {
+    const slots = this.$slots.get()
+    const node = slots[slotName]
+    if (node) {
+      Node.releaseParent(node)
+    }
+    this.$slots.set({ ...slots, [slotName]: null })
   }
 
   /**

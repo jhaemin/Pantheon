@@ -12,7 +12,11 @@ import {
 import { Button, Flex, IconButton, Tooltip } from '@radix-ui/themes'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
-import { $isAnimatingGround, $selectionRerenderFlag } from '../atoms'
+import {
+  $interactionMode,
+  $isAnimatingGround,
+  $selectionRerenderFlag,
+} from '../atoms'
 import { EaselContainer } from '../easel/easel-container'
 import { DropZoneGuide } from '../ui-guides/drop-zone-guide'
 
@@ -32,6 +36,7 @@ const SCALE_FACTOR = 0.004
 
 export function GroundComponent() {
   const ref = useRef<HTMLDivElement>(null!)
+  const interactionMode = useStore($interactionMode)
 
   useEffect(() => {
     const groundElm = document.getElementById(GROUND_ID)!
@@ -76,7 +81,8 @@ export function GroundComponent() {
         left: 300,
         right: 300,
         bottom: 0,
-        backgroundColor: 'var(--gray-4)',
+        transition: 'background-color 300ms ease',
+        backgroundColor: interactionMode ? 'var(--gray-10)' : 'var(--gray-4)',
       }}
     >
       <EaselContainer />

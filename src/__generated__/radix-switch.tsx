@@ -1,5 +1,4 @@
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Switch } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
@@ -12,9 +11,9 @@ export type RadixSwitchNodeProps = {
 }
 
 export class RadixSwitchNode extends Node {
-  readonly nodeName = 'RadixSwitch' satisfies NodeName
+  readonly nodeName = 'RadixSwitch'
 
-  defaultProps: RadixSwitchNodeProps = {
+  public readonly defaultProps: RadixSwitchNodeProps = {
     size: '2',
     variant: 'surface',
   }

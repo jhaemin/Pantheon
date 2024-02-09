@@ -1,8 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-
 import { Node } from '@/node-class/node'
-import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
 import { Button } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
@@ -42,9 +40,9 @@ export type RadixButtonNodeProps = {
 }
 
 export class RadixButtonNode extends Node {
-  readonly nodeName = 'RadixButton' satisfies NodeName
+  readonly nodeName = 'RadixButton'
 
-  defaultProps: RadixButtonNodeProps = {
+  public readonly defaultProps: RadixButtonNodeProps = {
     size: '2',
     variant: 'solid',
   }

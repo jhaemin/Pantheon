@@ -62,14 +62,14 @@ export function NodeComponent({ node }: { node: Node }) {
 
   return (
     // display: contents wrapper
-    <div
+    <span
       ref={nodeWrapperElementRef}
       id={node.id}
       className={styles.nodeComponentWrapper}
       {...commonNodeElementProps}
     >
       <Component node={node as never} /> {/* guaranteed type safety */}
-    </div>
+    </span>
   )
 }
 

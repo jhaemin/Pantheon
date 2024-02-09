@@ -1,9 +1,10 @@
 import { generatedNodeNameNodeMap } from './__generated__/generated-node-name-node-map'
+import { RadixDialogContentNode, RadixDialogNode } from './node-class/dialog'
+import { FragmentNode } from './node-class/fragment'
 import { PageNode } from './node-class/page'
+import { TextNode } from './node-class/text'
 import { ViewNode } from './node-class/view'
 import { NodeName } from './node-name'
-import { FragmentNode } from './nodes/fragment'
-import { TextNode } from './nodes/text'
 
 export const nodeNameNodeMap = {
   ...generatedNodeNameNodeMap,
@@ -11,6 +12,8 @@ export const nodeNameNodeMap = {
   Page: PageNode,
   Text: TextNode,
   View: ViewNode,
+  RadixDialog: RadixDialogNode,
+  RadixDialogContent: RadixDialogContentNode,
 } satisfies Record<NodeName, any>
 
 export type InferNodeByName<N extends NodeName> =

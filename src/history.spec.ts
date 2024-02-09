@@ -3,7 +3,7 @@ import { RadixFlexNode } from './__generated__/radix-flex'
 import { commandInsertNodes } from './command'
 import { History } from './history'
 import { PageNode } from './node-class/page'
-import { TextNode } from './nodes/text'
+import { TextNode } from './node-class/text'
 
 test('Command insert nodes', () => {
   const page = new PageNode()
