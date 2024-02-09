@@ -47,7 +47,7 @@ export function Drawer() {
         </DrawerItemWrapper>
 
         <DrawerItemWrapper createNode={() => new RadixTextNode()}>
-          <Text size="4">Radix Text</Text>
+          <Text size="3">Radix Text</Text>
         </DrawerItemWrapper>
 
         <DrawerItemWrapper

@@ -2,7 +2,7 @@ import { $selectedNodes } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { useStore } from '@nanostores/react'
-import { Flex, Separator, Text } from '@radix-ui/themes'
+import { Badge, Flex, Separator, Text } from '@radix-ui/themes'
 import { AppControls } from './app-controls'
 import { TSX } from './tsx'
 
@@ -18,6 +18,14 @@ export function ControlCenter() {
   const Controls = firstSelectedNode
     ? nodeControlsMap[firstSelectedNode.nodeName]
     : null
+
+  const closestSlotOwner = firstSelectedNode?.closestSlotOwner
+  const ClosestSlotOwnerControls =
+    closestSlotOwner && closestSlotOwner !== firstSelectedNode
+      ? nodeControlsMap[closestSlotOwner.nodeName]
+      : null
+
+  // TODO: show all parent node controls
 
   return (
     <Flex
@@ -47,6 +55,16 @@ export function ControlCenter() {
             <Controls nodes={selectedNodes as never} />
 
             <Separator size="4" />
+
+            {ClosestSlotOwnerControls && (
+              <>
+                <Text size="3" weight="bold">
+                  {closestSlotOwner?.nodeName} <Badge>slot owner</Badge>
+                </Text>
+                <ClosestSlotOwnerControls nodes={[closestSlotOwner as never]} />
+                <Separator size="4" />
+              </>
+            )}
 
             {selectedNodes.length === 1 && firstSelectedNode && (
               <TSX node={firstSelectedNode} />

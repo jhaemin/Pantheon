@@ -58,19 +58,18 @@ export function TextNodeControls({ nodes }: { nodes: TextNode[] }) {
   }, [value])
 
   return (
-    <Flex>
-      <Text>Text Value</Text>
-      <Flex>
-        <TextField.Root>
-          <TextField.Input
-            placeholder={allSame ? '' : 'Multiple values'}
-            onBlur={handleEmpty} // Set default value on blur without text
-            onChange={(e) => {
-              nodes.forEach((node) => node.$value.set(e.currentTarget.value))
-            }}
-          />
-        </TextField.Root>
-      </Flex>
+    <Flex direction="row" align="center" justify="between">
+      <Text>Value</Text>
+      <TextField.Root>
+        <TextField.Input
+          value={allSame ? value : ''}
+          placeholder={allSame ? '' : 'Multiple values'}
+          onBlur={handleEmpty} // Set default value on blur without text
+          onChange={(e) => {
+            nodes.forEach((node) => node.$value.set(e.currentTarget.value))
+          }}
+        />
+      </TextField.Root>
     </Flex>
   )
 }

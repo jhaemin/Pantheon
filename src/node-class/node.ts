@@ -92,6 +92,13 @@ export abstract class Node {
     return this.parent?.ownerPage ?? null
   }
 
+  get closestSlotOwner(): Node | null {
+    if (Object.keys(this.$slots.get()).length > 0) {
+      return this
+    }
+    return this.parent?.closestSlotOwner ?? null
+  }
+
   /** Only root node(PageNode)'s parent is null */
   private _parent: Node | null = null
 
