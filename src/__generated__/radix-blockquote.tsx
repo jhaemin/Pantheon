@@ -2,8 +2,15 @@ import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
+import { atom, map } from 'nanostores'
 import { Blockquote } from '@radix-ui/themes'
-import { SelectControls } from '@/control-center/controls-template'
+import {
+  SelectControls,
+  SwitchControls,
+  SlotToggleControls,
+} from '@/control-center/controls-template'
+import { NodeComponent } from '@/node-component'
+import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixBlockquoteNodeProps = {
   size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
@@ -42,6 +49,14 @@ export class RadixBlockquoteNode extends Node {
   readonly nodeName = 'RadixBlockquote'
 
   public readonly defaultProps: RadixBlockquoteNodeProps = {}
+
+  readonly $props = map(this.defaultProps)
+
+  readonly $slots = atom({})
+
+  constructor() {
+    super()
+  }
 }
 
 export function RadixBlockquoteNodeComponent({
@@ -133,11 +148,10 @@ export function RadixBlockquoteNodeControls({
           { label: 'gray', value: 'gray' },
         ]}
       />
-      <SelectControls
+      <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
         propertyKey="highContrast"
-        options={[{ label: 'default', value: undefined }]}
       />
     </>
   )

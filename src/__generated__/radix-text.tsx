@@ -3,7 +3,7 @@ import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
-import { Button } from '@radix-ui/themes'
+import { Text } from '@radix-ui/themes'
 import {
   SelectControls,
   SwitchControls,
@@ -12,10 +12,12 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 
-export type RadixButtonNodeProps = {
-  asChild?: boolean
-  size?: '1' | '2' | '3'
-  variant?: 'classic' | 'solid' | 'soft' | 'surface' | 'outline' | 'ghost'
+export type RadixTextNodeProps = {
+  as?: 'p' | 'label' | 'div' | 'span'
+  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  weight?: 'light' | 'regular' | 'medium' | 'bold'
+  align?: 'left' | 'center' | 'right'
+  trim?: 'normal' | 'start' | 'end' | 'both'
   color?:
     | 'tomato'
     | 'red'
@@ -43,15 +45,14 @@ export type RadixButtonNodeProps = {
     | 'gold'
     | 'bronze'
     | 'gray'
-  radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
+  highContrast?: boolean
 }
 
-export class RadixButtonNode extends Node {
-  readonly nodeName = 'RadixButton'
+export class RadixTextNode extends Node {
+  readonly nodeName = 'RadixText'
 
-  public readonly defaultProps: RadixButtonNodeProps = {
-    size: '2',
-    variant: 'solid',
+  public readonly defaultProps: RadixTextNodeProps = {
+    as: 'span',
   }
 
   readonly $props = map(this.defaultProps)
@@ -63,32 +64,35 @@ export class RadixButtonNode extends Node {
   }
 }
 
-export function RadixButtonNodeComponent({ node }: { node: RadixButtonNode }) {
+export function RadixTextNodeComponent({ node }: { node: RadixTextNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Button {...props}>
+    <Text {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixButton" />
+        <EmptyPlaceholder name="RadixText" />
       )}
-    </Button>
+    </Text>
   )
 }
 
-export function RadixButtonNodeControls({
-  nodes,
-}: {
-  nodes: RadixButtonNode[]
-}) {
+export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
   return (
     <>
-      <SwitchControls
-        controlsLabel="asChild"
+      <SelectControls
+        controlsLabel="as"
         nodes={nodes}
-        propertyKey="asChild"
+        propertyKey="as"
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'p', value: 'p' },
+          { label: 'label', value: 'label' },
+          { label: 'div', value: 'div' },
+          { label: 'span', value: 'span' },
+        ]}
       />
       <SelectControls
         controlsLabel="size"
@@ -99,20 +103,47 @@ export function RadixButtonNodeControls({
           { label: '1', value: '1' },
           { label: '2', value: '2' },
           { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
-        controlsLabel="variant"
+        controlsLabel="weight"
         nodes={nodes}
-        propertyKey="variant"
+        propertyKey="weight"
         options={[
           { label: 'default', value: undefined },
-          { label: 'classic', value: 'classic' },
-          { label: 'solid', value: 'solid' },
-          { label: 'soft', value: 'soft' },
-          { label: 'surface', value: 'surface' },
-          { label: 'outline', value: 'outline' },
-          { label: 'ghost', value: 'ghost' },
+          { label: 'light', value: 'light' },
+          { label: 'regular', value: 'regular' },
+          { label: 'medium', value: 'medium' },
+          { label: 'bold', value: 'bold' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="align"
+        nodes={nodes}
+        propertyKey="align"
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'left', value: 'left' },
+          { label: 'center', value: 'center' },
+          { label: 'right', value: 'right' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="trim"
+        nodes={nodes}
+        propertyKey="trim"
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'normal', value: 'normal' },
+          { label: 'start', value: 'start' },
+          { label: 'end', value: 'end' },
+          { label: 'both', value: 'both' },
         ]}
       />
       <SelectControls
@@ -149,18 +180,10 @@ export function RadixButtonNodeControls({
           { label: 'gray', value: 'gray' },
         ]}
       />
-      <SelectControls
-        controlsLabel="radius"
+      <SwitchControls
+        controlsLabel="highContrast"
         nodes={nodes}
-        propertyKey="radius"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'none', value: 'none' },
-          { label: 'small', value: 'small' },
-          { label: 'medium', value: 'medium' },
-          { label: 'large', value: 'large' },
-          { label: 'full', value: 'full' },
-        ]}
+        propertyKey="highContrast"
       />
     </>
   )

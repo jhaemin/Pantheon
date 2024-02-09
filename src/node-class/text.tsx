@@ -1,9 +1,9 @@
 import { triggerRerenderGuides } from '@/atoms'
-import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom } from 'nanostores'
 import { useCallback, useEffect } from 'react'
+import { Node } from './node'
 
 export class TextNode extends Node {
   readonly nodeName = 'Text'

@@ -1,9 +1,10 @@
 import { triggerRerenderGuides } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
+import { FragmentNode } from '@/node-class/fragment'
 import { Node } from '@/node-class/node'
 import { ExtractMapStoreGeneric } from '@/types/extract-generic'
 import { useStore } from '@nanostores/react'
-import { Flex, Select, Text } from '@radix-ui/themes'
+import { Flex, Select, Switch, Text } from '@radix-ui/themes'
 import { map } from 'nanostores'
 
 function useCommonValue<
@@ -81,89 +82,64 @@ export function SelectControls<
   )
 }
 
-export function ControlsSwitchForm<
+export function SwitchControls<
   N extends Node,
   K extends keyof ExtractMapStoreGeneric<N['$props']>,
 >({ controlsLabel, nodes, propertyKey: key }: ControlsCommonFormProps<N, K>) {
-  const value = useCommonValue(nodes, key)
+  const commonValue = useCommonValue(nodes, key)
 
   return (
-    <Flex>
-      <Flex>
-        <Flex align="center" justify="between">
-          {/* <Typography variant="body2">{controlsLabel}</Typography>
-          <Switch
-            checked={value}
-            onChange={(e) => {
-              nodes.forEach((node) => {
-                node.props = {
-                  ...node.props,
-                  [key]: e.target.checked,
-                }
-              })
+    <Flex direction="row" align="center" justify="between">
+      <Text size="2">{controlsLabel}</Text>
+      <Switch
+        defaultChecked={commonValue}
+        onCheckedChange={(checked) => {
+          nodes.forEach((node) => {
+            node.props = {
+              ...node.props,
+              [key]: checked,
+            }
+          })
 
-              triggerRerenderGuides(true)
-            }}
-          /> */}
-        </Flex>
-      </Flex>
+          triggerRerenderGuides(true)
+        }}
+      />
     </Flex>
   )
 }
 
-export function ControlsTextInputForm<
-  N extends Node,
-  K extends keyof ExtractMapStoreGeneric<N['$props']>,
->({ controlsLabel, nodes, propertyKey: key }: ControlsCommonFormProps<N, K>) {
-  const value = useCommonValue(nodes, key)
+export function SlotToggleControls({
+  nodes,
+  slotKey,
+}: {
+  nodes: Node[]
+  slotKey: string
+}) {
+  useStore(nodes[0].$slots)
+
+  const allNodesSlotEnabled = nodes.every((node) => {
+    return !!node.$slots.get()[slotKey]
+  })
 
   return (
-    <Flex>
-      <Flex>{controlsLabel}</Flex>
-      <Flex>
-        {/* <TextInput
-          value={value}
-          onChange={(e) => {
-            nodes.forEach((node) => {
-              node.props = {
-                ...node.props,
-                [key]: e.target.value,
+    <Flex direction="row" align="center" justify="between">
+      <Text size="2">{slotKey}</Text>
+      <Switch
+        defaultChecked={allNodesSlotEnabled}
+        onCheckedChange={(checked) => {
+          nodes.forEach((node) => {
+            if (checked) {
+              if (!node.$slots.get()[slotKey]) {
+                node.setSlot(slotKey, new FragmentNode())
               }
-            })
+            } else {
+              node.removeSlotByKey(slotKey)
+            }
+          })
 
-            triggerRerenderGuides(true)
-          }}
-        /> */}
-      </Flex>
-    </Flex>
-  )
-}
-
-export function ControlsStepperForm<
-  N extends Node,
-  K extends keyof ExtractMapStoreGeneric<N['$props']>,
->({ controlsLabel, nodes, propertyKey: key }: ControlsCommonFormProps<N, K>) {
-  const value = useCommonValue(nodes, key)
-
-  return (
-    <Flex>
-      <Flex>{controlsLabel}</Flex>
-      <Flex>
-        {/* <Stepper
-          type="number"
-          value={value}
-          onChange={(e) => {
-            nodes.forEach((node) => {
-              node.props = {
-                ...node.props,
-                [key]: Number(e.target.value),
-              }
-            })
-
-            triggerRerenderGuides(true)
-          }}
-        /> */}
-      </Flex>
+          triggerRerenderGuides(true)
+        }}
+      />
     </Flex>
   )
 }

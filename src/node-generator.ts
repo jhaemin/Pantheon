@@ -1,27 +1,22 @@
-import { kebabCase } from 'change-case'
+import { kebabCase, pascalCase } from 'change-case'
 import fs from 'node:fs/promises'
 import { format } from './format'
-import { NodeDefinition } from './node-definition'
+import { NodeDefinition, Prop, Slot } from './node-definition'
 
 async function main() {
   await fs.rm('src/__generated__', { recursive: true, force: true })
 
   const definitions = await import('./definitions/node-definitions')
 
-  const nodeNames: string[] = []
+  const allDefs = Object.values(definitions)
 
-  Object.entries(definitions).forEach(async ([key, def]) => {
-    nodeNames.push(def.nodeName)
+  await Promise.all(
+    Object.entries(definitions).map(async ([key, def]) => {
+      return generateNode(def)
+    }),
+  )
 
-    const nodeSource = generateNode(def)
-
-    const formatted = await format(nodeSource)
-
-    await Bun.write(
-      'src/__generated__/' + kebabCase(def.nodeName) + '.tsx',
-      formatted,
-    )
-  })
+  const nodeNames = allDefs.map((def) => def.nodeName)
 
   Bun.write(
     'src/__generated__/generated-node-name.ts',
@@ -37,7 +32,7 @@ async function main() {
     'src/__generated__/generated-node-map.ts',
     await format(
       `
-${Object.values(definitions)
+${allDefs
   .map(
     (def) =>
       `import { ${def.nodeName}NodeComponent, ${def.nodeName}NodeControls } from './${kebabCase(def.nodeName)}'`,
@@ -45,13 +40,13 @@ ${Object.values(definitions)
   .join('\n')}
 
 export const generatedNodeComponentMap = {
-  ${Object.values(definitions)
+  ${allDefs
     .map((def) => `${def.nodeName}: ${def.nodeName}NodeComponent`)
     .join(',\n')}
 }
 
 export const generatedNodeControlsMap = {
-  ${Object.values(definitions)
+  ${allDefs
     .map((def) => `${def.nodeName}: ${def.nodeName}NodeControls`)
     .join(',\n')}
 }
@@ -63,7 +58,7 @@ export const generatedNodeControlsMap = {
     'src/__generated__/generated-node-name-node-map.ts',
     await format(
       `
-${Object.values(definitions)
+${allDefs
   .map(
     (def) =>
       `import { ${def.nodeName}Node } from './${kebabCase(def.nodeName)}'`,
@@ -71,9 +66,7 @@ ${Object.values(definitions)
   .join('\n')}
 
 export const generatedNodeNameNodeMap = {
-  ${Object.values(definitions)
-    .map((def) => `${def.nodeName}: ${def.nodeName}Node`)
-    .join(',\n')}
+  ${allDefs.map((def) => `${def.nodeName}: ${def.nodeName}Node`).join(',\n')}
 }
 `,
     ),
@@ -82,10 +75,15 @@ export const generatedNodeNameNodeMap = {
 
 main()
 
-function generateNode(nodeDef: NodeDefinition) {
+function flattenSlots(slots: Slot[]): Slot[] {
+  return [...slots, ...slots.flatMap((slot) => flattenSlots(slot.slots ?? []))]
+}
+
+async function generateNode(nodeDef: NodeDefinition) {
   const {
     lib,
     leaf,
+    fragment,
     componentName,
     arbitraryChildren,
     nodeName,
@@ -93,13 +91,18 @@ function generateNode(nodeDef: NodeDefinition) {
     slots,
   } = nodeDef
 
+  const hasSlots = slots && slots.length > 0
   const hasProps = props && props.length > 0
   const propsTypeName = `${nodeName}NodeProps`
   const nodeClassName = `${nodeName}Node`
   const nodeComponentName = `${nodeName}NodeComponent`
   const nodeControlsName = `${nodeName}NodeControls`
+  const tagName = fragment ? '' : `${componentName ?? lib.mod}`
+  const openTag = `${tagName}${fragment ? '' : ' {...props}'}`
 
-  return `
+  const allSlots = flattenSlots(slots ?? [])
+
+  const source = `
 ${
   leaf
     ? ''
@@ -109,47 +112,75 @@ import { EmptyPlaceholder } from '@/empty-placeholder'`
 }
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
+import { atom, map } from 'nanostores'
 import { ${lib.mod} } from '${lib.from}'
-${hasProps ? `import { SelectControls } from '@/control-center/controls-template'` : ''}
+${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls } from '@/control-center/controls-template'` : ''}
+import { NodeComponent } from '@/node-component'
+import { FragmentNode } from '@/node-class/fragment'
 
-export type ${propsTypeName} = ${
-    props
-      ? `
-{
-  ${props.map((prop) => {
-    const { key, type, required } = prop
+export type ${propsTypeName} = ${generatePropsType(props)}
 
-    const tsType = Array.isArray(type)
-      ? type.map((t) => `'${t}'`).join(' | ')
-      : type
+${allSlots
+  .map((slot) => {
+    const { props } = slot
 
-    return `${key}${required ? '' : '?'}: ${tsType}`
-  })}
-}
-`
-      : '{}'
-  }
+    if (!props) return ''
+
+    return `
+export type ${nodeName}Slot${pascalCase(slot.key)}Props = ${generatePropsType(props)}
+  `
+  })
+  .join('')}
 
 export class ${nodeClassName} extends Node {
   readonly nodeName = '${nodeName}'
 
-  public readonly defaultProps: ${propsTypeName} = ${
-    props
-      ? JSON.stringify(
-          props.reduce((acc, prop) => {
-            const defaultValue = prop.default
+  public readonly defaultProps: ${propsTypeName} = ${generateDefaultProps(props)}
 
-            if (!defaultValue) return acc
+  ${
+    hasSlots
+      ? `
+  get isDroppable() {
+    return false
+  }
+  `
+      : ''
+  }
 
-            return {
-              ...acc,
-              [prop.key]: defaultValue,
-            }
-          }, {}),
-          null,
-          2,
-        )
-      : '{}'
+  readonly $props = map(this.defaultProps)
+
+  readonly $slots = atom({
+    ${(allSlots ?? []).map((slot) => `${slot.key}: null`).join(',\n')}
+  })
+
+  ${allSlots
+    .map((slot) => {
+      const { key, props, slots } = slot
+
+      if (!props) return ''
+
+      return `
+  public readonly ${key}DefaultProps: ${nodeName}Slot${pascalCase(slot.key)}Props = ${generateDefaultProps(props)}
+
+  readonly $${key}Props = map(this.${key}DefaultProps)
+    `
+    })
+    .join('')}
+
+  constructor() {
+    super()
+
+    ${allSlots
+      .map((slot) => {
+        if (slot.required) {
+          return `this.setSlot('${slot.key}', new FragmentNode({
+            isRemovable: ${slot.required ? 'false' : 'true'},
+            isDraggable: ${slot.required ? 'false' : 'true'},
+          }))`
+        }
+        return ''
+      })
+      .join('\n')}
   }
 
   ${
@@ -164,19 +195,35 @@ export class ${nodeClassName} extends Node {
 }
 
 export function ${nodeComponentName}({ node }: { node: ${nodeClassName} }) {
-  ${leaf ? '' : 'const children = useStore(node.$children)'}
+  ${leaf || hasSlots ? '' : 'const children = useStore(node.$children)'}
   const props = useStore(node.$props)
+  ${slots ? `const slots = useStore(node.$slots)` : ''}
+  ${allSlots
+    .map((slot) => {
+      if (slot.props) {
+        return `const ${slot.key}Props = useStore(node.$${slot.key}Props)`
+      }
+      return ''
+    })
+    .join('')}
 
   return ${
     leaf
-      ? `<${componentName ?? lib.mod} {...props} />`
-      : `<${componentName ?? lib.mod} {...props}>
+      ? fragment
+        ? `<></>`
+        : `<${openTag} />`
+      : `<${openTag}>
+      ${
+        hasSlots
+          ? generateSlots(slots)
+          : `
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
         <EmptyPlaceholder name="${nodeName}" />
-      )}
-    </${componentName ?? lib.mod}>
+      )}`
+      }
+    </${tagName}>
   `
   }
 }
@@ -185,22 +232,108 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
   return <>${
     hasProps
       ? props
-          .map(
-            (prop) => `
-    <SelectControls
-      controlsLabel="${prop.key}"
-      nodes={nodes}
-      propertyKey="${prop.key}"
-      options={[
-        ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
-        ${Array.isArray(prop.type) ? prop.type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
-      ]}
-    />`,
-          )
+          .map((prop) => {
+            if (Array.isArray(prop.type)) {
+              return `
+                <SelectControls
+                  controlsLabel="${prop.key}"
+                  nodes={nodes}
+                  propertyKey="${prop.key}"
+                  options={[
+                    ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
+                    ${Array.isArray(prop.type) ? prop.type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
+                  ]}
+                />`
+            } else if (prop.type === 'boolean') {
+              return `
+                <SwitchControls
+                  controlsLabel="${prop.key}"
+                  nodes={nodes}
+                  propertyKey="${prop.key}"
+                />`
+            }
+          })
+          .join('')
+      : ''
+  }
+  ${
+    hasSlots
+      ? allSlots
+          .filter((slot) => !slot.required)
+          .map((slot) => {
+            return `
+            <SlotToggleControls
+              slotKey="${slot.key}"
+              nodes={nodes}
+            />`
+          })
           .join('')
       : ''
   }
   </>
 }
-  `
+`
+
+  const formatted = await format(source)
+
+  await Bun.write(
+    'src/__generated__/' + kebabCase(nodeName) + '.tsx',
+    formatted,
+  )
+}
+
+function generateSlots(slots: Slot[], parentSlotKey = ''): string {
+  return slots
+    .map((slot) => {
+      const { key, componentName, props, slots } = slot
+
+      const inside = slots
+        ? generateSlots(slots, key)
+        : `<NodeComponent node={slots.${key}} />`
+
+      if (componentName) {
+        return `
+{slots.${key} && <${componentName}${props ? ` {...${key}Props}` : ''}>${inside}</${componentName}>}`
+      }
+
+      return `{slots.${key} && <NodeComponent node={slots.${key}} />}`
+    })
+    .join('')
+}
+
+function generatePropsType(props?: Prop[]): string {
+  return props
+    ? `
+{
+${props.map((prop) => {
+  const { key, type, required } = prop
+
+  const tsType = Array.isArray(type)
+    ? type.map((t) => `'${t}'`).join(' | ')
+    : type
+
+  return `${key}${required ? '' : '?'}: ${tsType}`
+})}
+}
+`
+    : '{}'
+}
+
+function generateDefaultProps(props?: Prop[]): string {
+  return props
+    ? JSON.stringify(
+        props.reduce((acc, prop) => {
+          const defaultValue = prop.default
+
+          if (!defaultValue) return acc
+
+          return {
+            ...acc,
+            [prop.key]: defaultValue,
+          }
+        }, {}),
+        null,
+        2,
+      )
+    : '{}'
 }

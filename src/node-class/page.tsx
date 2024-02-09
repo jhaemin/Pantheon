@@ -1,10 +1,10 @@
 import { RemoveNodeAction } from '@/action'
-import { Node } from '@/node-class/node'
 import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom, map } from 'nanostores'
 import { renderChildren } from '../node-component'
+import { Node } from './node'
 
 export const DEFAULT_PAGE_LABEL = 'New Page'
 
@@ -38,7 +38,7 @@ export class PageNode extends Node {
     }
   }
 
-  get isMovable(): boolean {
+  get isDraggable(): boolean {
     return false
   }
 

@@ -2,6 +2,80 @@ import { NodeDefinition } from '@/node-definition'
 
 const importFrom = '@radix-ui/themes'
 
+const color = [
+  'tomato',
+  'red',
+  'ruby',
+  'crimson',
+  'pink',
+  'plum',
+  'purple',
+  'violet',
+  'iris',
+  'indigo',
+  'blue',
+  'cyan',
+  'teal',
+  'jade',
+  'green',
+  'grass',
+  'brown',
+  'orange',
+  'sky',
+  'mint',
+  'lime',
+  'yellow',
+  'amber',
+  'gold',
+  'bronze',
+  'gray',
+]
+
+export const textDef: NodeDefinition = {
+  nodeName: 'RadixText',
+  lib: {
+    mod: 'Text',
+    from: importFrom,
+  },
+  props: [
+    // TODO: `as` cannot be used in combination with `asChild`
+    // {
+    //   key: 'asChild',
+    //   type: 'boolean',
+    //   default: false,
+    // },
+    {
+      key: 'as',
+      type: ['p', 'label', 'div', 'span'],
+      default: 'span',
+    },
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'weight',
+      type: ['light', 'regular', 'medium', 'bold'],
+    },
+    {
+      key: 'align',
+      type: ['left', 'center', 'right'],
+    },
+    {
+      key: 'trim',
+      type: ['normal', 'start', 'end', 'both'],
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+}
+
 export const buttonDef: NodeDefinition = {
   nodeName: 'RadixButton',
   lib: {
@@ -26,34 +100,7 @@ export const buttonDef: NodeDefinition = {
     },
     {
       key: 'color',
-      type: [
-        'tomato',
-        'red',
-        'ruby',
-        'crimson',
-        'pink',
-        'plum',
-        'purple',
-        'violet',
-        'iris',
-        'indigo',
-        'blue',
-        'cyan',
-        'teal',
-        'jade',
-        'green',
-        'grass',
-        'brown',
-        'orange',
-        'sky',
-        'mint',
-        'lime',
-        'yellow',
-        'amber',
-        'gold',
-        'bronze',
-        'gray',
-      ],
+      type: color,
     },
     {
       key: 'radius',
@@ -168,34 +215,7 @@ export const blockquoteDef: NodeDefinition = {
     },
     {
       key: 'color',
-      type: [
-        'tomato',
-        'red',
-        'ruby',
-        'crimson',
-        'pink',
-        'plum',
-        'purple',
-        'violet',
-        'iris',
-        'indigo',
-        'blue',
-        'cyan',
-        'teal',
-        'jade',
-        'green',
-        'grass',
-        'brown',
-        'orange',
-        'sky',
-        'mint',
-        'lime',
-        'yellow',
-        'amber',
-        'gold',
-        'bronze',
-        'gray',
-      ],
+      type: color,
     },
     {
       key: 'highContrast',
@@ -204,39 +224,38 @@ export const blockquoteDef: NodeDefinition = {
   ],
 }
 
-// export const dialogDef: NodeDefinition = {
-//   nodeName: 'RadixDialog',
-//   lib: {
-//     mod: 'Dialog',
-//     from: importFrom,
-//   },
-//   componentName: 'Dialog.Root',
-//   portal: true,
-//   props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
-//   slots: [
-//     {
-//       key: 'trigger',
-//       componentName: 'Dialog.Trigger',
-//       required: true,
-//     },
-//     {
-//       key: 'content',
-//       componentName: 'Dialog.Content',
-//       required: true,
-//       slots: [
-//         {
-//           key: 'title',
-//           componentName: 'Dialog.Title',
-//         },
-//         {
-//           key: 'description',
-//           componentName: 'Dialog.Description',
-//         },
-//         {
-//           key: 'realContent',
-//           componentName: 'Fragment',
-//         },
-//       ],
-//     },
-//   ],
-// }
+export const dialogDef: NodeDefinition = {
+  nodeName: 'RadixDialog',
+  lib: { mod: 'Dialog', from: importFrom },
+  componentName: 'Dialog.Root',
+  portal: true,
+  props: [
+    {
+      key: 'open',
+      type: 'boolean',
+      default: true,
+    },
+  ],
+  slots: [
+    {
+      key: 'content',
+      required: true,
+      componentName: 'Dialog.Content',
+      props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
+      slots: [
+        {
+          key: 'title',
+          componentName: 'Dialog.Title',
+        },
+        {
+          key: 'description',
+          componentName: 'Dialog.Description',
+        },
+        {
+          key: 'contentBody',
+          required: true,
+        },
+      ],
+    },
+  ],
+}

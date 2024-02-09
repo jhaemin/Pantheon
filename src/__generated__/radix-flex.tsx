@@ -2,8 +2,15 @@ import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
+import { atom, map } from 'nanostores'
 import { Flex } from '@radix-ui/themes'
-import { SelectControls } from '@/control-center/controls-template'
+import {
+  SelectControls,
+  SwitchControls,
+  SlotToggleControls,
+} from '@/control-center/controls-template'
+import { NodeComponent } from '@/node-component'
+import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixFlexNodeProps = {
   asChild?: boolean
@@ -21,6 +28,14 @@ export class RadixFlexNode extends Node {
   public readonly defaultProps: RadixFlexNodeProps = {
     display: 'flex',
     justify: 'start',
+  }
+
+  readonly $props = map(this.defaultProps)
+
+  readonly $slots = atom({})
+
+  constructor() {
+    super()
   }
 }
 
@@ -42,11 +57,10 @@ export function RadixFlexNodeComponent({ node }: { node: RadixFlexNode }) {
 export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
   return (
     <>
-      <SelectControls
+      <SwitchControls
         controlsLabel="asChild"
         nodes={nodes}
         propertyKey="asChild"
-        options={[{ label: 'default', value: undefined }]}
       />
       <SelectControls
         controlsLabel="display"

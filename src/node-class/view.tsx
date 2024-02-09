@@ -1,5 +1,5 @@
-import { Node } from '@/node-class/node'
 import { map } from 'nanostores'
+import { Node } from './node'
 
 export class ViewNode extends Node {
   readonly nodeName = 'View'

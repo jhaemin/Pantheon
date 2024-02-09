@@ -176,7 +176,7 @@ export function getClosestMoveableNodeSet(elm: Element):
     }
   }
 
-  if (!closestNode.isMovable) {
+  if (!closestNode.isDraggable) {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
     return getClosestMoveableNodeSet(
@@ -196,12 +196,6 @@ export function getClosestMoveableNodeSet(elm: Element):
  * It's very important user experience.
  */
 export function isSelectableNode(node: Node) {
-  const nodeName = node.nodeName
-
-  if (nodeName === 'Fragment') {
-    return false
-  }
-
   return true
 }
 

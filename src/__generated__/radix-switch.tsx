@@ -1,7 +1,14 @@
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
+import { atom, map } from 'nanostores'
 import { Switch } from '@radix-ui/themes'
-import { SelectControls } from '@/control-center/controls-template'
+import {
+  SelectControls,
+  SwitchControls,
+  SlotToggleControls,
+} from '@/control-center/controls-template'
+import { NodeComponent } from '@/node-component'
+import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixSwitchNodeProps = {
   size?: '1' | '2' | '3'
@@ -16,6 +23,14 @@ export class RadixSwitchNode extends Node {
   public readonly defaultProps: RadixSwitchNodeProps = {
     size: '2',
     variant: 'surface',
+  }
+
+  readonly $props = map(this.defaultProps)
+
+  readonly $slots = atom({})
+
+  constructor() {
+    super()
   }
 
   get isDroppable() {
@@ -58,11 +73,10 @@ export function RadixSwitchNodeControls({
           { label: 'soft', value: 'soft' },
         ]}
       />
-      <SelectControls
+      <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
         propertyKey="highContrast"
-        options={[{ label: 'default', value: undefined }]}
       />
       <SelectControls
         controlsLabel="radius"

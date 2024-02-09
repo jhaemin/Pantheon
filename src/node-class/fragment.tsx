@@ -1,7 +1,7 @@
-import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { EmptyPlaceholder } from '../empty-placeholder'
 import { renderChildren } from '../node-component'
+import { Node } from './node'
 
 export class FragmentNode extends Node {
   readonly nodeName = 'Fragment'

@@ -136,7 +136,7 @@ export function commandUnwrapNode(unwrappingNode: Node) {
   const removeAction = parent.removeChild(unwrappingNode)
   const insertAction = parent.insertBefore(unwrappingNode.children, nextSibling)
 
-  const actions: Action[] = [removeAction]
+  const actions: Action[] = removeAction ? [removeAction] : []
   if (insertAction) actions.push(insertAction)
 
   History.push({

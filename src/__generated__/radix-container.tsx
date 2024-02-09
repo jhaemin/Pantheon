@@ -2,8 +2,15 @@ import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
+import { atom, map } from 'nanostores'
 import { Container } from '@radix-ui/themes'
-import { SelectControls } from '@/control-center/controls-template'
+import {
+  SelectControls,
+  SwitchControls,
+  SlotToggleControls,
+} from '@/control-center/controls-template'
+import { NodeComponent } from '@/node-component'
+import { FragmentNode } from '@/node-class/fragment'
 
 export type RadixContainerNodeProps = {
   size?: '1' | '2' | '3' | '4'
@@ -15,6 +22,14 @@ export class RadixContainerNode extends Node {
 
   public readonly defaultProps: RadixContainerNodeProps = {
     size: '4',
+  }
+
+  readonly $props = map(this.defaultProps)
+
+  readonly $slots = atom({})
+
+  constructor() {
+    super()
   }
 }
 

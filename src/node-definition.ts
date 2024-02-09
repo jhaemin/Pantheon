@@ -1,3 +1,18 @@
+export type Slot = {
+  key: string
+  required?: boolean
+  componentName?: string
+  props?: NodeDefinition['props']
+  slots?: Slot[]
+}
+
+export type Prop = {
+  key: string
+  type: 'string' | 'number' | 'boolean' | string[]
+  required?: boolean
+  default?: any
+}
+
 export type NodeDefinition = {
   nodeName: string
   lib: {
@@ -11,20 +26,17 @@ export type NodeDefinition = {
    * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
    */
   componentName?: string
+  fragment?: boolean
   leaf?: boolean
   portal?: boolean
   arbitraryChildren?: boolean
-  props?: Array<{
-    key: string
-    type: 'string' | 'number' | 'boolean' | string[]
-    required?: boolean
-    default?: any
-  }>
+  props?: Prop[]
   // additionalData?:
   slots?: Array<{
     key: string
-    componentName: string
     required?: boolean
-    slots?: NodeDefinition['slots']
+    componentName?: string
+    props?: Prop[]
+    slots?: Slot[]
   }>
 }

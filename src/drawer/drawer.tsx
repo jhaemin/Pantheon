@@ -1,8 +1,9 @@
 import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
 import { RadixButtonNode } from '@/__generated__/radix-button'
+import { RadixDialogNode } from '@/__generated__/radix-dialog'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
-import { RadixDialogNode } from '@/node-class/dialog'
+import { RadixTextNode } from '@/__generated__/radix-text'
 import { TextNode } from '@/node-class/text'
 import { Blockquote, Button, Flex, Switch, Text } from '@radix-ui/themes'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
@@ -28,18 +29,6 @@ export function Drawer() {
       </Text>
 
       <Flex direction="column" gap="4">
-        <DrawerItemWrapper createNode={() => new RadixDialogNode()}>
-          <Flex
-            align="center"
-            justify="center"
-            style={{
-              backgroundColor: 'var(--gray-3)',
-              padding: 'var(--space-4) var(--space-8)',
-            }}
-          >
-            Dialog
-          </Flex>
-        </DrawerItemWrapper>
         <DrawerItemWrapper createNode={() => new RadixFlexNode()}>
           <Flex
             align="center"
@@ -51,6 +40,14 @@ export function Drawer() {
           >
             Flex
           </Flex>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new TextNode()}>
+          <span>Text</span>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixTextNode()}>
+          <Text size="4">Radix Text</Text>
         </DrawerItemWrapper>
 
         <DrawerItemWrapper
@@ -70,6 +67,19 @@ export function Drawer() {
 
         <DrawerItemWrapper createNode={() => new RadixBlockquoteNode()}>
           <Blockquote>Blockquote</Blockquote>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixDialogNode()}>
+          <Flex
+            align="center"
+            justify="center"
+            style={{
+              backgroundColor: 'var(--gray-3)',
+              padding: 'var(--space-4) var(--space-8)',
+            }}
+          >
+            Dialog
+          </Flex>
         </DrawerItemWrapper>
       </Flex>
     </Flex>

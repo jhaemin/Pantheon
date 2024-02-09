@@ -83,7 +83,6 @@ export function useGlobalEvents() {
 
     function onMouseDown(e: MouseEvent) {
       if (document.activeElement?.tagName === 'IFRAME') {
-        console.log('blur')
         ;(document.activeElement as HTMLElement).blur()
       }
 

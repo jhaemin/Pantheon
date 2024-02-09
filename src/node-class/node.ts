@@ -10,6 +10,13 @@ export abstract class Node {
   readonly id = alphanumericId(7)
   abstract readonly nodeName: NodeName
 
+  constructor(preOptions?: { isRemovable?: boolean; isDraggable?: boolean }) {
+    if (preOptions) {
+      this._isRemovable = preOptions.isRemovable ?? true
+      this._isDraggable = preOptions.isDraggable ?? true
+    }
+  }
+
   /**
    * Wrapper element for the node.
    * `display: contents` is used to make the wrapper element invisible and let the children take its place.
@@ -65,12 +72,20 @@ export abstract class Node {
     this.$props?.set(any)
   }
 
+  private _isRemovable = true
+
+  get isRemovable() {
+    return this._isRemovable
+  }
+
   get isDroppable() {
     return true
   }
 
-  get isMovable() {
-    return true
+  private _isDraggable = true
+
+  get isDraggable() {
+    return this._isDraggable
   }
 
   get ownerPage(): PageNode | null {
@@ -97,9 +112,7 @@ export abstract class Node {
 
   get children() {
     const slots = this.$slots.get()
-    const slotNodes = Object.values(slots).filter(
-      (node) => node !== undefined,
-    ) as Node[]
+    const slotNodes = Object.values(slots).filter((node) => !!node) as Node[]
 
     return [...this.$children.get(), ...slotNodes]
   }
@@ -152,32 +165,34 @@ export abstract class Node {
   ): InsertNodesAction | undefined {
     if (children.length === 0) return
 
+    const removableChildren = children.filter((child) => child.isRemovable)
+
     if (!referenceNode) {
-      return this.append(...children)
+      return this.append(...removableChildren)
     }
 
     const insertNodesAction = new InsertNodesAction({
-      insertedNodes: children,
+      insertedNodes: removableChildren,
       newContainableParent: this,
       newNextSibling: referenceNode,
-      oldContainableParent: children[0].parent,
-      oldNextSibling: children[0].nextSibling,
+      oldContainableParent: removableChildren[0].parent,
+      oldNextSibling: removableChildren[0].nextSibling,
     })
 
     const referenceNodeNextSibling = referenceNode.nextSibling
 
-    children.forEach((child) => {
+    removableChildren.forEach((child) => {
       child.remove() // TODO: bulk remove by parent to avoid unnecessary re-render
       Node.assignParent(child, this)
     })
 
     // After removing inserting nodes,
     // if inserting nodes include referenceNode, we cannot find referenceNode.
-    if (children.includes(referenceNode)) {
+    if (removableChildren.includes(referenceNode)) {
       if (referenceNodeNextSibling === null) {
-        return this.append(...children)
+        return this.append(...removableChildren)
       } else {
-        return this.insertBefore(children, referenceNodeNextSibling)
+        return this.insertBefore(removableChildren, referenceNodeNextSibling)
       }
     }
 
@@ -185,7 +200,7 @@ export abstract class Node {
 
     this.children = [
       ...this.children.slice(0, referenceIndex),
-      ...children,
+      ...removableChildren,
       ...this.children.slice(referenceIndex),
     ]
 
@@ -196,6 +211,8 @@ export abstract class Node {
    * TODO: merge with `removeChildren`. Use spread
    */
   public removeChild(child: Node) {
+    if (!child.isRemovable) return
+
     const removeNodeAction = new RemoveNodeAction({
       removedNode: child,
       oldParent: this,
@@ -205,33 +222,47 @@ export abstract class Node {
     Node.releaseParent(child)
     this.children = this.children.filter((c) => c !== child)
 
+    this.removeSlot(child)
+
     return removeNodeAction
   }
 
   public removeChildren(children: Node[]) {
-    children.forEach((child) => Node.releaseParent(child))
-    this.children = this.children.filter((c) => !children.includes(c))
+    const removableChildren = children.filter((child) => child.isRemovable)
+    removableChildren.forEach((child) => Node.releaseParent(child))
+    this.children = this.children.filter((c) => !removableChildren.includes(c))
   }
 
   public removeAllChildren() {
-    this.children.forEach((child) => Node.releaseParent(child))
-    this.children = []
+    this.removeChildren(this.children)
   }
 
   public readonly $slots = atom<Record<string, Node | null>>({})
 
-  setSlot(slotName: string, node: Node) {
+  setSlot(slotKey: string, node: Node) {
+    if (this.$slots.get()[slotKey]) {
+      this.removeSlotByKey(slotKey)
+    }
+
     Node.assignParent(node, this)
-    this.$slots.set({ ...this.$slots.get(), [slotName]: node })
+    this.$slots.set({ ...this.$slots.get(), [slotKey]: node })
   }
 
-  removeSlot(slotName: string) {
-    const slots = this.$slots.get()
-    const node = slots[slotName]
-    if (node) {
-      Node.releaseParent(node)
+  removeSlot(node: Node) {
+    Node.releaseParent(node)
+    const newSlots = { ...this.$slots.get() }
+    const slotName = Object.keys(newSlots).find((key) => newSlots[key] === node)
+    if (slotName) {
+      newSlots[slotName] = null
+      this.$slots.set(newSlots)
     }
-    this.$slots.set({ ...slots, [slotName]: null })
+  }
+
+  removeSlotByKey(slotKey: string) {
+    const slot = this.$slots.get()[slotKey]
+    if (slot) {
+      this.removeSlot(slot)
+    }
   }
 
   /**

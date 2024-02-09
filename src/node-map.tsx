@@ -3,10 +3,6 @@ import {
   generatedNodeControlsMap,
 } from '@/__generated__/generated-node-map'
 import { FC } from 'react'
-import {
-  RadixDialogContentNodeComponent,
-  RadixDialogNodeComponent,
-} from './node-class/dialog'
 import { FragmentNodeComponent } from './node-class/fragment'
 import { PageNodeComponent, PageNodeControls } from './node-class/page'
 import { TextNodeComponent, TextNodeControls } from './node-class/text'
@@ -21,8 +17,6 @@ export const nodeComponentMap: {
   Page: PageNodeComponent,
   Text: TextNodeComponent,
   View: () => <></>,
-  RadixDialog: RadixDialogNodeComponent,
-  RadixDialogContent: RadixDialogContentNodeComponent,
 }
 
 export const nodeControlsMap: {
@@ -33,6 +27,4 @@ export const nodeControlsMap: {
   Page: PageNodeControls,
   Text: TextNodeControls,
   View: () => <></>,
-  RadixDialog: () => <></>,
-  RadixDialogContent: () => <></>,
 }

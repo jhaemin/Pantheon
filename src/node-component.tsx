@@ -23,7 +23,7 @@ export function NodeComponent({ node }: { node: Node }) {
   }
 
   /**
-   * Very IMPORTANT logic
+   * VERY IMPORTANT LOGIC
    *
    * When a node is mounted, we need to register it to `allEaselNodeAtoms`.
    * Then when a node is unmounted, we need to unregister it from `allEaselNodeAtoms`.
@@ -68,7 +68,8 @@ export function NodeComponent({ node }: { node: Node }) {
       className={styles.nodeComponentWrapper}
       {...commonNodeElementProps}
     >
-      <Component node={node as never} /> {/* guaranteed type safety */}
+      <Component node={node as never} />
+      {/* guaranteed type safety */}
     </span>
   )
 }
