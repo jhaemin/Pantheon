@@ -156,12 +156,16 @@ function Actions() {
         zIndex: 100,
       }}
     >
-      <div {...keepNodeSelectionAttribute}>
+      <Flex {...keepNodeSelectionAttribute} gap="2">
         <Button onClick={commandAddPage} variant="soft" color="gray">
           <PlusIcon />
-          Add a Page
+          Page
         </Button>
-      </div>
+        <Button onClick={commandAddPage} variant="soft" color="gray">
+          <PlusIcon />
+          View
+        </Button>
+      </Flex>
     </Flex>
   )
 }

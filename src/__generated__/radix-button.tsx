@@ -44,7 +44,7 @@ export type RadixButtonNodeProps = {
 export class RadixButtonNode extends Node {
   readonly nodeName = 'RadixButton' satisfies NodeName
 
-  defaultProps = {
+  defaultProps: RadixButtonNodeProps = {
     size: '2',
     variant: 'solid',
   }

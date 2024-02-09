@@ -6,11 +6,11 @@ import { NodeDefinition } from './node-definition'
 async function main() {
   await fs.rm('src/__generated__', { recursive: true, force: true })
 
-  const mod = await import('./definitions/node-definitions')
+  const definitions = await import('./definitions/node-definitions')
 
   const nodeNames: string[] = []
 
-  Object.entries(mod).forEach(async ([key, def]) => {
+  Object.entries(definitions).forEach(async ([key, def]) => {
     nodeNames.push(def.nodeName)
 
     const nodeSource = generateNode(def)
@@ -37,7 +37,7 @@ async function main() {
     'src/__generated__/generated-node-map.ts',
     await format(
       `
-${Object.values(mod)
+${Object.values(definitions)
   .map(
     (def) =>
       `import { ${def.nodeName}NodeComponent, ${def.nodeName}NodeControls } from './${kebabCase(def.nodeName)}'`,
@@ -45,13 +45,13 @@ ${Object.values(mod)
   .join('\n')}
 
 export const generatedNodeComponentMap = {
-  ${Object.values(mod)
+  ${Object.values(definitions)
     .map((def) => `${def.nodeName}: ${def.nodeName}NodeComponent`)
     .join(',\n')}
 }
 
 export const generatedNodeControlsMap = {
-  ${Object.values(mod)
+  ${Object.values(definitions)
     .map((def) => `${def.nodeName}: ${def.nodeName}NodeControls`)
     .join(',\n')}
 }
@@ -63,7 +63,7 @@ export const generatedNodeControlsMap = {
     'src/__generated__/generated-node-name-node-map.ts',
     await format(
       `
-${Object.values(mod)
+${Object.values(definitions)
   .map(
     (def) =>
       `import { ${def.nodeName}Node } from './${kebabCase(def.nodeName)}'`,
@@ -71,7 +71,7 @@ ${Object.values(mod)
   .join('\n')}
 
 export const generatedNodeNameNodeMap = {
-  ${Object.values(mod)
+  ${Object.values(definitions)
     .map((def) => `${def.nodeName}: ${def.nodeName}Node`)
     .join(',\n')}
 }
@@ -84,15 +84,20 @@ main()
 
 function generateNode(nodeDef: NodeDefinition) {
   const {
-    importDefinition,
+    lib,
     leaf,
+    componentName,
     arbitraryChildren,
     nodeName,
-    propsDefinition,
-    slotsDefinition,
+    props,
+    slots,
   } = nodeDef
 
-  const hasProps = propsDefinition && propsDefinition.length > 0
+  const hasProps = props && props.length > 0
+  const propsTypeName = `${nodeName}NodeProps`
+  const nodeClassName = `${nodeName}Node`
+  const nodeComponentName = `${nodeName}NodeComponent`
+  const nodeControlsName = `${nodeName}NodeControls`
 
   return `
 ${
@@ -106,14 +111,14 @@ import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
-import { ${importDefinition.named} } from '${importDefinition.from}'
+import { ${lib.mod} } from '${lib.from}'
 ${hasProps ? `import { SelectControls } from '@/control-center/controls-template'` : ''}
 
-export type ${nodeName}NodeProps = ${
-    propsDefinition
+export type ${propsTypeName} = ${
+    props
       ? `
 {
-  ${propsDefinition.map((prop) => {
+  ${props.map((prop) => {
     const { key, type, required } = prop
 
     const tsType = Array.isArray(type)
@@ -127,13 +132,13 @@ export type ${nodeName}NodeProps = ${
       : '{}'
   }
 
-export class ${nodeName}Node extends Node {
+export class ${nodeClassName} extends Node {
   readonly nodeName = '${nodeName}' satisfies NodeName
 
-  defaultProps = ${
-    propsDefinition
+  defaultProps: ${propsTypeName} = ${
+    props
       ? JSON.stringify(
-          propsDefinition.reduce((acc, prop) => {
+          props.reduce((acc, prop) => {
             const defaultValue = prop.default
 
             if (!defaultValue) return acc
@@ -160,28 +165,28 @@ export class ${nodeName}Node extends Node {
   }
 }
 
-export function ${nodeName}NodeComponent({ node }: { node: ${nodeName}Node }) {
+export function ${nodeComponentName}({ node }: { node: ${nodeClassName} }) {
   ${leaf ? '' : 'const children = useStore(node.$children)'}
   const props = useStore(node.$props)
 
   return ${
     leaf
-      ? `<${importDefinition.named} {...props} />`
-      : `<${importDefinition.named} {...props}>
+      ? `<${componentName ?? lib.mod} {...props} />`
+      : `<${componentName ?? lib.mod} {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
         <EmptyPlaceholder name="${nodeName}" />
       )}
-    </${importDefinition.named}>
+    </${componentName ?? lib.mod}>
   `
   }
 }
 
-export function ${nodeName}NodeControls({ nodes }: { nodes: ${nodeName}Node[] }) {
+export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
   return <>${
     hasProps
-      ? propsDefinition
+      ? props
           .map(
             (prop) => `
     <SelectControls

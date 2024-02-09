@@ -14,7 +14,7 @@ export type RadixSwitchNodeProps = {
 export class RadixSwitchNode extends Node {
   readonly nodeName = 'RadixSwitch' satisfies NodeName
 
-  defaultProps = {
+  defaultProps: RadixSwitchNodeProps = {
     size: '2',
     variant: 'surface',
   }

@@ -4,45 +4,40 @@ import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { NodeName } from '@/node-name'
 import { useStore } from '@nanostores/react'
-import { Container } from '@radix-ui/themes'
+import { Dialog } from '@radix-ui/themes'
 import { SelectControls } from '@/control-center/controls-template'
 
-export type RadixContainerNodeProps = {
+export type RadixDialogNodeProps = {
   size?: '1' | '2' | '3' | '4'
-  display?: 'none' | 'block'
 }
 
-export class RadixContainerNode extends Node {
-  readonly nodeName = 'RadixContainer' satisfies NodeName
+export class RadixDialogNode extends Node {
+  readonly nodeName = 'RadixDialog' satisfies NodeName
 
-  defaultProps: RadixContainerNodeProps = {
-    size: '4',
+  defaultProps: RadixDialogNodeProps = {
+    size: '3',
   }
 }
 
-export function RadixContainerNodeComponent({
-  node,
-}: {
-  node: RadixContainerNode
-}) {
+export function RadixDialogNodeComponent({ node }: { node: RadixDialogNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Container {...props}>
+    <Dialog.Root {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixContainer" />
+        <EmptyPlaceholder name="RadixDialog" />
       )}
-    </Container>
+    </Dialog.Root>
   )
 }
 
-export function RadixContainerNodeControls({
+export function RadixDialogNodeControls({
   nodes,
 }: {
-  nodes: RadixContainerNode[]
+  nodes: RadixDialogNode[]
 }) {
   return (
     <>
@@ -56,16 +51,6 @@ export function RadixContainerNodeControls({
           { label: '2', value: '2' },
           { label: '3', value: '3' },
           { label: '4', value: '4' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="display"
-        nodes={nodes}
-        propertyKey="display"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'none', value: 'none' },
-          { label: 'block', value: 'block' },
         ]}
       />
     </>

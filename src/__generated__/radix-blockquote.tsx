@@ -43,7 +43,7 @@ export type RadixBlockquoteNodeProps = {
 export class RadixBlockquoteNode extends Node {
   readonly nodeName = 'RadixBlockquote' satisfies NodeName
 
-  defaultProps = {}
+  defaultProps: RadixBlockquoteNodeProps = {}
 }
 
 export function RadixBlockquoteNodeComponent({

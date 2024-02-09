@@ -1,9 +1,13 @@
 import { atom, computed } from 'nanostores'
 import { PageNode } from './node-class/page'
+import { ViewNode } from './node-class/view'
 
 export class StudioApp {
   private _$pages = atom<PageNode[]>([])
+  private _$views = atom<ViewNode[]>([])
+
   readonly $pages = computed(this._$pages, (pages) => pages)
+  readonly $views = computed(this._$views, (views) => views)
 
   get pages() {
     return this._$pages.get()
@@ -26,6 +30,18 @@ export class StudioApp {
 
   removePage(page: PageNode) {
     this._$pages.set(this.pages.filter((p) => p !== page))
+  }
+
+  get views() {
+    return this._$views.get()
+  }
+
+  addView(view: ViewNode) {
+    this._$views.set([...this.views, view])
+  }
+
+  removeView(view: ViewNode) {
+    this._$views.set(this.views.filter((v) => v !== view))
   }
 }
 

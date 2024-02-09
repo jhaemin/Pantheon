@@ -1,20 +1,24 @@
 export type NodeDefinition = {
   nodeName: string
-  importDefinition: {
-    named: string
+  lib: {
+    mod: string
     from: string
   }
+  componentName?: string
   leaf?: boolean
+  portal?: boolean
   arbitraryChildren?: boolean
-  propsDefinition?: Array<{
+  props?: Array<{
     key: string
     type: 'string' | 'number' | 'boolean' | string[]
     required?: boolean
     default?: any
   }>
-  slotsDefinition?: Array<{
+  // additionalData?:
+  slots?: Array<{
     key: string
-    slotNodeName: string
+    componentName: string
     required?: boolean
+    slots?: NodeDefinition['slots']
   }>
 }

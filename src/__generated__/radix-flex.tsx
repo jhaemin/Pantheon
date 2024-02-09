@@ -20,7 +20,7 @@ export type RadixFlexNodeProps = {
 export class RadixFlexNode extends Node {
   readonly nodeName = 'RadixFlex' satisfies NodeName
 
-  defaultProps = {
+  defaultProps: RadixFlexNodeProps = {
     display: 'flex',
     justify: 'start',
   }

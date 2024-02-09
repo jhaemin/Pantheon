@@ -4,11 +4,11 @@ const importFrom = '@radix-ui/themes'
 
 export const buttonDef: NodeDefinition = {
   nodeName: 'RadixButton',
-  importDefinition: {
-    named: 'Button',
+  lib: {
+    mod: 'Button',
     from: importFrom,
   },
-  propsDefinition: [
+  props: [
     {
       key: 'asChild',
       type: 'boolean',
@@ -64,12 +64,12 @@ export const buttonDef: NodeDefinition = {
 
 export const switchDef: NodeDefinition = {
   nodeName: 'RadixSwitch',
-  importDefinition: {
-    named: 'Switch',
+  lib: {
+    mod: 'Switch',
     from: importFrom,
   },
   leaf: true,
-  propsDefinition: [
+  props: [
     {
       key: 'size',
       type: ['1', '2', '3'],
@@ -93,11 +93,11 @@ export const switchDef: NodeDefinition = {
 
 export const flexDef: NodeDefinition = {
   nodeName: 'RadixFlex',
-  importDefinition: {
-    named: 'Flex',
+  lib: {
+    mod: 'Flex',
     from: importFrom,
   },
-  propsDefinition: [
+  props: [
     {
       key: 'asChild',
       type: 'boolean',
@@ -134,11 +134,11 @@ export const flexDef: NodeDefinition = {
 
 export const containerDef: NodeDefinition = {
   nodeName: 'RadixContainer',
-  importDefinition: {
-    named: 'Container',
+  lib: {
+    mod: 'Container',
     from: importFrom,
   },
-  propsDefinition: [
+  props: [
     {
       key: 'size',
       type: ['1', '2', '3', '4'],
@@ -153,11 +153,11 @@ export const containerDef: NodeDefinition = {
 
 export const blockquoteDef: NodeDefinition = {
   nodeName: 'RadixBlockquote',
-  importDefinition: {
-    named: 'Blockquote',
+  lib: {
+    mod: 'Blockquote',
     from: importFrom,
   },
-  propsDefinition: [
+  props: [
     {
       key: 'size',
       type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -200,6 +200,43 @@ export const blockquoteDef: NodeDefinition = {
     {
       key: 'highContrast',
       type: 'boolean',
+    },
+  ],
+}
+
+export const dialogDef: NodeDefinition = {
+  nodeName: 'RadixDialog',
+  lib: {
+    mod: 'Dialog',
+    from: importFrom,
+  },
+  componentName: 'Dialog.Root',
+  portal: true,
+  props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
+  slots: [
+    {
+      key: 'trigger',
+      componentName: 'Dialog.Trigger',
+      required: true,
+    },
+    {
+      key: 'content',
+      componentName: 'Dialog.Content',
+      required: true,
+      slots: [
+        {
+          key: 'title',
+          componentName: 'Dialog.Title',
+        },
+        {
+          key: 'description',
+          componentName: 'Dialog.Description',
+        },
+        {
+          key: 'realContent',
+          componentName: 'Fragment',
+        },
+      ],
     },
   ],
 }

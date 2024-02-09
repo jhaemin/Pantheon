@@ -1,4 +1,4 @@
-import { $isContextMenuOpen } from '@/atoms'
+import { $isContextMenuOpen, triggerRerenderGuides } from '@/atoms'
 import { Button, Flex, Text } from '@radix-ui/themes'
 import { ComponentProps } from 'react'
 
@@ -26,6 +26,7 @@ export function ContextMenuButton({
       onClick={() => {
         onClick()
         $isContextMenuOpen.set(false)
+        triggerRerenderGuides()
       }}
     >
       <Flex align="center" justify="between" width="100%" gap="6">
