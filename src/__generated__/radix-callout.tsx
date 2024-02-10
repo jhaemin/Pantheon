@@ -13,11 +13,11 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 import type { ReactNode } from 'react'
-import { Blockquote } from '@radix-ui/themes'
+import { Callout } from '@radix-ui/themes'
 
-export type RadixBlockquoteNodeProps = {
-  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-  weight?: 'light' | 'regular' | 'medium' | 'bold'
+export type RadixCalloutNodeProps = {
+  size?: '1' | '2' | '3'
+  variant?: 'soft' | 'surface' | 'outline'
   color?:
     | 'tomato'
     | 'red'
@@ -48,46 +48,75 @@ export type RadixBlockquoteNodeProps = {
   highContrast?: boolean
 }
 
-export class RadixBlockquoteNode extends Node {
-  readonly nodeName = 'RadixBlockquote'
+export class RadixCalloutNode extends Node {
+  readonly nodeName = 'RadixCallout'
 
-  public readonly defaultProps: RadixBlockquoteNodeProps = {}
+  public readonly defaultProps: RadixCalloutNodeProps = {
+    size: '2',
+    variant: 'soft',
+  }
+
+  get isDroppable() {
+    return false
+  }
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom({
+    icon: null,
+    text: null,
+  })
 
   constructor() {
     super()
+
+    this.setSlot(
+      'text',
+      new FragmentNode({
+        isRemovable: false,
+        isDraggable: false,
+      }),
+    )
   }
 }
 
-export function RadixBlockquoteNodeComponent({
+export function RadixCalloutNodeComponent({
   node,
 }: {
-  node: RadixBlockquoteNode
+  node: RadixCalloutNode
 }) {
-  const children = useStore(node.$children)
   const props = useStore(node.$props)
+  const slots = useStore(node.$slots)
 
   return (
-    <Blockquote {...props}>
-      {children.length > 0 ? (
-        renderChildren(children)
-      ) : (
-        <EmptyPlaceholder name="RadixBlockquote" />
+    <Callout.Root {...props}>
+      {slots.icon && (
+        <Callout.Icon>
+          <NodeComponent node={slots.icon} />
+        </Callout.Icon>
       )}
-    </Blockquote>
+      {slots.text && (
+        <Callout.Text>
+          <NodeComponent node={slots.text} />
+        </Callout.Text>
+      )}
+    </Callout.Root>
   )
 }
 
-export function RadixBlockquoteNodeControls({
+export function RadixCalloutNodeControls({
   nodes,
 }: {
-  nodes: RadixBlockquoteNode[]
+  nodes: RadixCalloutNode[]
 }) {
   return (
     <>
+      <Card size="1">
+        <Flex direction="column" gap="3">
+          <SlotToggleControls slotKey="icon" nodes={nodes} />
+        </Flex>
+      </Card>
+
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
@@ -97,24 +126,17 @@ export function RadixBlockquoteNodeControls({
           { label: '1', value: '1' },
           { label: '2', value: '2' },
           { label: '3', value: '3' },
-          { label: '4', value: '4' },
-          { label: '5', value: '5' },
-          { label: '6', value: '6' },
-          { label: '7', value: '7' },
-          { label: '8', value: '8' },
-          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
-        controlsLabel="weight"
+        controlsLabel="variant"
         nodes={nodes}
-        propertyKey="weight"
+        propertyKey="variant"
         options={[
           { label: 'default', value: undefined },
-          { label: 'light', value: 'light' },
-          { label: 'regular', value: 'regular' },
-          { label: 'medium', value: 'medium' },
-          { label: 'bold', value: 'bold' },
+          { label: 'soft', value: 'soft' },
+          { label: 'surface', value: 'surface' },
+          { label: 'outline', value: 'outline' },
         ]}
       />
       <SelectControls

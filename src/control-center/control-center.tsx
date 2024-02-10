@@ -6,10 +6,13 @@ import { useStore } from '@nanostores/react'
 import { DotsHorizontalIcon, TargetIcon } from '@radix-ui/react-icons'
 import {
   Badge,
+  Box,
   DropdownMenu,
   Flex,
   IconButton,
+  ScrollArea,
   Separator,
+  Tabs,
   Text,
 } from '@radix-ui/themes'
 import { AppControls } from './app-controls'
@@ -28,106 +31,133 @@ export function ControlCenter() {
     ? nodeControlsMap[firstSelectedNode.nodeName]
     : null
 
-  const parents =
+  const upwardTree =
     selectedNodes.length === 1 ? firstSelectedNode?.parents ?? [] : []
 
   if (firstSelectedNode) {
-    parents.unshift(firstSelectedNode)
+    upwardTree.unshift(firstSelectedNode)
   }
 
   return (
-    <Flex
-      {...keepNodeSelectionAttribute}
-      direction="column"
-      p="5"
+    <Box
       style={{
-        width: 300,
+        height: 'calc(100vh - var(--space-8))',
         position: 'fixed',
         top: 'var(--space-8)',
         right: 0,
         bottom: 0,
+        zIndex: 100,
         backgroundColor: '#fff',
         borderLeft: '1px solid var(--gray-4)',
-        zIndex: 100,
       }}
     >
-      {selectedNodes.length > 0 &&
-      areAllSelectedNodesTheSame &&
-      Controls &&
-      firstSelectedNode ? (
-        <Flex direction="column" gap="4">
-          {parents.map((parent, i) => {
-            const ParentControls = nodeControlsMap[parent.nodeName]
+      <Tabs.Root defaultValue="nodes" {...keepNodeSelectionAttribute}>
+        <Box px="2">
+          <Tabs.List>
+            <Tabs.Trigger value="nodes">Nodes</Tabs.Trigger>
+            <Tabs.Trigger value="code">Code</Tabs.Trigger>
+          </Tabs.List>
+        </Box>
 
-            return (
-              <Flex
-                key={parent.id}
-                direction="column"
-                gap="4"
-                onMouseEnter={() => {
-                  $hoveredNode.set(parent)
-                }}
-                onMouseLeave={() => {
-                  $hoveredNode.set(null)
-                }}
-              >
-                {i > 0 && <Separator size="4" my="1" />}
-                <Flex align="center" justify="between">
-                  <Text size={i === 0 ? '5' : '3'} weight="bold">
-                    {parent.nodeName}
-                    {i > 0 && parent.slotsArray.length > 0 && (
-                      <Badge ml="2">slot owner</Badge>
-                    )}
-                    {i === parents.length - 1 && <Badge ml="2">root</Badge>}
-                  </Text>
-                  <Flex gap="3">
-                    {i > 0 && (
-                      <IconButton
-                        variant="ghost"
-                        onClick={() => {
-                          $selectedNodes.set([parent])
-                        }}
-                      >
-                        <TargetIcon />
-                      </IconButton>
-                    )}
-                    <DropdownMenu.Root>
-                      <DropdownMenu.Trigger>
-                        <IconButton variant="ghost" color="gray">
-                          <DotsHorizontalIcon />
-                        </IconButton>
-                      </DropdownMenu.Trigger>
-                      <DropdownMenu.Content>
-                        <DropdownMenu.Item
-                          onMouseDown={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+        <ScrollArea
+          type="hover"
+          style={{
+            height: 'calc(100vh - var(--space-8) - var(--space-7))', // Window height - header height - tabs height
+          }}
+        >
+          <Box p="5" style={{ width: 300 }}>
+            <Tabs.Content value="nodes">
+              <Flex {...keepNodeSelectionAttribute} direction="column">
+                {selectedNodes.length > 0 &&
+                areAllSelectedNodesTheSame &&
+                Controls &&
+                firstSelectedNode ? (
+                  <Flex direction="column" gap="4">
+                    {upwardTree.map((node, i) => {
+                      const ParentControls = nodeControlsMap[node.nodeName]
+
+                      return (
+                        <Flex
+                          key={node.id}
+                          direction="column"
+                          gap="3"
+                          onMouseEnter={() => {
+                            $hoveredNode.set(node)
                           }}
-                          onClick={() => {
-                            commandDeleteNodes([parent])
+                          onMouseLeave={() => {
+                            $hoveredNode.set(null)
                           }}
                         >
-                          Remove
-                        </DropdownMenu.Item>
-                      </DropdownMenu.Content>
-                    </DropdownMenu.Root>
+                          {i > 0 && <Separator size="4" my="1" />}
+                          <Flex align="center" justify="between">
+                            <Text size={i === 0 ? '5' : '3'} weight="bold">
+                              {node.nodeName}
+                              {i > 0 && node.slotsArray.length > 0 && (
+                                <Badge ml="2">slot owner</Badge>
+                              )}
+                              {i === upwardTree.length - 1 && (
+                                <Badge ml="2">root</Badge>
+                              )}
+                            </Text>
+                            <Flex gap="3">
+                              {i > 0 && (
+                                <IconButton
+                                  variant="ghost"
+                                  onClick={() => {
+                                    $selectedNodes.set([node])
+                                  }}
+                                >
+                                  <TargetIcon />
+                                </IconButton>
+                              )}
+                              <DropdownMenu.Root>
+                                <DropdownMenu.Trigger>
+                                  <IconButton variant="ghost">
+                                    <DotsHorizontalIcon />
+                                  </IconButton>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content>
+                                  <DropdownMenu.Item
+                                    color="red"
+                                    onMouseDown={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                    }}
+                                    onClick={() => {
+                                      commandDeleteNodes([node])
+                                    }}
+                                  >
+                                    Remove
+                                  </DropdownMenu.Item>
+                                </DropdownMenu.Content>
+                              </DropdownMenu.Root>
+                            </Flex>
+                          </Flex>
+                          <ParentControls
+                            nodes={
+                              i === 0
+                                ? (selectedNodes as never)
+                                : [node as never]
+                            }
+                          />
+                        </Flex>
+                      )
+                    })}
                   </Flex>
-                </Flex>
-                <ParentControls nodes={[parent as never]} />
+                ) : (
+                  <AppControls />
+                )}
               </Flex>
-            )
-          })}
-
-          {selectedNodes.length === 1 && firstSelectedNode && (
-            <>
-              <Separator size="4" my="1" />
-              <TSX node={firstSelectedNode} />
-            </>
-          )}
-        </Flex>
-      ) : (
-        <AppControls />
-      )}
-    </Flex>
+            </Tabs.Content>
+            <Tabs.Content value="code">
+              {selectedNodes.length === 1 && firstSelectedNode && (
+                <TSX node={firstSelectedNode} />
+              )}
+            </Tabs.Content>
+          </Box>
+        </ScrollArea>
+        {/* </Box> */}
+      </Tabs.Root>
+    </Box>
   )
 }

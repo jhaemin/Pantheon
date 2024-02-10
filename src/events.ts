@@ -91,11 +91,17 @@ export function onMouseDownForDragAndDropNode(
     $selectedNodes.set([])
 
     const clone = cloneTargetElm.cloneNode(true) as HTMLElement
-    const computedStyles = window.getComputedStyle(cloneTargetElm)
 
-    Array.from(computedStyles).forEach((key) => {
-      clone.style.setProperty(key, computedStyles.getPropertyValue(key))
-    })
+    clone.style.width = cloneTargetElm.clientWidth + 'px'
+    clone.style.height = cloneTargetElm.clientHeight + 'px'
+    clone.style.whiteSpace = 'nowrap'
+    clone.style.fontSize = window.getComputedStyle(cloneTargetElm).fontSize
+
+    // const computedStyles = window.getComputedStyle(cloneTargetElm)
+
+    // Array.from(computedStyles).forEach((key) => {
+    //   clone.style.setProperty(key, computedStyles.getPropertyValue(key))
+    // })
 
     clone.style.pointerEvents = 'none'
     clone.style.position = 'fixed'

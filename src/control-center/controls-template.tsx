@@ -4,7 +4,7 @@ import { FragmentNode } from '@/node-class/fragment'
 import { Node } from '@/node-class/node'
 import { ExtractMapStoreGeneric } from '@/types/extract-generic'
 import { useStore } from '@nanostores/react'
-import { Flex, Select, Switch, Text } from '@radix-ui/themes'
+import { Flex, Select, Switch, Text, TextField } from '@radix-ui/themes'
 import { map } from 'nanostores'
 
 function useCommonValue<
@@ -103,6 +103,33 @@ export function SwitchControls<
             node.props = {
               ...node.props,
               [key]: checked,
+            }
+          })
+
+          triggerRerenderGuides(true)
+        }}
+      />
+    </Flex>
+  )
+}
+
+export function TextFieldControls<
+  N extends Node,
+  K extends keyof ExtractMapStoreGeneric<N['$props']>,
+>({ controlsLabel, nodes, propertyKey: key }: ControlsCommonFormProps<N, K>) {
+  const commonValue = useCommonValue(nodes, key)
+
+  return (
+    <Flex direction="row" align="center" justify="between">
+      <Text size="2">{controlsLabel}</Text>
+      <TextField.Input
+        defaultValue={commonValue}
+        onChange={(e) => {
+          const value = e.target.value
+          nodes.forEach((node) => {
+            node.props = {
+              ...node.props,
+              [key]: value,
             }
           })
 

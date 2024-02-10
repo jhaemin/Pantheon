@@ -1,11 +1,26 @@
+import { RadixAvatarNode } from '@/__generated__/radix-avatar'
 import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
+import { RadixBoxNode } from '@/__generated__/radix-box'
 import { RadixButtonNode } from '@/__generated__/radix-button'
+import { RadixCalloutNode } from '@/__generated__/radix-callout'
+import { RadixCardNode } from '@/__generated__/radix-card'
 import { RadixDialogNode } from '@/__generated__/radix-dialog'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { RadixTextNode } from '@/__generated__/radix-text'
 import { TextNode } from '@/node-class/text'
-import { Blockquote, Button, Flex, Switch, Text } from '@radix-ui/themes'
+import { InfoCircledIcon } from '@radix-ui/react-icons'
+import {
+  Avatar,
+  Blockquote,
+  Box,
+  Button,
+  Callout,
+  Card,
+  Flex,
+  Switch,
+  Text,
+} from '@radix-ui/themes'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
 
 export function Drawer() {
@@ -28,7 +43,18 @@ export function Drawer() {
         Drawer
       </Text>
 
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
+        <DrawerItemWrapper createNode={() => new RadixBoxNode()}>
+          <Box
+            style={{
+              backgroundColor: 'var(--gray-3)',
+              padding: 'var(--space-4) var(--space-8)',
+            }}
+          >
+            Box
+          </Box>
+        </DrawerItemWrapper>
+
         <DrawerItemWrapper createNode={() => new RadixFlexNode()}>
           <Flex
             align="center"
@@ -75,6 +101,15 @@ export function Drawer() {
           <Blockquote>Blockquote</Blockquote>
         </DrawerItemWrapper>
 
+        <DrawerItemWrapper createNode={() => new RadixCalloutNode()}>
+          <Callout.Root>
+            <Callout.Icon>
+              <InfoCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>Callout</Callout.Text>
+          </Callout.Root>
+        </DrawerItemWrapper>
+
         <DrawerItemWrapper createNode={() => new RadixDialogNode()}>
           <Flex
             align="center"
@@ -86,6 +121,76 @@ export function Drawer() {
           >
             Dialog
           </Flex>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper
+          createNode={() => {
+            const avatar = new RadixAvatarNode()
+            avatar.$props.setKey(
+              'src',
+              'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop',
+            )
+            return avatar
+          }}
+        >
+          <Avatar
+            src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
+            fallback="A"
+            size="4"
+          />
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper
+          createNode={() => {
+            const card = new RadixCardNode()
+            const flex = new RadixFlexNode()
+            flex.$props.setKey('gap', '3')
+            flex.$props.setKey('align', 'center')
+            const avatar = new RadixAvatarNode()
+            avatar.$props.setKey(
+              'src',
+              'https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop',
+            )
+            avatar.$props.setKey('size', '3')
+            avatar.$props.setKey('radius', 'full')
+            avatar.$props.setKey('fallback', 'T')
+            const box = new RadixBoxNode()
+            const text1 = new RadixTextNode()
+            text1.$props.setKey('as', 'div')
+            text1.$props.setKey('size', '2')
+            text1.$props.setKey('weight', 'bold')
+            text1.append(new TextNode('Teodros Girmay'))
+            const text2 = new RadixTextNode()
+            text2.$props.setKey('as', 'div')
+            text2.$props.setKey('size', '2')
+            text2.$props.setKey('color', 'gray')
+            text2.append(new TextNode('Engineering'))
+
+            box.append(text1, text2)
+            flex.append(avatar, box)
+            card.append(flex)
+
+            return card
+          }}
+        >
+          <Card>
+            <Flex gap="3" align="center">
+              <Avatar
+                size="3"
+                src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
+                radius="full"
+                fallback="T"
+              />
+              <Box>
+                <Text as="div" size="2" weight="bold">
+                  Teodros Girmay
+                </Text>
+                <Text as="div" size="2" color="gray">
+                  Engineering
+                </Text>
+              </Box>
+            </Flex>
+          </Card>
         </DrawerItemWrapper>
       </Flex>
     </Flex>

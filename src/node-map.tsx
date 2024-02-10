@@ -3,7 +3,10 @@ import {
   generatedNodeControlsMap,
 } from '@/__generated__/generated-node-map'
 import { FC } from 'react'
-import { FragmentNodeComponent } from './node-class/fragment'
+import {
+  FragmentNodeComponent,
+  FragmentNodeControls,
+} from './node-class/fragment'
 import { PageNodeComponent, PageNodeControls } from './node-class/page'
 import { TextNodeComponent, TextNodeControls } from './node-class/text'
 import { NodeName } from './node-name'
@@ -23,7 +26,7 @@ export const nodeControlsMap: {
   [K in NodeName]: FC<{ nodes: InferNodeByName<K>[] }>
 } = {
   ...generatedNodeControlsMap,
-  Fragment: () => <></>,
+  Fragment: FragmentNodeControls,
   Page: PageNodeControls,
   Text: TextNodeControls,
   View: () => <></>,

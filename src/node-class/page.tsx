@@ -98,7 +98,10 @@ export class PageNode extends Node {
   }
 
   public generateCode(): string {
-    return `<>${this.children.map((child) => child.generateCode()).join('')}</>`
+    const openTag = this.children.length === 0 ? '' : '<>'
+    const closeTag = this.children.length === 0 ? '' : '</>'
+
+    return `${openTag}${this.children.map((child) => child.generateCode()).join('')}${closeTag}`
   }
 }
 

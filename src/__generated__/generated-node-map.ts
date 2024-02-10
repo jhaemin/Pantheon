@@ -1,11 +1,21 @@
 import {
+  RadixAvatarNodeComponent,
+  RadixAvatarNodeControls,
+} from './radix-avatar'
+import {
   RadixBlockquoteNodeComponent,
   RadixBlockquoteNodeControls,
 } from './radix-blockquote'
+import { RadixBoxNodeComponent, RadixBoxNodeControls } from './radix-box'
 import {
   RadixButtonNodeComponent,
   RadixButtonNodeControls,
 } from './radix-button'
+import {
+  RadixCalloutNodeComponent,
+  RadixCalloutNodeControls,
+} from './radix-callout'
+import { RadixCardNodeComponent, RadixCardNodeControls } from './radix-card'
 import {
   RadixContainerNodeComponent,
   RadixContainerNodeControls,
@@ -22,8 +32,12 @@ import {
 import { RadixTextNodeComponent, RadixTextNodeControls } from './radix-text'
 
 export const generatedNodeComponentMap = {
+  RadixAvatar: RadixAvatarNodeComponent,
   RadixBlockquote: RadixBlockquoteNodeComponent,
+  RadixBox: RadixBoxNodeComponent,
   RadixButton: RadixButtonNodeComponent,
+  RadixCallout: RadixCalloutNodeComponent,
+  RadixCard: RadixCardNodeComponent,
   RadixContainer: RadixContainerNodeComponent,
   RadixDialog: RadixDialogNodeComponent,
   RadixFlex: RadixFlexNodeComponent,
@@ -32,8 +46,12 @@ export const generatedNodeComponentMap = {
 }
 
 export const generatedNodeControlsMap = {
+  RadixAvatar: RadixAvatarNodeControls,
   RadixBlockquote: RadixBlockquoteNodeControls,
+  RadixBox: RadixBoxNodeControls,
   RadixButton: RadixButtonNodeControls,
+  RadixCallout: RadixCalloutNodeControls,
+  RadixCard: RadixCardNodeControls,
   RadixContainer: RadixContainerNodeControls,
   RadixDialog: RadixDialogNodeControls,
   RadixFlex: RadixFlexNodeControls,

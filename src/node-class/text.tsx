@@ -28,6 +28,10 @@ export class TextNode extends Node {
   set value(value: string) {
     this.$value.set(value)
   }
+
+  public generateCode(): string {
+    return `<span>${this.value}</span>`
+  }
 }
 
 export function TextNodeComponent({ node }: { node: TextNode }) {

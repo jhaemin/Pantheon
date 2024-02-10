@@ -1,4 +1,5 @@
 import { useStore } from '@nanostores/react'
+import { Callout } from '@radix-ui/themes'
 import { EmptyPlaceholder } from '../empty-placeholder'
 import { renderChildren } from '../node-component'
 import { Node } from './node'
@@ -22,5 +23,16 @@ export function FragmentNodeComponent({ node }: { node: FragmentNode }) {
     <EmptyPlaceholder name="Fragment" />
   ) : (
     renderChildren(children)
+  )
+}
+
+export function FragmentNodeControls() {
+  return (
+    <Callout.Root color="gray" size="1">
+      <Callout.Text>
+        Fragments are a way to group multiple children into a single parent
+        without affecting the layout.
+      </Callout.Text>
+    </Callout.Root>
   )
 }

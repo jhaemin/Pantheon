@@ -13,14 +13,10 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 import type { ReactNode } from 'react'
+import { Box } from '@radix-ui/themes'
 
-export type RadixFlexNodeProps = {
-  display?: 'none' | 'inline-flex' | 'flex'
-  direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
-  align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
-  justify?: 'start' | 'center' | 'end' | 'between'
-  wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
-  gap?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+export type RadixBoxNodeProps = {
+  display?: 'none' | 'inline' | 'inline-block' | 'block'
   p?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   px?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   py?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
@@ -38,13 +34,10 @@ export type RadixFlexNodeProps = {
   grow?: '0' | '1'
 }
 
-export class RadixFlexNode extends Node {
-  readonly nodeName = 'RadixFlex'
+export class RadixBoxNode extends Node {
+  readonly nodeName = 'RadixBox'
 
-  public readonly defaultProps: RadixFlexNodeProps = {
-    display: 'flex',
-    justify: 'start',
-  }
+  public readonly defaultProps: RadixBoxNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -55,22 +48,22 @@ export class RadixFlexNode extends Node {
   }
 }
 
-export function RadixFlexNodeComponent({ node }: { node: RadixFlexNode }) {
+export function RadixBoxNodeComponent({ node }: { node: RadixBoxNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Flex {...props}>
+    <Box {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixFlex" />
+        <EmptyPlaceholder name="RadixBox" />
       )}
-    </Flex>
+    </Box>
   )
 }
 
-export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
+export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
   return (
     <>
       <SelectControls
@@ -80,74 +73,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },
-          { label: 'inline-flex', value: 'inline-flex' },
-          { label: 'flex', value: 'flex' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="direction"
-        nodes={nodes}
-        propertyKey="direction"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'row', value: 'row' },
-          { label: 'row-reverse', value: 'row-reverse' },
-          { label: 'column', value: 'column' },
-          { label: 'column-reverse', value: 'column-reverse' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="align"
-        nodes={nodes}
-        propertyKey="align"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'start', value: 'start' },
-          { label: 'center', value: 'center' },
-          { label: 'end', value: 'end' },
-          { label: 'stretch', value: 'stretch' },
-          { label: 'baseline', value: 'baseline' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="justify"
-        nodes={nodes}
-        propertyKey="justify"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'start', value: 'start' },
-          { label: 'center', value: 'center' },
-          { label: 'end', value: 'end' },
-          { label: 'between', value: 'between' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="wrap"
-        nodes={nodes}
-        propertyKey="wrap"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'wrap', value: 'wrap' },
-          { label: 'nowrap', value: 'nowrap' },
-          { label: 'wrap-reverse', value: 'wrap-reverse' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="gap"
-        nodes={nodes}
-        propertyKey="gap"
-        options={[
-          { label: 'default', value: undefined },
-          { label: '0', value: '0' },
-          { label: '1', value: '1' },
-          { label: '2', value: '2' },
-          { label: '3', value: '3' },
-          { label: '4', value: '4' },
-          { label: '5', value: '5' },
-          { label: '6', value: '6' },
-          { label: '7', value: '7' },
-          { label: '8', value: '8' },
-          { label: '9', value: '9' },
+          { label: 'inline', value: 'inline' },
+          { label: 'inline-block', value: 'inline-block' },
+          { label: 'block', value: 'block' },
         ]}
       />
       <SelectControls

@@ -1,7 +1,7 @@
 import { kebabCase, pascalCase } from 'change-case'
 import fs from 'node:fs/promises'
 import { format } from './format'
-import { NodeDefinition, Prop, Slot } from './node-definition'
+import { CustomClass, NodeDefinition, Prop, Slot } from './node-definition'
 
 async function main() {
   await fs.rm('src/__generated__', { recursive: true, force: true })
@@ -113,11 +113,19 @@ import { EmptyPlaceholder } from '@/empty-placeholder'`
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
-import { ${lib.mod} } from '${lib.from}'
-${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls } from '@/control-center/controls-template'` : ''}
-${hasProps ? `import { Card${lib.mod !== 'Flex' ? ', Flex' : ''} } from '@radix-ui/themes'` : ''}
+import { Card, Flex } from '@radix-ui/themes'
+${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls, TextFieldControls } from '@/control-center/controls-template'` : ''}
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
+import type { ReactNode } from 'react'
+${(() => {
+  if (lib.from === '@radix-ui/themes') {
+    if (lib.mod !== 'Card' && lib.mod !== 'Flex') {
+      return `import { ${lib.mod} } from '${lib.from}'`
+    }
+  }
+  return ''
+})()}
 
 export type ${propsTypeName} = ${generatePropsType(props)}
 
@@ -136,7 +144,7 @@ export type ${nodeName}Slot${pascalCase(slot.key)}Props = ${generatePropsType(pr
 export class ${nodeClassName} extends Node {
   readonly nodeName = '${nodeName}'
 
-  public readonly defaultProps: ${propsTypeName} = ${generateDefaultProps(props)}
+  public readonly defaultProps: ${propsTypeName} = ${generateDefaultProps(props ?? [], nodeName)}
 
   ${
     hasSlots
@@ -161,7 +169,7 @@ export class ${nodeClassName} extends Node {
       if (!props) return ''
 
       return `
-  public readonly ${key}DefaultProps: ${nodeName}Slot${pascalCase(slot.key)}Props = ${generateDefaultProps(props)}
+  public readonly ${key}DefaultProps: ${nodeName}Slot${pascalCase(slot.key)}Props = ${generateDefaultProps(props, nodeName)}
 
   readonly $${key}Props = map(this.${key}DefaultProps)
     `
@@ -255,23 +263,33 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
     hasProps
       ? props
           .map((prop) => {
+            const { key, type } = prop
+            const label = prop.label ?? key
+
             if (Array.isArray(prop.type)) {
               return `
                 <SelectControls
-                  controlsLabel="${prop.key}"
+                  controlsLabel="${label}"
                   nodes={nodes}
-                  propertyKey="${prop.key}"
+                  propertyKey="${key}"
                   options={[
                     ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
-                    ${Array.isArray(prop.type) ? prop.type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
+                    ${Array.isArray(type) ? type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
                   ]}
                 />`
-            } else if (prop.type === 'boolean') {
+            } else if (type === 'boolean') {
               return `
                 <SwitchControls
-                  controlsLabel="${prop.key}"
+                  controlsLabel="${label}"
                   nodes={nodes}
-                  propertyKey="${prop.key}"
+                  propertyKey="${key}"
+                />`
+            } else if (type === 'string') {
+              return `
+                <TextFieldControls
+                  controlsLabel="${label}"
+                  nodes={nodes}
+                  propertyKey="${key}"
                 />`
             }
           })
@@ -316,9 +334,12 @@ function generatePropsType(props?: Prop[]): string {
 ${props.map((prop) => {
   const { key, type, required } = prop
 
-  const tsType = Array.isArray(type)
-    ? type.map((t) => `'${t}'`).join(' | ')
-    : type
+  const tsType =
+    type instanceof CustomClass
+      ? type.type
+      : Array.isArray(type)
+        ? type.map((t) => `'${t}'`).join(' | ')
+        : type
 
   return `${key}${required ? '' : '?'}: ${tsType}`
 })}
@@ -327,13 +348,20 @@ ${props.map((prop) => {
     : '{}'
 }
 
-function generateDefaultProps(props?: Prop[]): string {
+function generateDefaultProps(props: Prop[], nodeName: string): string {
   return props
     ? JSON.stringify(
         props.reduce((acc, prop) => {
-          const defaultValue = prop.default
+          const defaultValue =
+            prop.default instanceof CustomClass
+              ? prop.default.type
+              : prop.default
 
-          if (!defaultValue) return acc
+          if (prop.required && defaultValue === undefined) {
+            throw new Error(
+              `Required prop ${prop.key} of ${nodeName} has no default value`,
+            )
+          }
 
           return {
             ...acc,

@@ -2,7 +2,15 @@ import { format } from '@/format'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { CheckIcon, ClipboardIcon } from '@radix-ui/react-icons'
-import { Flex, IconButton, Text } from '@radix-ui/themes'
+import {
+  Box,
+  Card,
+  Flex,
+  IconButton,
+  Inset,
+  ScrollArea,
+  Text,
+} from '@radix-ui/themes'
 import hljs from 'highlight.js'
 import { useEffect, useRef, useState } from 'react'
 
@@ -59,22 +67,31 @@ export function TSX({ node }: { node: Node }) {
       </Flex>
 
       <Flex direction="column" mt="4">
-        <pre
-          style={{
-            fontSize: 12,
-            width: '100%',
-            overflow: 'auto',
-            margin: 0,
-            fontFamily: 'SF Mono, Menlo, monospace',
-            lineHeight: 1.4,
-          }}
-        >
-          <code
-            dangerouslySetInnerHTML={{
-              __html: syntaxHighlighted,
-            }}
-          />
-        </pre>
+        <Card size="1">
+          <Inset>
+            <ScrollArea>
+              <Box p="3">
+                <pre
+                  style={{
+                    fontSize: 12,
+                    width: '100%',
+                    margin: 0,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  <code
+                    style={{
+                      fontFamily: 'SF Mono, Menlo, monospace',
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: syntaxHighlighted,
+                    }}
+                  />
+                </pre>
+              </Box>
+            </ScrollArea>
+          </Inset>
+        </Card>
         {/* <pre
               style={{
                 fontSize: 12,

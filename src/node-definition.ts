@@ -1,3 +1,11 @@
+export class CustomClass {
+  constructor(public type: string) {}
+}
+
+export function Custom(type: string) {
+  return new CustomClass(type)
+}
+
 export type Slot = {
   key: string
   required?: boolean
@@ -8,11 +16,15 @@ export type Slot = {
 
 export type Prop = {
   key: string
-  type: 'string' | 'number' | 'boolean' | string[]
+  label?: string
+  type: 'string' | 'number' | 'boolean' | 'ReactNode' | string[] | CustomClass
   required?: boolean
-  default?: any
+  default?: any | CustomClass
 }
 
+/**
+ * TODO: ReactNode as a prop is not supported yet.
+ */
 export type NodeDefinition = {
   nodeName: string
   lib: {

@@ -23,6 +23,10 @@ body {
   user-select: none;
 }
 
+code {
+  user-select: text;
+}
+
 * {
   margin: 0;
   padding: 0;

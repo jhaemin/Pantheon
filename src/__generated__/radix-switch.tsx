@@ -1,15 +1,17 @@
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
-import { Switch } from '@radix-ui/themes'
+import { Card, Flex } from '@radix-ui/themes'
 import {
   SelectControls,
   SwitchControls,
   SlotToggleControls,
+  TextFieldControls,
 } from '@/control-center/controls-template'
-import { Card, Flex } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
+import type { ReactNode } from 'react'
+import { Switch } from '@radix-ui/themes'
 
 export type RadixSwitchNodeProps = {
   size?: '1' | '2' | '3'

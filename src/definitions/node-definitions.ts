@@ -1,4 +1,4 @@
-import { NodeDefinition } from '@/node-definition'
+import { Custom, NodeDefinition, Prop } from '@/node-definition'
 
 const importFrom = '@radix-ui/themes'
 
@@ -138,6 +138,86 @@ export const switchDef: NodeDefinition = {
   ],
 }
 
+const zeroToNine = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+const commonLayoutProps: Prop[] = [
+  {
+    key: 'p',
+    type: zeroToNine,
+  },
+  {
+    key: 'px',
+    type: zeroToNine,
+  },
+  {
+    key: 'py',
+    type: zeroToNine,
+  },
+  {
+    key: 'pt',
+    type: zeroToNine,
+  },
+  {
+    key: 'pr',
+    type: zeroToNine,
+  },
+  {
+    key: 'pb',
+    type: zeroToNine,
+  },
+  {
+    key: 'pl',
+    type: zeroToNine,
+  },
+  {
+    key: 'position',
+    type: ['static', 'relative', 'absolute', 'fixed', 'sticky'],
+  },
+  {
+    key: 'inset',
+    type: ['auto', '0', '50%', '100%'],
+  },
+  {
+    key: 'top',
+    type: ['auto', '0', '50%', '100%'],
+  },
+  {
+    key: 'right',
+    type: ['auto', '0', '50%', '100%'],
+  },
+  {
+    key: 'bottom',
+    type: ['auto', '0', '50%', '100%'],
+  },
+  {
+    key: 'left',
+    type: ['auto', '0', '50%', '100%'],
+  },
+  {
+    key: 'shrink',
+    type: ['0', '1'],
+  },
+  {
+    key: 'grow',
+    type: ['0', '1'],
+  },
+]
+
+export const boxDef: NodeDefinition = {
+  nodeName: 'RadixBox',
+  lib: {
+    mod: 'Box',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'display',
+      type: ['none', 'inline', 'inline-block', 'block'],
+    },
+    ...commonLayoutProps,
+  ],
+}
+
 export const flexDef: NodeDefinition = {
   nodeName: 'RadixFlex',
   lib: {
@@ -176,6 +256,7 @@ export const flexDef: NodeDefinition = {
       key: 'gap',
       type: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
     },
+    ...commonLayoutProps,
   ],
 }
 
@@ -233,7 +314,6 @@ export const dialogDef: NodeDefinition = {
     {
       key: 'open',
       type: 'boolean',
-      default: true,
     },
   ],
   slots: [
@@ -256,6 +336,100 @@ export const dialogDef: NodeDefinition = {
           required: true,
         },
       ],
+    },
+  ],
+}
+
+export const calloutDef: NodeDefinition = {
+  nodeName: 'RadixCallout',
+  lib: { mod: 'Callout', from: importFrom },
+  componentName: 'Callout.Root',
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2', '3'],
+      default: '2',
+    },
+    {
+      key: 'variant',
+      type: ['soft', 'surface', 'outline'],
+      default: 'soft',
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+  slots: [
+    {
+      key: 'icon',
+      componentName: 'Callout.Icon',
+    },
+    {
+      key: 'text',
+      componentName: 'Callout.Text',
+      required: true,
+    },
+  ],
+}
+
+export const avatarDef: NodeDefinition = {
+  nodeName: 'RadixAvatar',
+  lib: { mod: 'Avatar', from: importFrom },
+  leaf: true,
+  props: [
+    {
+      key: 'src',
+      type: 'string',
+    },
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      default: '3',
+    },
+    {
+      key: 'variant',
+      type: ['solid', 'soft'],
+      default: 'soft',
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+    {
+      key: 'radius',
+      type: ['none', 'small', 'medium', 'large', 'full'],
+    },
+    {
+      key: 'fallback',
+      type: Custom('NonNullable<ReactNode>'),
+      required: true,
+      default: 'A',
+    },
+  ],
+}
+
+export const cardDef: NodeDefinition = {
+  nodeName: 'RadixCard',
+  lib: { mod: 'Card', from: importFrom },
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5'],
+      default: '1',
+    },
+    {
+      key: 'variant',
+      type: ['surface', 'classic', 'ghost'],
+      default: 'surface',
     },
   ],
 }

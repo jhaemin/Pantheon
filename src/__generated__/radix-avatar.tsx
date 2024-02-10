@@ -1,5 +1,3 @@
-import { renderChildren } from '@/node-component'
-import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
@@ -13,11 +11,12 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 import type { ReactNode } from 'react'
-import { Blockquote } from '@radix-ui/themes'
+import { Avatar } from '@radix-ui/themes'
 
-export type RadixBlockquoteNodeProps = {
+export type RadixAvatarNodeProps = {
+  src?: string
   size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-  weight?: 'light' | 'regular' | 'medium' | 'bold'
+  variant?: 'solid' | 'soft'
   color?:
     | 'tomato'
     | 'red'
@@ -46,12 +45,18 @@ export type RadixBlockquoteNodeProps = {
     | 'bronze'
     | 'gray'
   highContrast?: boolean
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
+  fallback: NonNullable<ReactNode>
 }
 
-export class RadixBlockquoteNode extends Node {
-  readonly nodeName = 'RadixBlockquote'
+export class RadixAvatarNode extends Node {
+  readonly nodeName = 'RadixAvatar'
 
-  public readonly defaultProps: RadixBlockquoteNodeProps = {}
+  public readonly defaultProps: RadixAvatarNodeProps = {
+    size: '3',
+    variant: 'soft',
+    fallback: 'A',
+  }
 
   readonly $props = map(this.defaultProps)
 
@@ -60,34 +65,26 @@ export class RadixBlockquoteNode extends Node {
   constructor() {
     super()
   }
+
+  get isDroppable() {
+    return false
+  }
 }
 
-export function RadixBlockquoteNodeComponent({
-  node,
-}: {
-  node: RadixBlockquoteNode
-}) {
-  const children = useStore(node.$children)
+export function RadixAvatarNodeComponent({ node }: { node: RadixAvatarNode }) {
   const props = useStore(node.$props)
 
-  return (
-    <Blockquote {...props}>
-      {children.length > 0 ? (
-        renderChildren(children)
-      ) : (
-        <EmptyPlaceholder name="RadixBlockquote" />
-      )}
-    </Blockquote>
-  )
+  return <Avatar {...props} />
 }
 
-export function RadixBlockquoteNodeControls({
+export function RadixAvatarNodeControls({
   nodes,
 }: {
-  nodes: RadixBlockquoteNode[]
+  nodes: RadixAvatarNode[]
 }) {
   return (
     <>
+      <TextFieldControls controlsLabel="src" nodes={nodes} propertyKey="src" />
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
@@ -106,15 +103,13 @@ export function RadixBlockquoteNodeControls({
         ]}
       />
       <SelectControls
-        controlsLabel="weight"
+        controlsLabel="variant"
         nodes={nodes}
-        propertyKey="weight"
+        propertyKey="variant"
         options={[
           { label: 'default', value: undefined },
-          { label: 'light', value: 'light' },
-          { label: 'regular', value: 'regular' },
-          { label: 'medium', value: 'medium' },
-          { label: 'bold', value: 'bold' },
+          { label: 'solid', value: 'solid' },
+          { label: 'soft', value: 'soft' },
         ]}
       />
       <SelectControls
@@ -155,6 +150,19 @@ export function RadixBlockquoteNodeControls({
         controlsLabel="highContrast"
         nodes={nodes}
         propertyKey="highContrast"
+      />
+      <SelectControls
+        controlsLabel="radius"
+        nodes={nodes}
+        propertyKey="radius"
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'none', value: 'none' },
+          { label: 'small', value: 'small' },
+          { label: 'medium', value: 'medium' },
+          { label: 'large', value: 'large' },
+          { label: 'full', value: 'full' },
+        ]}
       />
     </>
   )

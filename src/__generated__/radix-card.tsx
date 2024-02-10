@@ -13,18 +13,18 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 import type { ReactNode } from 'react'
-import { Container } from '@radix-ui/themes'
 
-export type RadixContainerNodeProps = {
-  size?: '1' | '2' | '3' | '4'
-  display?: 'none' | 'block'
+export type RadixCardNodeProps = {
+  size?: '1' | '2' | '3' | '4' | '5'
+  variant?: 'surface' | 'classic' | 'ghost'
 }
 
-export class RadixContainerNode extends Node {
-  readonly nodeName = 'RadixContainer'
+export class RadixCardNode extends Node {
+  readonly nodeName = 'RadixCard'
 
-  public readonly defaultProps: RadixContainerNodeProps = {
-    size: '4',
+  public readonly defaultProps: RadixCardNodeProps = {
+    size: '1',
+    variant: 'surface',
   }
 
   readonly $props = map(this.defaultProps)
@@ -36,30 +36,22 @@ export class RadixContainerNode extends Node {
   }
 }
 
-export function RadixContainerNodeComponent({
-  node,
-}: {
-  node: RadixContainerNode
-}) {
+export function RadixCardNodeComponent({ node }: { node: RadixCardNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Container {...props}>
+    <Card {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixContainer" />
+        <EmptyPlaceholder name="RadixCard" />
       )}
-    </Container>
+    </Card>
   )
 }
 
-export function RadixContainerNodeControls({
-  nodes,
-}: {
-  nodes: RadixContainerNode[]
-}) {
+export function RadixCardNodeControls({ nodes }: { nodes: RadixCardNode[] }) {
   return (
     <>
       <SelectControls
@@ -72,16 +64,18 @@ export function RadixContainerNodeControls({
           { label: '2', value: '2' },
           { label: '3', value: '3' },
           { label: '4', value: '4' },
+          { label: '5', value: '5' },
         ]}
       />
       <SelectControls
-        controlsLabel="display"
+        controlsLabel="variant"
         nodes={nodes}
-        propertyKey="display"
+        propertyKey="variant"
         options={[
           { label: 'default', value: undefined },
-          { label: 'none', value: 'none' },
-          { label: 'block', value: 'block' },
+          { label: 'surface', value: 'surface' },
+          { label: 'classic', value: 'classic' },
+          { label: 'ghost', value: 'ghost' },
         ]}
       />
     </>

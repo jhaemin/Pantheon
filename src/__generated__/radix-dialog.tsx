@@ -3,15 +3,17 @@ import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
-import { Dialog } from '@radix-ui/themes'
+import { Card, Flex } from '@radix-ui/themes'
 import {
   SelectControls,
   SwitchControls,
   SlotToggleControls,
+  TextFieldControls,
 } from '@/control-center/controls-template'
-import { Card, Flex } from '@radix-ui/themes'
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
+import type { ReactNode } from 'react'
+import { Dialog } from '@radix-ui/themes'
 
 export type RadixDialogNodeProps = {
   open?: boolean
@@ -24,9 +26,7 @@ export type RadixDialogSlotContentProps = {
 export class RadixDialogNode extends Node {
   readonly nodeName = 'RadixDialog'
 
-  public readonly defaultProps: RadixDialogNodeProps = {
-    open: true,
-  }
+  public readonly defaultProps: RadixDialogNodeProps = {}
 
   get isDroppable() {
     return false
