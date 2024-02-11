@@ -39,6 +39,7 @@ export type NodeDefinition = {
    */
   componentName?: string
   fragment?: boolean
+  invisible?: boolean
   leaf?: boolean
   portal?: boolean
   arbitraryChildren?: boolean

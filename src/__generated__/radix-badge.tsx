@@ -13,14 +13,11 @@ import {
 import { NodeComponent } from '@/node-component'
 import { FragmentNode } from '@/node-class/fragment'
 import type { ReactNode } from 'react'
-import { Text } from '@radix-ui/themes'
+import { Badge } from '@radix-ui/themes'
 
-export type RadixTextNodeProps = {
-  as?: 'p' | 'label' | 'div' | 'span'
-  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-  weight?: 'light' | 'regular' | 'medium' | 'bold'
-  align?: 'left' | 'center' | 'right'
-  trim?: 'normal' | 'start' | 'end' | 'both'
+export type RadixBadgeNodeProps = {
+  size?: '1' | '2'
+  variant?: 'solid' | 'soft' | 'surface' | 'outline'
   color?:
     | 'tomato'
     | 'red'
@@ -49,12 +46,13 @@ export type RadixTextNodeProps = {
     | 'bronze'
     | 'gray'
   highContrast?: boolean
+  radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
 }
 
-export class RadixTextNode extends Node {
-  readonly nodeName = 'RadixText'
+export class RadixBadgeNode extends Node {
+  readonly nodeName = 'RadixBadge'
 
-  public readonly defaultProps: RadixTextNodeProps = {}
+  public readonly defaultProps: RadixBadgeNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -65,36 +63,24 @@ export class RadixTextNode extends Node {
   }
 }
 
-export function RadixTextNodeComponent({ node }: { node: RadixTextNode }) {
+export function RadixBadgeNodeComponent({ node }: { node: RadixBadgeNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Text {...props}>
+    <Badge {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixText" />
+        <EmptyPlaceholder name="RadixBadge" />
       )}
-    </Text>
+    </Badge>
   )
 }
 
-export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
+export function RadixBadgeNodeControls({ nodes }: { nodes: RadixBadgeNode[] }) {
   return (
     <>
-      <SelectControls
-        controlsLabel="as"
-        nodes={nodes}
-        propertyKey="as"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'p', value: 'p' },
-          { label: 'label', value: 'label' },
-          { label: 'div', value: 'div' },
-          { label: 'span', value: 'span' },
-        ]}
-      />
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
@@ -103,48 +89,18 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
           { label: '2', value: '2' },
-          { label: '3', value: '3' },
-          { label: '4', value: '4' },
-          { label: '5', value: '5' },
-          { label: '6', value: '6' },
-          { label: '7', value: '7' },
-          { label: '8', value: '8' },
-          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
-        controlsLabel="weight"
+        controlsLabel="variant"
         nodes={nodes}
-        propertyKey="weight"
+        propertyKey="variant"
         options={[
           { label: 'default', value: undefined },
-          { label: 'light', value: 'light' },
-          { label: 'regular', value: 'regular' },
-          { label: 'medium', value: 'medium' },
-          { label: 'bold', value: 'bold' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="align"
-        nodes={nodes}
-        propertyKey="align"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'left', value: 'left' },
-          { label: 'center', value: 'center' },
-          { label: 'right', value: 'right' },
-        ]}
-      />
-      <SelectControls
-        controlsLabel="trim"
-        nodes={nodes}
-        propertyKey="trim"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'normal', value: 'normal' },
-          { label: 'start', value: 'start' },
-          { label: 'end', value: 'end' },
-          { label: 'both', value: 'both' },
+          { label: 'solid', value: 'solid' },
+          { label: 'soft', value: 'soft' },
+          { label: 'surface', value: 'surface' },
+          { label: 'outline', value: 'outline' },
         ]}
       />
       <SelectControls
@@ -185,6 +141,19 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
         controlsLabel="highContrast"
         nodes={nodes}
         propertyKey="highContrast"
+      />
+      <SelectControls
+        controlsLabel="radius"
+        nodes={nodes}
+        propertyKey="radius"
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'none', value: 'none' },
+          { label: 'small', value: 'small' },
+          { label: 'medium', value: 'medium' },
+          { label: 'large', value: 'large' },
+          { label: 'full', value: 'full' },
+        ]}
       />
     </>
   )

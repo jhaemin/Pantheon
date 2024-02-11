@@ -23,14 +23,11 @@ export type RadixSwitchNodeProps = {
 export class RadixSwitchNode extends Node {
   readonly nodeName = 'RadixSwitch'
 
-  public readonly defaultProps: RadixSwitchNodeProps = {
-    size: '2',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixSwitchNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

@@ -41,14 +41,11 @@ export type RadixFlexNodeProps = {
 export class RadixFlexNode extends Node {
   readonly nodeName = 'RadixFlex'
 
-  public readonly defaultProps: RadixFlexNodeProps = {
-    display: 'flex',
-    justify: 'start',
-  }
+  public readonly defaultProps: RadixFlexNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

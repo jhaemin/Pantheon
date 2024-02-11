@@ -158,8 +158,8 @@ export class ${nodeClassName} extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({
-    ${(allSlots ?? []).map((slot) => `${slot.key}: null`).join(',\n')}
+  readonly $slots = atom<{ ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'FragmentNode' : 'FragmentNode | null'}`).join(';')} }>({
+    ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'new FragmentNode()' : 'null'}`).join(',\n')}
   })
 
   ${allSlots
@@ -361,6 +361,10 @@ function generateDefaultProps(props: Prop[], nodeName: string): string {
             throw new Error(
               `Required prop ${prop.key} of ${nodeName} has no default value`,
             )
+          }
+
+          if (!prop.required) {
+            return acc
           }
 
           return {

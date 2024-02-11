@@ -22,14 +22,11 @@ export type RadixCardNodeProps = {
 export class RadixCardNode extends Node {
   readonly nodeName = 'RadixCard'
 
-  public readonly defaultProps: RadixCardNodeProps = {
-    size: '1',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixCardNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

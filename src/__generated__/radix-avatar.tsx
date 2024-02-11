@@ -53,14 +53,12 @@ export class RadixAvatarNode extends Node {
   readonly nodeName = 'RadixAvatar'
 
   public readonly defaultProps: RadixAvatarNodeProps = {
-    size: '3',
-    variant: 'soft',
     fallback: 'A',
   }
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

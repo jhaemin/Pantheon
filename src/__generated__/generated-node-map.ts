@@ -2,6 +2,7 @@ import {
   RadixAvatarNodeComponent,
   RadixAvatarNodeControls,
 } from './radix-avatar'
+import { RadixBadgeNodeComponent, RadixBadgeNodeControls } from './radix-badge'
 import {
   RadixBlockquoteNodeComponent,
   RadixBlockquoteNodeControls,
@@ -33,6 +34,7 @@ import { RadixTextNodeComponent, RadixTextNodeControls } from './radix-text'
 
 export const generatedNodeComponentMap = {
   RadixAvatar: RadixAvatarNodeComponent,
+  RadixBadge: RadixBadgeNodeComponent,
   RadixBlockquote: RadixBlockquoteNodeComponent,
   RadixBox: RadixBoxNodeComponent,
   RadixButton: RadixButtonNodeComponent,
@@ -47,6 +49,7 @@ export const generatedNodeComponentMap = {
 
 export const generatedNodeControlsMap = {
   RadixAvatar: RadixAvatarNodeControls,
+  RadixBadge: RadixBadgeNodeControls,
   RadixBlockquote: RadixBlockquoteNodeControls,
   RadixBox: RadixBoxNodeControls,
   RadixButton: RadixButtonNodeControls,

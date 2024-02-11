@@ -51,10 +51,7 @@ export type RadixCalloutNodeProps = {
 export class RadixCalloutNode extends Node {
   readonly nodeName = 'RadixCallout'
 
-  public readonly defaultProps: RadixCalloutNodeProps = {
-    size: '2',
-    variant: 'soft',
-  }
+  public readonly defaultProps: RadixCalloutNodeProps = {}
 
   get isDroppable() {
     return false
@@ -62,9 +59,9 @@ export class RadixCalloutNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({
+  readonly $slots = atom<{ icon: FragmentNode | null; text: FragmentNode }>({
     icon: null,
-    text: null,
+    text: new FragmentNode(),
   })
 
   constructor() {

@@ -1,4 +1,5 @@
 import { RadixAvatarNode } from './radix-avatar'
+import { RadixBadgeNode } from './radix-badge'
 import { RadixBlockquoteNode } from './radix-blockquote'
 import { RadixBoxNode } from './radix-box'
 import { RadixButtonNode } from './radix-button'
@@ -12,6 +13,7 @@ import { RadixTextNode } from './radix-text'
 
 export const generatedNodeNameNodeMap = {
   RadixAvatar: RadixAvatarNode,
+  RadixBadge: RadixBadgeNode,
   RadixBlockquote: RadixBlockquoteNode,
   RadixBox: RadixBoxNode,
   RadixButton: RadixButtonNode,

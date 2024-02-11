@@ -41,7 +41,7 @@ export class RadixBoxNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

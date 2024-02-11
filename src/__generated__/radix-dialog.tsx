@@ -34,16 +34,19 @@ export class RadixDialogNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({
-    content: null,
+  readonly $slots = atom<{
+    content: FragmentNode
+    title: FragmentNode | null
+    description: FragmentNode | null
+    contentBody: FragmentNode
+  }>({
+    content: new FragmentNode(),
     title: null,
     description: null,
-    contentBody: null,
+    contentBody: new FragmentNode(),
   })
 
-  public readonly contentDefaultProps: RadixDialogSlotContentProps = {
-    size: '3',
-  }
+  public readonly contentDefaultProps: RadixDialogSlotContentProps = {}
 
   readonly $contentProps = map(this.contentDefaultProps)
 

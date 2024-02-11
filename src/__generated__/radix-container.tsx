@@ -23,13 +23,11 @@ export type RadixContainerNodeProps = {
 export class RadixContainerNode extends Node {
   readonly nodeName = 'RadixContainer'
 
-  public readonly defaultProps: RadixContainerNodeProps = {
-    size: '4',
-  }
+  public readonly defaultProps: RadixContainerNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

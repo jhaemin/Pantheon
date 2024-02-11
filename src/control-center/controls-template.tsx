@@ -157,7 +157,7 @@ export function SlotToggleControls({
     <Flex direction="row" align="center" justify="between">
       <Text size="2">{slotKey}</Text>
       <Switch
-        defaultChecked={allNodesSlotEnabled}
+        checked={allNodesSlotEnabled}
         onCheckedChange={(checked) => {
           nodes.forEach((node) => {
             if (checked) {

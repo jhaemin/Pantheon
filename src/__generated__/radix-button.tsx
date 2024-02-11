@@ -51,14 +51,11 @@ export type RadixButtonNodeProps = {
 export class RadixButtonNode extends Node {
   readonly nodeName = 'RadixButton'
 
-  public readonly defaultProps: RadixButtonNodeProps = {
-    size: '2',
-    variant: 'solid',
-  }
+  public readonly defaultProps: RadixButtonNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
-  readonly $slots = atom({})
+  readonly $slots = atom<{}>({})
 
   constructor() {
     super()

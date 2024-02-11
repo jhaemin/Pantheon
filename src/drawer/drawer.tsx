@@ -1,4 +1,5 @@
 import { RadixAvatarNode } from '@/__generated__/radix-avatar'
+import { RadixBadgeNode } from '@/__generated__/radix-badge'
 import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
 import { RadixBoxNode } from '@/__generated__/radix-box'
 import { RadixButtonNode } from '@/__generated__/radix-button'
@@ -12,6 +13,7 @@ import { TextNode } from '@/node-class/text'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import {
   Avatar,
+  Badge,
   Blockquote,
   Box,
   Button,
@@ -85,12 +87,23 @@ export function Drawer() {
         <DrawerItemWrapper
           createNode={() => {
             const button = new RadixButtonNode()
-            const text = new TextNode()
+            const text = new TextNode('Button')
             button.append(text)
             return button
           }}
         >
           <Button>Button</Button>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper
+          createNode={() => {
+            const badge = new RadixBadgeNode()
+            const text = new TextNode('Badge')
+            badge.append(text)
+            return badge
+          }}
+        >
+          <Badge>Badge</Badge>
         </DrawerItemWrapper>
 
         <DrawerItemWrapper createNode={() => new RadixSwitchNode()}>
@@ -101,7 +114,14 @@ export function Drawer() {
           <Blockquote>Blockquote</Blockquote>
         </DrawerItemWrapper>
 
-        <DrawerItemWrapper createNode={() => new RadixCalloutNode()}>
+        <DrawerItemWrapper
+          createNode={() => {
+            const callout = new RadixCalloutNode()
+            const text = new TextNode()
+            callout.$slots.get().text.append(text)
+            return callout
+          }}
+        >
           <Callout.Root>
             <Callout.Icon>
               <InfoCircledIcon />

@@ -30,6 +30,7 @@ const color = [
   'bronze',
   'gray',
 ]
+const radius = ['none', 'small', 'medium', 'large', 'full']
 
 export const textDef: NodeDefinition = {
   nodeName: 'RadixText',
@@ -104,7 +105,39 @@ export const buttonDef: NodeDefinition = {
     },
     {
       key: 'radius',
-      type: ['none', 'small', 'medium', 'large', 'full'],
+      type: radius,
+    },
+  ],
+}
+
+export const badgeDef: NodeDefinition = {
+  nodeName: 'RadixBadge',
+  lib: {
+    mod: 'Badge',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2'],
+      default: '1',
+    },
+    {
+      key: 'variant',
+      type: ['solid', 'soft', 'surface', 'outline'],
+      default: 'soft',
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+    {
+      key: 'radius',
+      type: radius,
     },
   ],
 }
@@ -133,7 +166,7 @@ export const switchDef: NodeDefinition = {
     },
     {
       key: 'radius',
-      type: ['none', 'small', 'medium', 'large', 'full'],
+      type: radius,
     },
   ],
 }
@@ -406,7 +439,7 @@ export const avatarDef: NodeDefinition = {
     },
     {
       key: 'radius',
-      type: ['none', 'small', 'medium', 'large', 'full'],
+      type: radius,
     },
     {
       key: 'fallback',

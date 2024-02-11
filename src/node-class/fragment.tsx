@@ -8,6 +8,10 @@ export class FragmentNode extends Node {
   readonly nodeName = 'Fragment'
 
   public generateCode(): string {
+    if (this.children.length === 0) {
+      return ''
+    }
+
     if (this.children.length === 1) {
       return this.children[0].generateCode()
     }
