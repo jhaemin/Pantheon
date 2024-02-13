@@ -16,7 +16,7 @@ export class PageNode extends Node {
 
   public refreshUnselectableNodes() {
     this.$unselectableNodes.set(
-      this.children.filter((child) => child.isUnselectable),
+      this.allNestedChildren.filter((child) => child.isUnselectable),
     )
   }
 

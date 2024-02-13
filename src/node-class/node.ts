@@ -29,6 +29,12 @@ export abstract class Node {
     }
 
     this.isUnselectable = preOptions?.isUnselectable ?? false
+
+    this.$children.listen(() => {
+      if (this.ownerPage) {
+        this.ownerPage.refreshUnselectableNodes()
+      }
+    })
   }
 
   /**
@@ -204,10 +210,6 @@ export abstract class Node {
 
     this.children = [...this.children, ...removableChildren]
 
-    // if (this.ownerPage) {
-    //   this.ownerPage.refreshUnselectableNodes()
-    // }
-
     return insertNodesAction
   }
 
@@ -256,10 +258,6 @@ export abstract class Node {
       ...this.children.slice(referenceIndex),
     ]
 
-    if (this.ownerPage) {
-      this.ownerPage.refreshUnselectableNodes()
-    }
-
     return insertNodesAction
   }
 
@@ -285,10 +283,6 @@ export abstract class Node {
     })
 
     this.children = this.children.filter((c) => !removableChildren.includes(c))
-
-    if (this.ownerPage) {
-      this.ownerPage.refreshUnselectableNodes()
-    }
   }
 
   /**

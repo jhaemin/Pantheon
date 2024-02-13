@@ -22,6 +22,7 @@ import { useEffect, useRef } from 'react'
 import styles from './easel-wrapper.module.scss'
 import { PageLabel } from './page-label'
 import { Resizer } from './resizer'
+import { UnselectableNodes } from './unselectable-nodes'
 
 export const EASEL_WRAPPER_CLASS_NAME = 'studio-easel-wrapper'
 
@@ -155,7 +156,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
 
       <PageLabel page={page} />
       <Resizer page={page} />
-      {/* <UnselectableNodes page={page} /> */}
+      <UnselectableNodes page={page} />
     </div>
   )
 }
