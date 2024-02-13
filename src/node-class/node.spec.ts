@@ -12,6 +12,25 @@ test('Node creation', () => {
   expect(frag.nextSibling).toBe(null)
 })
 
+test('Children', () => {
+  const frag = new FragmentNode()
+  const text = new TextNode()
+  frag.append(text)
+  expect(frag.children.length).toBe(1)
+  expect(frag.children[0]).toBe(text)
+  expect(text.parent).toBe(frag)
+
+  const frag2 = new FragmentNode()
+  frag.append(frag2)
+  expect(frag.children.length).toBe(2)
+  expect(frag.allNestedChildren.length).toBe(2)
+
+  const text2 = new TextNode()
+  frag2.append(text2)
+  expect(frag.allNestedChildren.length).toBe(3)
+  expect(frag2.allNestedChildren.length).toBe(1)
+})
+
 test('Append children', () => {
   const frag = new FragmentNode()
   const text1 = new TextNode()
@@ -29,6 +48,28 @@ test('Append children', () => {
   expect(frag.children[0].nextSibling).toBe(text2)
   expect(frag.children[1].previousSibling).toBe(text1)
   expect(frag.children[1].nextSibling).toBe(null)
+})
+
+test('Move', () => {
+  const frag = new FragmentNode()
+  const frag2 = new FragmentNode()
+  const text = new TextNode()
+
+  frag.append(text)
+  frag2.append(text)
+
+  expect(frag.children.length).toBe(0)
+  expect(frag2.children.length).toBe(1)
+  expect(frag2.children[0]).toBe(text)
+
+  const text2 = new TextNode()
+  frag2.append(text2)
+
+  frag.append(text, text2)
+  expect(frag.children.length).toBe(2)
+  expect(frag.children[0]).toBe(text)
+  expect(frag.children[1]).toBe(text2)
+  expect(frag2.children.length).toBe(0)
 })
 
 test('Remove children', () => {

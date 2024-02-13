@@ -51,7 +51,9 @@ export class RadixDialogNode extends Node {
   readonly $contentProps = map(this.contentDefaultProps)
 
   constructor() {
-    super()
+    super({
+      isUnselectable: true,
+    })
 
     this.setSlot(
       'content',

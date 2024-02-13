@@ -65,7 +65,9 @@ export class RadixCalloutNode extends Node {
   })
 
   constructor() {
-    super()
+    super({
+      isUnselectable: false,
+    })
 
     this.setSlot(
       'text',

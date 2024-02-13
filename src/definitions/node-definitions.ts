@@ -342,6 +342,7 @@ export const dialogDef: NodeDefinition = {
   nodeName: 'RadixDialog',
   lib: { mod: 'Dialog', from: importFrom },
   componentName: 'Dialog.Root',
+  unselectable: true,
   portal: true,
   props: [
     {

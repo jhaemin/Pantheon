@@ -89,6 +89,7 @@ async function generateNode(nodeDef: NodeDefinition) {
     nodeName,
     props,
     slots,
+    unselectable,
   } = nodeDef
 
   const hasSlots = slots && slots.length > 0
@@ -177,7 +178,9 @@ export class ${nodeClassName} extends Node {
     .join('')}
 
   constructor() {
-    super()
+    super({
+      isUnselectable: ${unselectable ? 'true' : 'false'},
+    })
 
     ${allSlots
       .map((slot) => {

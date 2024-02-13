@@ -10,11 +10,19 @@ export abstract class Node {
   readonly id = alphanumericId(7)
   abstract readonly nodeName: NodeName
 
-  constructor(preOptions?: { isRemovable?: boolean; isDraggable?: boolean }) {
+  readonly isUnselectable: boolean
+
+  constructor(preOptions?: {
+    isRemovable?: boolean
+    isDraggable?: boolean
+    isUnselectable?: boolean
+  }) {
     if (preOptions) {
       this._isRemovable = preOptions.isRemovable ?? true
       this._isDraggable = preOptions.isDraggable ?? true
     }
+
+    this.isUnselectable = preOptions?.isUnselectable ?? false
   }
 
   /**
@@ -138,6 +146,10 @@ export abstract class Node {
     this._$children.set(children)
   }
 
+  get allNestedChildren(): Node[] {
+    return this.children.flatMap((child) => [child, ...child.allNestedChildren])
+  }
+
   get previousSibling(): Node | null {
     if (this.parent) {
       const index = this.parent.children.indexOf(this)
@@ -159,19 +171,26 @@ export abstract class Node {
   public append(...children: Node[]): InsertNodesAction | undefined {
     if (children.length === 0) return
 
+    const removableChildren = children.filter((child) => child.isRemovable)
+
     const insertNodesAction = new InsertNodesAction({
-      insertedNodes: children,
+      insertedNodes: removableChildren,
       newContainableParent: this,
       newNextSibling: null,
-      oldContainableParent: children[0].parent,
-      oldNextSibling: children[0].nextSibling,
+      oldContainableParent: removableChildren[0].parent,
+      oldNextSibling: removableChildren[0].nextSibling,
     })
 
-    children.forEach((child) => {
+    removableChildren.forEach((child) => {
       child.remove()
       Node.assignParent(child, this)
     })
-    this.children = [...this.children, ...children]
+
+    this.children = [...this.children, ...removableChildren]
+
+    if (this.ownerPage) {
+      this.ownerPage.refreshUnselectableNodes()
+    }
 
     return insertNodesAction
   }
@@ -221,34 +240,34 @@ export abstract class Node {
       ...this.children.slice(referenceIndex),
     ]
 
+    if (this.ownerPage) {
+      this.ownerPage.refreshUnselectableNodes()
+    }
+
     return insertNodesAction
   }
 
-  /**
-   * TODO: merge with `removeChildren`. Use spread
-   */
   public removeChild(child: Node) {
-    if (!child.isRemovable) return
-
-    const removeNodeAction = new RemoveNodeAction({
-      removedNode: child,
-      oldParent: this,
-      oldNextSibling: child.nextSibling,
-    })
-
-    Node.releaseParent(child)
-    this.children = this.children.filter((c) => c !== child)
-
-    this.removeSlot(child)
-
-    return removeNodeAction
+    this.removeChildren([child])
   }
 
   public removeChildren(children: Node[]) {
+    if (children.some((child) => child.parent !== this)) {
+      throw new Error('Some children are not contained by this node')
+    }
+
     const removableChildren = children.filter((child) => child.isRemovable)
-    removableChildren.forEach((child) => Node.releaseParent(child))
+
+    removableChildren.forEach((child) => {
+      Node.releaseParent(child)
+      this.removeSlot(child)
+    })
+
     this.children = this.children.filter((c) => !removableChildren.includes(c))
-    removableChildren.forEach((child) => this.removeSlot(child))
+
+    if (this.ownerPage) {
+      this.ownerPage.refreshUnselectableNodes()
+    }
   }
 
   public removeAllChildren() {

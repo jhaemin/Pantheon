@@ -11,6 +11,8 @@
     "nanostores",
     "nums",
     "typecheck",
+    "Unselectable",
+    "Unselectables",
     "unwrappable",
     "xlarge",
     "xsmall"

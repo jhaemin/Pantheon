@@ -58,7 +58,9 @@ export class RadixButtonNode extends Node {
   readonly $slots = atom<{}>({})
 
   constructor() {
-    super()
+    super({
+      isUnselectable: false,
+    })
   }
 }
 

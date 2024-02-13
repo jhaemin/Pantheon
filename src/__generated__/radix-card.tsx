@@ -29,7 +29,9 @@ export class RadixCardNode extends Node {
   readonly $slots = atom<{}>({})
 
   constructor() {
-    super()
+    super({
+      isUnselectable: false,
+    })
   }
 }
 

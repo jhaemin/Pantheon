@@ -139,14 +139,16 @@ export function commandUnwrapNode(unwrappingNode: Node) {
   const removeAction = parent.removeChild(unwrappingNode)
   const insertAction = parent.insertBefore(unwrappingNode.children, nextSibling)
 
-  const actions: Action[] = removeAction ? [removeAction] : []
-  if (insertAction) actions.push(insertAction)
+  // TODO: Implement remove actions and History.push
 
-  History.push({
-    actions,
-    previousSelectedNodes: $selectedNodes.get(),
-    nextSelectedNodes: unwrappingNode.children,
-  })
+  // const actions: Action[] = removeAction ? [removeAction] : []
+  // if (insertAction) actions.push(insertAction)
+
+  // History.push({
+  //   actions,
+  //   previousSelectedNodes: $selectedNodes.get(),
+  //   nextSelectedNodes: unwrappingNode.children,
+  // })
 }
 
 export function commandFocusPage(page: PageNode, animation = false) {

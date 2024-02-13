@@ -30,7 +30,9 @@ export class RadixSwitchNode extends Node {
   readonly $slots = atom<{}>({})
 
   constructor() {
-    super()
+    super({
+      isUnselectable: false,
+    })
   }
 
   get isDroppable() {

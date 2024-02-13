@@ -12,6 +12,13 @@ export class PageNode extends Node {
   readonly nodeName = 'Page'
 
   public $pageLabel = atom(DEFAULT_PAGE_LABEL)
+  public $unselectableNodes = atom<Node[]>([])
+
+  public refreshUnselectableNodes() {
+    this.$unselectableNodes.set(
+      this.children.filter((child) => child.isUnselectable),
+    )
+  }
 
   private _iframeElement: HTMLIFrameElement | null = null
 

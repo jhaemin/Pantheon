@@ -13,10 +13,12 @@ export function getRenderedNodeById(nodeId: string) {
   const node = $allRenderedNodes.get()[nodeId]
 
   if (!node) {
-    console.log($allRenderedNodes.get())
+    console.group('getRenderedNodeById - NOT FOUND')
+    console.log('allRenderedNodes', $allRenderedNodes.get())
     console.warn(
       `Node is not rendered: ${nodeId}. Maybe it is unmounted or not rendered yet.`,
     )
+    console.groupEnd()
     return null
   }
 
