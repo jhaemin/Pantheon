@@ -99,7 +99,9 @@ export function RadixBlockquoteNodeControls({
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -116,7 +118,9 @@ export function RadixBlockquoteNodeControls({
       <SelectControls
         controlsLabel="weight"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="weight"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'light', value: 'light' },
@@ -128,7 +132,9 @@ export function RadixBlockquoteNodeControls({
       <SelectControls
         controlsLabel="color"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="color"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'tomato', value: 'tomato' },
@@ -162,7 +168,9 @@ export function RadixBlockquoteNodeControls({
       <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="highContrast"
+        defaultValue={undefined}
       />
     </>
   )

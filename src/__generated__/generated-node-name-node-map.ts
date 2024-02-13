@@ -11,6 +11,7 @@ import { RadixFlexNode } from './radix-flex'
 import { RadixGridNode } from './radix-grid'
 import { RadixSwitchNode } from './radix-switch'
 import { RadixTextNode } from './radix-text'
+import { RadixTextFieldNode } from './radix-text-field'
 
 export const generatedNodeNameNodeMap = {
   RadixAvatar: RadixAvatarNode,
@@ -26,4 +27,5 @@ export const generatedNodeNameNodeMap = {
   RadixGrid: RadixGridNode,
   RadixSwitch: RadixSwitchNode,
   RadixText: RadixTextNode,
+  RadixTextField: RadixTextFieldNode,
 }

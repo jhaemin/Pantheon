@@ -81,7 +81,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="display"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="display"
+        defaultValue="flex"
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },
@@ -92,7 +94,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="direction"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="direction"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'row', value: 'row' },
@@ -104,7 +108,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="align"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="align"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'start', value: 'start' },
@@ -117,7 +123,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="justify"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="justify"
+        defaultValue="start"
         options={[
           { label: 'default', value: undefined },
           { label: 'start', value: 'start' },
@@ -129,7 +137,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="wrap"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="wrap"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'wrap', value: 'wrap' },
@@ -140,7 +150,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="gap"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="gap"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -158,7 +170,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="p"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="p"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -176,7 +190,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="px"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="px"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -194,7 +210,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="py"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="py"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -212,7 +230,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="pt"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pt"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -230,7 +250,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="pr"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pr"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -248,7 +270,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="pb"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pb"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -266,7 +290,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="pl"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pl"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -284,7 +310,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="position"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="position"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'static', value: 'static' },
@@ -297,7 +325,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="inset"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="inset"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -309,7 +339,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="top"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="top"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -321,7 +353,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="right"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="right"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -333,7 +367,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="bottom"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="bottom"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -345,7 +381,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="left"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="left"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -357,7 +395,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="shrink"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="shrink"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -367,7 +407,9 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
       <SelectControls
         controlsLabel="grow"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="grow"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },

@@ -32,6 +32,10 @@ import {
   RadixSwitchNodeControls,
 } from './radix-switch'
 import { RadixTextNodeComponent, RadixTextNodeControls } from './radix-text'
+import {
+  RadixTextFieldNodeComponent,
+  RadixTextFieldNodeControls,
+} from './radix-text-field'
 
 export const generatedNodeComponentMap = {
   RadixAvatar: RadixAvatarNodeComponent,
@@ -47,6 +51,7 @@ export const generatedNodeComponentMap = {
   RadixGrid: RadixGridNodeComponent,
   RadixSwitch: RadixSwitchNodeComponent,
   RadixText: RadixTextNodeComponent,
+  RadixTextField: RadixTextFieldNodeComponent,
 }
 
 export const generatedNodeControlsMap = {
@@ -63,4 +68,5 @@ export const generatedNodeControlsMap = {
   RadixGrid: RadixGridNodeControls,
   RadixSwitch: RadixSwitchNodeControls,
   RadixText: RadixTextNodeControls,
+  RadixTextField: RadixTextFieldNodeControls,
 }

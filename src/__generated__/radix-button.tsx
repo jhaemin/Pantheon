@@ -95,7 +95,9 @@ export function RadixButtonNodeControls({
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue="2"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -106,7 +108,9 @@ export function RadixButtonNodeControls({
       <SelectControls
         controlsLabel="variant"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="variant"
+        defaultValue="solid"
         options={[
           { label: 'default', value: undefined },
           { label: 'classic', value: 'classic' },
@@ -120,7 +124,9 @@ export function RadixButtonNodeControls({
       <SelectControls
         controlsLabel="color"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="color"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'tomato', value: 'tomato' },
@@ -154,7 +160,9 @@ export function RadixButtonNodeControls({
       <SelectControls
         controlsLabel="radius"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="radius"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },

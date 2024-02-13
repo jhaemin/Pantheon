@@ -515,3 +515,34 @@ export const cardDef: NodeDefinition = {
     },
   ],
 }
+
+export const textFieldDef: NodeDefinition = {
+  nodeName: 'RadixTextField',
+  lib: { mod: 'TextField', from: importFrom },
+  componentName: 'TextField.Input',
+  leaf: true,
+  props: [
+    {
+      key: 'placeholder',
+      type: 'string',
+    },
+    {
+      key: 'size',
+      type: ['1', '2', '3'],
+      default: '2',
+    },
+    {
+      key: 'variant',
+      type: ['classic', 'surface', 'soft'],
+      default: 'surface',
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'radius',
+      type: radius,
+    },
+  ],
+}

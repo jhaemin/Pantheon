@@ -92,7 +92,9 @@ export function RadixBadgeNodeControls({ nodes }: { nodes: RadixBadgeNode[] }) {
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue="1"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -102,7 +104,9 @@ export function RadixBadgeNodeControls({ nodes }: { nodes: RadixBadgeNode[] }) {
       <SelectControls
         controlsLabel="variant"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="variant"
+        defaultValue="soft"
         options={[
           { label: 'default', value: undefined },
           { label: 'solid', value: 'solid' },
@@ -114,7 +118,9 @@ export function RadixBadgeNodeControls({ nodes }: { nodes: RadixBadgeNode[] }) {
       <SelectControls
         controlsLabel="color"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="color"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'tomato', value: 'tomato' },
@@ -148,12 +154,16 @@ export function RadixBadgeNodeControls({ nodes }: { nodes: RadixBadgeNode[] }) {
       <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="highContrast"
+        defaultValue={undefined}
       />
       <SelectControls
         controlsLabel="radius"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="radius"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },

@@ -79,6 +79,18 @@ function flattenSlots(slots: Slot[]): Slot[] {
   return [...slots, ...slots.flatMap((slot) => flattenSlots(slot.slots ?? []))]
 }
 
+function getDefaultValue(value: any) {
+  if (typeof value === 'string') {
+    return `'${value}'`
+  } else if (typeof value === 'number') {
+    return `{${value}}`
+  } else if (value === undefined) {
+    return `{undefined}`
+  } else if (typeof value === 'boolean') {
+    return `{${value}}`
+  }
+}
+
 async function generateNode(nodeDef: NodeDefinition) {
   const {
     lib,
@@ -300,7 +312,9 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
                 <SelectControls
                   controlsLabel="${label}"
                   nodes={nodes}
+                  propsAtomKey="$props"
                   propertyKey="${key}"
+                  defaultValue=${getDefaultValue(prop.default)}
                   options={[
                     ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
                     ${
@@ -322,20 +336,82 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
                 <SwitchControls
                   controlsLabel="${label}"
                   nodes={nodes}
+                  propsAtomKey="$props"
                   propertyKey="${key}"
+                  defaultValue=${getDefaultValue(prop.default)}
                 />`
             } else if (type === 'string') {
               return `
                 <TextFieldControls
                   controlsLabel="${label}"
                   nodes={nodes}
+                  propsAtomKey="$props"
                   propertyKey="${key}"
+                  defaultValue=${getDefaultValue(prop.default)}
                 />`
             }
           })
           .join('')
       : ''
   }
+  ${allSlots
+    .map((slot) => {
+      const { key: slotKey, props } = slot
+
+      if (!props) return
+
+      return props
+        .map((prop) => {
+          const { key, type } = prop
+          const label = prop.label ?? key
+
+          if (Array.isArray(prop.type)) {
+            return `
+            <SelectControls
+              controlsLabel="${label}"
+              nodes={nodes}
+              propsAtomKey="$${slotKey}Props"
+              propertyKey="${key}"
+              defaultValue=${getDefaultValue(prop.default)}
+              options={[
+                ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
+                ${
+                  Array.isArray(type)
+                    ? type
+                        .map((t) => {
+                          const value = typeof t === 'string' ? t : t.value
+                          const label = typeof t === 'string' ? t : t.label
+
+                          return `{ label: '${label}', value: '${value}' }`
+                        })
+                        .join(',\n')
+                    : ''
+                }
+              ]}
+            />`
+          } else if (type === 'boolean') {
+            return `
+            <SwitchControls
+              controlsLabel="${label}"
+              nodes={nodes}
+              propsAtomKey="$${slotKey}Props"
+              propertyKey="${key}"
+              defaultValue=${getDefaultValue(prop.default)}
+            />`
+          } else if (type === 'string') {
+            return `
+            <TextFieldControls
+              controlsLabel="${label}"
+              nodes={nodes}
+              propsAtomKey="$${slotKey}Props"
+              propertyKey="${key}"
+              defaultValue=${getDefaultValue(prop.default)}
+            />`
+          }
+        })
+        .join('')
+    })
+    .join('')}
   </>
 }
 `

@@ -10,12 +10,12 @@ import {
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
 import { type ReactNode } from 'react'
-import { Avatar } from '@radix-ui/themes'
+import { TextField } from '@radix-ui/themes'
 
-export type RadixAvatarNodeProps = {
-  src?: string
-  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
-  variant?: 'solid' | 'soft'
+export type RadixTextFieldNodeProps = {
+  placeholder?: string
+  size?: '1' | '2' | '3'
+  variant?: 'classic' | 'surface' | 'soft'
   color?:
     | 'tomato'
     | 'red'
@@ -43,17 +43,13 @@ export type RadixAvatarNodeProps = {
     | 'gold'
     | 'bronze'
     | 'gray'
-  highContrast?: boolean
   radius?: 'none' | 'small' | 'medium' | 'large' | 'full'
-  fallback: NonNullable<ReactNode>
 }
 
-export class RadixAvatarNode extends Node {
-  readonly nodeName = 'RadixAvatar'
+export class RadixTextFieldNode extends Node {
+  readonly nodeName = 'RadixTextField'
 
-  public readonly defaultProps: RadixAvatarNodeProps = {
-    fallback: 'A',
-  }
+  public readonly defaultProps: RadixTextFieldNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -77,24 +73,28 @@ export class RadixAvatarNode extends Node {
   }
 }
 
-export function RadixAvatarNodeComponent({ node }: { node: RadixAvatarNode }) {
+export function RadixTextFieldNodeComponent({
+  node,
+}: {
+  node: RadixTextFieldNode
+}) {
   const props = useStore(node.$props)
 
-  return <Avatar {...props} />
+  return <TextField.Input {...props} />
 }
 
-export function RadixAvatarNodeControls({
+export function RadixTextFieldNodeControls({
   nodes,
 }: {
-  nodes: RadixAvatarNode[]
+  nodes: RadixTextFieldNode[]
 }) {
   return (
     <>
       <TextFieldControls
-        controlsLabel="src"
+        controlsLabel="placeholder"
         nodes={nodes}
         propsAtomKey="$props"
-        propertyKey="src"
+        propertyKey="placeholder"
         defaultValue={undefined}
       />
       <SelectControls
@@ -102,18 +102,12 @@ export function RadixAvatarNodeControls({
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="size"
-        defaultValue="3"
+        defaultValue="2"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
           { label: '2', value: '2' },
           { label: '3', value: '3' },
-          { label: '4', value: '4' },
-          { label: '5', value: '5' },
-          { label: '6', value: '6' },
-          { label: '7', value: '7' },
-          { label: '8', value: '8' },
-          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
@@ -121,10 +115,11 @@ export function RadixAvatarNodeControls({
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="variant"
-        defaultValue="soft"
+        defaultValue="surface"
         options={[
           { label: 'default', value: undefined },
-          { label: 'solid', value: 'solid' },
+          { label: 'classic', value: 'classic' },
+          { label: 'surface', value: 'surface' },
           { label: 'soft', value: 'soft' },
         ]}
       />
@@ -163,13 +158,6 @@ export function RadixAvatarNodeControls({
           { label: 'bronze', value: 'bronze' },
           { label: 'gray', value: 'gray' },
         ]}
-      />
-      <SwitchControls
-        controlsLabel="highContrast"
-        nodes={nodes}
-        propsAtomKey="$props"
-        propertyKey="highContrast"
-        defaultValue={undefined}
       />
       <SelectControls
         controlsLabel="radius"

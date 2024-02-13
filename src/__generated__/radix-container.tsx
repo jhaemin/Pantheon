@@ -71,7 +71,9 @@ export function RadixContainerNodeControls({
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue="4"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -83,7 +85,9 @@ export function RadixContainerNodeControls({
       <SelectControls
         controlsLabel="display"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="display"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },

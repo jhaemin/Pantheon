@@ -12,3 +12,4 @@ export type GeneratedNodeName =
   | 'RadixGrid'
   | 'RadixSwitch'
   | 'RadixText'
+  | 'RadixTextField'

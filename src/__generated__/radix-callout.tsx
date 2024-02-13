@@ -143,7 +143,9 @@ export function RadixCalloutNodeControls({
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue="2"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -154,7 +156,9 @@ export function RadixCalloutNodeControls({
       <SelectControls
         controlsLabel="variant"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="variant"
+        defaultValue="soft"
         options={[
           { label: 'default', value: undefined },
           { label: 'soft', value: 'soft' },
@@ -165,7 +169,9 @@ export function RadixCalloutNodeControls({
       <SelectControls
         controlsLabel="color"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="color"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'tomato', value: 'tomato' },
@@ -199,7 +205,9 @@ export function RadixCalloutNodeControls({
       <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="highContrast"
+        defaultValue={undefined}
       />
     </>
   )

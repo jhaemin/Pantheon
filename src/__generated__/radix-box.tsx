@@ -77,7 +77,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="display"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="display"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },
@@ -89,7 +91,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="p"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="p"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -107,7 +111,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="px"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="px"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -125,7 +131,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="py"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="py"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -143,7 +151,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="pt"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pt"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -161,7 +171,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="pr"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pr"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -179,7 +191,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="pb"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pb"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -197,7 +211,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="pl"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="pl"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -215,7 +231,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="position"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="position"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'static', value: 'static' },
@@ -228,7 +246,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="inset"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="inset"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -240,7 +260,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="top"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="top"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -252,7 +274,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="right"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="right"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -264,7 +288,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="bottom"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="bottom"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -276,7 +302,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="left"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="left"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'auto', value: 'auto' },
@@ -288,7 +316,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="shrink"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="shrink"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },
@@ -298,7 +328,9 @@ export function RadixBoxNodeControls({ nodes }: { nodes: RadixBoxNode[] }) {
       <SelectControls
         controlsLabel="grow"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="grow"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },

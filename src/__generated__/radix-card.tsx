@@ -62,7 +62,9 @@ export function RadixCardNodeControls({ nodes }: { nodes: RadixCardNode[] }) {
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue="1"
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -75,7 +77,9 @@ export function RadixCardNodeControls({ nodes }: { nodes: RadixCardNode[] }) {
       <SelectControls
         controlsLabel="variant"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="variant"
+        defaultValue="surface"
         options={[
           { label: 'default', value: undefined },
           { label: 'surface', value: 'surface' },

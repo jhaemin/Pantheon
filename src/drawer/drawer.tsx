@@ -10,6 +10,7 @@ import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixGridNode } from '@/__generated__/radix-grid'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { RadixTextNode } from '@/__generated__/radix-text'
+import { RadixTextFieldNode } from '@/__generated__/radix-text-field'
 import { TextNode } from '@/node-class/text'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import {
@@ -23,6 +24,7 @@ import {
   Flex,
   Switch,
   Text,
+  TextField,
 } from '@radix-ui/themes'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
 
@@ -118,6 +120,10 @@ export function Drawer() {
           }}
         >
           <Badge>Badge</Badge>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixTextFieldNode()}>
+          <TextField.Input placeholder="Text Field Input" />
         </DrawerItemWrapper>
 
         <DrawerItemWrapper createNode={() => new RadixSwitchNode()}>

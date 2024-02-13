@@ -94,7 +94,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="as"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="as"
+        defaultValue="span"
         options={[
           { label: 'default', value: undefined },
           { label: 'p', value: 'p' },
@@ -106,7 +108,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="size"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
@@ -123,7 +127,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="weight"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="weight"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'light', value: 'light' },
@@ -135,7 +141,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="align"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="align"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'left', value: 'left' },
@@ -146,7 +154,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="trim"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="trim"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'normal', value: 'normal' },
@@ -158,7 +168,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SelectControls
         controlsLabel="color"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="color"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: 'tomato', value: 'tomato' },
@@ -192,7 +204,9 @@ export function RadixTextNodeControls({ nodes }: { nodes: RadixTextNode[] }) {
       <SwitchControls
         controlsLabel="highContrast"
         nodes={nodes}
+        propsAtomKey="$props"
         propertyKey="highContrast"
+        defaultValue={undefined}
       />
     </>
   )

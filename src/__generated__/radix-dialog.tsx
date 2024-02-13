@@ -154,7 +154,28 @@ export function RadixDialogNodeControls({
         </Flex>
       </Card>
 
-      <SwitchControls controlsLabel="open" nodes={nodes} propertyKey="open" />
+      <SwitchControls
+        controlsLabel="open"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="open"
+        defaultValue={undefined}
+      />
+
+      <SelectControls
+        controlsLabel="size"
+        nodes={nodes}
+        propsAtomKey="$contentProps"
+        propertyKey="size"
+        defaultValue="3"
+        options={[
+          { label: 'default', value: undefined },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+        ]}
+      />
     </>
   )
 }
