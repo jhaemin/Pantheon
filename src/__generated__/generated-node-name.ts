@@ -6,6 +6,7 @@ export type GeneratedNodeName =
   | 'RadixButton'
   | 'RadixCallout'
   | 'RadixCard'
+  | 'RadixCheckbox'
   | 'RadixContainer'
   | 'RadixDialog'
   | 'RadixFlex'

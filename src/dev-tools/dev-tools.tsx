@@ -25,8 +25,10 @@ export function DevTools() {
       previousSibling: node.previousSibling?.id,
       nextSibling: node.nextSibling?.id,
       children: onlyChildIds
-        ? node.children.map((child) => child.id)
-        : node.children.map((child) => toHumanReadable(child, onlyChildIds)),
+        ? node.childrenWithSlots.map((child) => child.id)
+        : node.childrenWithSlots.map((child) =>
+            toHumanReadable(child, onlyChildIds),
+          ),
     }
   }
 

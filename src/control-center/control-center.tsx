@@ -104,9 +104,9 @@ export function ControlCenter() {
                                 <Badge ml="2">slot owner</Badge>
                               )}
 
-                              {i === upwardTree.length - 1 && (
+                              {/* {i === upwardTree.length - 1 && (
                                 <Badge ml="2">root</Badge>
-                              )}
+                              )} */}
                             </Text>
                             <Flex gap="3">
                               {i > 0 && (

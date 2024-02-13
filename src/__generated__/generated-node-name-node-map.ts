@@ -5,6 +5,7 @@ import { RadixBoxNode } from './radix-box'
 import { RadixButtonNode } from './radix-button'
 import { RadixCalloutNode } from './radix-callout'
 import { RadixCardNode } from './radix-card'
+import { RadixCheckboxNode } from './radix-checkbox'
 import { RadixContainerNode } from './radix-container'
 import { RadixDialogNode } from './radix-dialog'
 import { RadixFlexNode } from './radix-flex'
@@ -21,6 +22,7 @@ export const generatedNodeNameNodeMap = {
   RadixButton: RadixButtonNode,
   RadixCallout: RadixCalloutNode,
   RadixCard: RadixCardNode,
+  RadixCheckbox: RadixCheckboxNode,
   RadixContainer: RadixContainerNode,
   RadixDialog: RadixDialogNode,
   RadixFlex: RadixFlexNode,

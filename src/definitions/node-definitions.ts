@@ -516,6 +516,32 @@ export const cardDef: NodeDefinition = {
   ],
 }
 
+export const checkboxDef: NodeDefinition = {
+  nodeName: 'RadixCheckbox',
+  lib: { mod: 'Checkbox', from: importFrom },
+  leaf: true,
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2', '3'],
+      default: '2',
+    },
+    {
+      key: 'variant',
+      type: ['classic', 'surface', 'soft'],
+      default: 'surface',
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+}
+
 export const textFieldDef: NodeDefinition = {
   nodeName: 'RadixTextField',
   lib: { mod: 'TextField', from: importFrom },

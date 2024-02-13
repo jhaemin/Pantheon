@@ -78,7 +78,7 @@ export function GroundComponent() {
       style={{
         position: 'fixed',
         top: 'var(--space-8)',
-        left: 600,
+        left: 300,
         right: 300,
         bottom: 0,
         transition: 'background-color 300ms ease',

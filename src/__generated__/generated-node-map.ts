@@ -18,6 +18,10 @@ import {
 } from './radix-callout'
 import { RadixCardNodeComponent, RadixCardNodeControls } from './radix-card'
 import {
+  RadixCheckboxNodeComponent,
+  RadixCheckboxNodeControls,
+} from './radix-checkbox'
+import {
   RadixContainerNodeComponent,
   RadixContainerNodeControls,
 } from './radix-container'
@@ -45,6 +49,7 @@ export const generatedNodeComponentMap = {
   RadixButton: RadixButtonNodeComponent,
   RadixCallout: RadixCalloutNodeComponent,
   RadixCard: RadixCardNodeComponent,
+  RadixCheckbox: RadixCheckboxNodeComponent,
   RadixContainer: RadixContainerNodeComponent,
   RadixDialog: RadixDialogNodeComponent,
   RadixFlex: RadixFlexNodeComponent,
@@ -62,6 +67,7 @@ export const generatedNodeControlsMap = {
   RadixButton: RadixButtonNodeControls,
   RadixCallout: RadixCalloutNodeControls,
   RadixCard: RadixCardNodeControls,
+  RadixCheckbox: RadixCheckboxNodeControls,
   RadixContainer: RadixContainerNodeControls,
   RadixDialog: RadixDialogNodeControls,
   RadixFlex: RadixFlexNodeControls,

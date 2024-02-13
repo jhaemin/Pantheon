@@ -45,6 +45,9 @@ export function makeDropZoneAttributes(dropZoneData: {
   }
 }
 
+/**
+ * TODO: instead of checking closest data attribute, stop propagation of the event
+ */
 export function shouldKeepNodeSelection(target: Element) {
   return target.closest(`[${dataAttributes.keepNodeSelection}]`)
 }
