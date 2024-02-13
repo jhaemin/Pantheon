@@ -1,0 +1,9 @@
+.treeNode {
+  &:hover {
+    box-shadow: inset 0 0 0 1.5px var(--orange-9);
+  }
+
+  &.selected {
+    box-shadow: inset 0 0 0 1.5px var(--accent-11);
+  }
+}
