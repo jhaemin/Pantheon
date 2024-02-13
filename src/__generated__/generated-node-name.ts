@@ -9,5 +9,6 @@ export type GeneratedNodeName =
   | 'RadixContainer'
   | 'RadixDialog'
   | 'RadixFlex'
+  | 'RadixGrid'
   | 'RadixSwitch'
   | 'RadixText'

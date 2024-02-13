@@ -3,7 +3,15 @@ import { NodeName } from '@/node-name'
 import { serializeProps } from '@/serialize-props'
 import { MapStore, atom, computed, map } from 'nanostores'
 import { InsertNodesAction, RemoveNodeAction } from '../action'
-import { PageNode } from './page'
+import { type PageNode } from './page'
+
+export type NodePreOptions = {
+  isRemovable?: boolean
+  isDraggable?: boolean
+  isUnselectable?: boolean
+  slotKey?: string
+  slotLabel?: string
+}
 
 export abstract class Node {
   /** Unique ID */
@@ -12,14 +20,12 @@ export abstract class Node {
 
   readonly isUnselectable: boolean
 
-  constructor(preOptions?: {
-    isRemovable?: boolean
-    isDraggable?: boolean
-    isUnselectable?: boolean
-  }) {
+  constructor(preOptions?: NodePreOptions) {
     if (preOptions) {
       this._isRemovable = preOptions.isRemovable ?? true
       this._isDraggable = preOptions.isDraggable ?? true
+      this.slotKey = preOptions.slotKey
+      this.slotLabel = preOptions.slotLabel
     }
 
     this.isUnselectable = preOptions?.isUnselectable ?? false
@@ -135,7 +141,17 @@ export abstract class Node {
   protected _$children = atom<Node[]>([])
   public readonly $children = computed(this._$children, (children) => children)
 
+  /**
+   * Return only iterable children, excluding slots.
+   */
   get children() {
+    return this.$children.get()
+  }
+
+  /**
+   * Return all children including slots.
+   */
+  get childrenWithSlots() {
     const slots = this.$slots.get()
     const slotNodes = Object.values(slots).filter((node) => !!node) as Node[]
 
@@ -188,9 +204,9 @@ export abstract class Node {
 
     this.children = [...this.children, ...removableChildren]
 
-    if (this.ownerPage) {
-      this.ownerPage.refreshUnselectableNodes()
-    }
+    // if (this.ownerPage) {
+    //   this.ownerPage.refreshUnselectableNodes()
+    // }
 
     return insertNodesAction
   }
@@ -260,7 +276,12 @@ export abstract class Node {
 
     removableChildren.forEach((child) => {
       Node.releaseParent(child)
-      this.removeSlot(child)
+
+      const isSlot = child.slotKey !== undefined
+
+      if (isSlot && !this.slotsInfo[child.slotKey].required) {
+        this.disableSlot(child)
+      }
     })
 
     this.children = this.children.filter((c) => !removableChildren.includes(c))
@@ -270,9 +291,15 @@ export abstract class Node {
     }
   }
 
+  /**
+   * Remove all iterable children
+   */
   public removeAllChildren() {
     this.removeChildren(this.children)
   }
+
+  public readonly slotKey?: string
+  public readonly slotLabel?: string
 
   public readonly $slots = atom<Record<string, Node | null>>({})
 
@@ -281,32 +308,83 @@ export abstract class Node {
   }
 
   get slotsArray() {
-    return Object.values(this.$slots.get()).filter((node) => !!node) as Node[]
+    return this.slotsInfoArray
+      .map(({ key }) => this.$slots.get()[key])
+      .filter((node) => !!node) as Node[]
+  }
+
+  public slotsInfo: Record<
+    string,
+    { required: boolean; key: string; label: string }
+  > = {}
+
+  public slotsInfoArray: { required: boolean; key: string; label: string }[] =
+    []
+
+  enableSlot(slotKey: string) {
+    const slotInfo = this.slotsInfo[slotKey]
+    const { required, key, label } = slotInfo
+
+    if (slotInfo) {
+      this.setSlot(
+        slotKey,
+        new FragmentNode({
+          slotKey: key,
+          slotLabel: label ?? key,
+          isRemovable: !required,
+          isDraggable: false,
+        }),
+      )
+    } else {
+      throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
+    }
+  }
+
+  toggleSlot(slotKey: string) {
+    if (this.slotsInfo[slotKey].required) {
+      throw new Error(`Slot ${slotKey} is required`)
+    }
+
+    if (this.$slots.get()[slotKey]) {
+      this.disableSlotByKey(slotKey)
+    } else {
+      this.enableSlot(slotKey)
+    }
   }
 
   setSlot(slotKey: string, node: Node) {
-    if (this.$slots.get()[slotKey]) {
-      this.removeSlotByKey(slotKey)
+    const previousSlot = this.$slots.get()[slotKey]
+
+    if (previousSlot) {
+      Node.releaseParent(previousSlot)
     }
 
     Node.assignParent(node, this)
     this.$slots.set({ ...this.$slots.get(), [slotKey]: node })
   }
 
-  removeSlot(node: Node) {
-    Node.releaseParent(node)
+  disableSlot(node: Node) {
     const newSlots = { ...this.$slots.get() }
     const slotName = Object.keys(newSlots).find((key) => newSlots[key] === node)
+
     if (slotName) {
+      const slotInfo = this.slotsInfo[slotName]
+
+      if (slotInfo.required) {
+        throw new Error(`Slot ${slotName} is required. Cannot be disabled.`)
+      }
+
+      Node.releaseParent(node)
+
       newSlots[slotName] = null
       this.$slots.set(newSlots)
     }
   }
 
-  removeSlotByKey(slotKey: string) {
+  disableSlotByKey(slotKey: string) {
     const slot = this.$slots.get()[slotKey]
     if (slot) {
-      this.removeSlot(slot)
+      this.disableSlot(slot)
     }
   }
 
@@ -340,5 +418,21 @@ export abstract class Node {
     return `<${this.nodeName} ${serializedProps}>${this.children
       .map((child) => child.generateCode())
       .join('')}</${this.nodeName}>`
+  }
+}
+
+export class FragmentNode extends Node {
+  readonly nodeName = 'Fragment'
+
+  public generateCode(): string {
+    if (this.children.length === 0) {
+      return ''
+    }
+
+    if (this.children.length === 1) {
+      return this.children[0].generateCode()
+    }
+
+    return `<>${this.children.map((child) => child.generateCode()).join('')}</>`
   }
 }

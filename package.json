@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck:watch": "tsc --noEmit --watch"
+    "typecheck:watch": "tsc --noEmit --watch",
+    "generate": "bun src/node-generator.ts"
   },
   "dependencies": {
     "@nanostores/react": "^0.7.1",

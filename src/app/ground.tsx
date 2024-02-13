@@ -78,11 +78,12 @@ export function GroundComponent() {
       style={{
         position: 'fixed',
         top: 'var(--space-8)',
-        left: 300,
+        left: 600,
         right: 300,
         bottom: 0,
         transition: 'background-color 300ms ease',
         backgroundColor: interactionMode ? 'var(--gray-10)' : 'var(--gray-4)',
+        overflow: 'hidden',
       }}
     >
       <EaselContainer />

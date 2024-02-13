@@ -31,8 +31,11 @@ export function ControlCenter() {
     ? nodeControlsMap[firstSelectedNode.nodeName]
     : null
 
-  const upwardTree =
-    selectedNodes.length === 1 ? firstSelectedNode?.parents ?? [] : []
+  // NOTE: Too many ancestors lead to performance issue
+  // const upwardTree =
+  //   selectedNodes.length === 1 ? firstSelectedNode?.parents ?? [] : []
+
+  const upwardTree = []
 
   if (firstSelectedNode) {
     upwardTree.unshift(firstSelectedNode)
@@ -75,6 +78,10 @@ export function ControlCenter() {
                   <Flex direction="column" gap="4">
                     {upwardTree.map((node, i) => {
                       const ParentControls = nodeControlsMap[node.nodeName]
+                      const isSlot = node.slotKey !== undefined
+                      const componentLabel = isSlot
+                        ? `Slot: ${node.slotLabel ?? node.slotKey}`
+                        : node.nodeName
 
                       return (
                         <Flex
@@ -91,10 +98,12 @@ export function ControlCenter() {
                           {i > 0 && <Separator size="4" my="1" />}
                           <Flex align="center" justify="between">
                             <Text size={i === 0 ? '5' : '3'} weight="bold">
-                              {node.nodeName}
+                              {componentLabel}
+
                               {i > 0 && node.slotsArray.length > 0 && (
                                 <Badge ml="2">slot owner</Badge>
                               )}
+
                               {i === upwardTree.length - 1 && (
                                 <Badge ml="2">root</Badge>
                               )}

@@ -7,6 +7,7 @@ import { RadixCalloutNode } from '@/__generated__/radix-callout'
 import { RadixCardNode } from '@/__generated__/radix-card'
 import { RadixDialogNode } from '@/__generated__/radix-dialog'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
+import { RadixGridNode } from '@/__generated__/radix-grid'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { RadixTextNode } from '@/__generated__/radix-text'
 import { TextNode } from '@/node-class/text'
@@ -67,6 +68,19 @@ export function Drawer() {
             }}
           >
             Flex
+          </Flex>
+        </DrawerItemWrapper>
+
+        <DrawerItemWrapper createNode={() => new RadixGridNode()}>
+          <Flex
+            align="center"
+            justify="center"
+            style={{
+              backgroundColor: 'var(--gray-3)',
+              padding: 'var(--space-4) var(--space-8)',
+            }}
+          >
+            Grid
           </Flex>
         </DrawerItemWrapper>
 

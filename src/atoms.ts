@@ -1,4 +1,4 @@
-import { atom } from 'nanostores'
+import { atom, computed } from 'nanostores'
 import { Node } from './node-class/node'
 
 /**
@@ -57,4 +57,18 @@ $interactionMode.listen((interactionMode) => {
     $selectedNodes.set([])
     $dropZone.set(null)
   }
+})
+
+export const $currentPage = computed($selectedNodes, (selectedNodes) => {
+  if (selectedNodes.length === 0) {
+    return null
+  }
+
+  if (
+    selectedNodes.every((node) => node.ownerPage === selectedNodes[0].ownerPage)
+  ) {
+    return selectedNodes[0].ownerPage
+  }
+
+  return null
 })

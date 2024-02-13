@@ -1,8 +1,8 @@
-import { FragmentNode } from '@/node-class/fragment'
 import { PageNode } from '@/node-class/page'
 import { TextNode } from '@/node-class/text'
 import { StudioApp } from '@/studio-app'
 import { expect, test } from 'bun:test'
+import { FragmentNode, Node } from './node'
 
 test('Node creation', () => {
   const frag = new FragmentNode()
@@ -214,16 +214,28 @@ test('Tree', () => {
   expect(text.parent).toBe(frag)
 })
 
-test('Slot', () => {
-  const frag = new FragmentNode()
+class TestNode extends Node {
+  readonly nodeName = 'Fragment'
 
-  const content = new FragmentNode()
+  slotsInfo = {
+    content: {
+      required: false,
+      key: 'content',
+      label: 'Content',
+    },
+  }
+}
+
+test('Slot', () => {
+  const frag = new TestNode()
+
+  const content = new FragmentNode({ slotKey: 'content', slotLabel: 'Content' })
   frag.setSlot('content', content)
 
   expect(frag.slots.content).toBe(content)
   expect(frag.slots.content?.parent).toBe(frag)
 
-  frag.removeSlot(content)
+  frag.disableSlot(content)
   expect(frag.slots.content).toBe(null)
 
   frag.setSlot('content', content)
@@ -235,8 +247,8 @@ test('Slot', () => {
   expect(frag.slots.content).toBe(null)
 
   frag.setSlot('content', content)
-  expect(frag.children.length).toBe(1)
+  expect(frag.childrenWithSlots.length).toBe(1)
 
   frag.removeAllChildren()
-  expect(frag.slots.content).toBe(null)
+  expect(frag.slots.content).toBe(content)
 })

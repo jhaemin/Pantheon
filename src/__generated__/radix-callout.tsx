@@ -1,6 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-import { Node } from '@/node-class/node'
+import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
@@ -11,8 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
-import { FragmentNode } from '@/node-class/fragment'
-import type { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Callout } from '@radix-ui/themes'
 
 export type RadixCalloutNodeProps = {
@@ -59,6 +58,34 @@ export class RadixCalloutNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
+  slotsInfo = {
+    icon: {
+      required: false,
+      key: 'icon',
+      label: 'icon',
+    },
+
+    text: {
+      required: true,
+      key: 'text',
+      label: 'text',
+    },
+  }
+
+  slotsInfoArray = [
+    {
+      required: false,
+      key: 'icon',
+      label: 'icon',
+    },
+
+    {
+      required: true,
+      key: 'text',
+      label: 'text',
+    },
+  ]
+
   readonly $slots = atom<{ icon: FragmentNode | null; text: FragmentNode }>({
     icon: null,
     text: new FragmentNode(),
@@ -69,13 +96,10 @@ export class RadixCalloutNode extends Node {
       isUnselectable: false,
     })
 
-    this.setSlot(
-      'text',
-      new FragmentNode({
-        isRemovable: false,
-        isDraggable: false,
-      }),
-    )
+    // Enable required slot inside constructor instead of property initializer
+    // because enableSlot() sets parent of the slot
+
+    this.enableSlot('text')
   }
 }
 

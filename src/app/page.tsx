@@ -8,6 +8,7 @@ import { DevTools } from '@/dev-tools/dev-tools'
 import { Drawer } from '@/drawer/drawer'
 import { useGlobalEvents } from '@/hooks/use-global-events'
 import { ShortcutsDialog } from '@/shortcuts-dialog'
+import { Tree } from '@/tree/tree'
 import { Theme } from '@radix-ui/themes'
 import 'highlight.js/styles/github.css'
 import dynamic from 'next/dynamic'
@@ -38,6 +39,7 @@ export default function Home() {
 
         <div className={styles.content}>
           <Drawer />
+          <Tree />
           <GroundComponent />
           <ControlCenter />
         </div>

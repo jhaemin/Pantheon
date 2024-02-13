@@ -26,6 +26,7 @@ import {
   RadixDialogNodeControls,
 } from './radix-dialog'
 import { RadixFlexNodeComponent, RadixFlexNodeControls } from './radix-flex'
+import { RadixGridNodeComponent, RadixGridNodeControls } from './radix-grid'
 import {
   RadixSwitchNodeComponent,
   RadixSwitchNodeControls,
@@ -43,6 +44,7 @@ export const generatedNodeComponentMap = {
   RadixContainer: RadixContainerNodeComponent,
   RadixDialog: RadixDialogNodeComponent,
   RadixFlex: RadixFlexNodeComponent,
+  RadixGrid: RadixGridNodeComponent,
   RadixSwitch: RadixSwitchNodeComponent,
   RadixText: RadixTextNodeComponent,
 }
@@ -58,6 +60,7 @@ export const generatedNodeControlsMap = {
   RadixContainer: RadixContainerNodeControls,
   RadixDialog: RadixDialogNodeControls,
   RadixFlex: RadixFlexNodeControls,
+  RadixGrid: RadixGridNodeControls,
   RadixSwitch: RadixSwitchNodeControls,
   RadixText: RadixTextNodeControls,
 }

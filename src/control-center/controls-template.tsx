@@ -1,6 +1,5 @@
 import { triggerRerenderGuides } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
-import { FragmentNode } from '@/node-class/fragment'
 import { Node } from '@/node-class/node'
 import { ExtractMapStoreGeneric } from '@/types/extract-generic'
 import { useStore } from '@nanostores/react'
@@ -160,13 +159,7 @@ export function SlotToggleControls({
         checked={allNodesSlotEnabled}
         onCheckedChange={(checked) => {
           nodes.forEach((node) => {
-            if (checked) {
-              if (!node.$slots.get()[slotKey]) {
-                node.setSlot(slotKey, new FragmentNode())
-              }
-            } else {
-              node.removeSlotByKey(slotKey)
-            }
+            node.toggleSlot(slotKey)
           })
 
           triggerRerenderGuides(true)

@@ -8,6 +8,7 @@ export function Custom(type: string) {
 
 export type Slot = {
   key: string
+  label?: string
   required?: boolean
   componentName?: string
   props?: NodeDefinition['props']
@@ -17,7 +18,19 @@ export type Slot = {
 export type Prop = {
   key: string
   label?: string
-  type: 'string' | 'number' | 'boolean' | 'ReactNode' | string[] | CustomClass
+  type:
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'ReactNode'
+    | (
+        | string
+        | {
+            value: string
+            label: string
+          }
+      )[]
+    | CustomClass
   required?: boolean
   default?: any | CustomClass
 }

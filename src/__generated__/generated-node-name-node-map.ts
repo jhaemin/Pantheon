@@ -8,6 +8,7 @@ import { RadixCardNode } from './radix-card'
 import { RadixContainerNode } from './radix-container'
 import { RadixDialogNode } from './radix-dialog'
 import { RadixFlexNode } from './radix-flex'
+import { RadixGridNode } from './radix-grid'
 import { RadixSwitchNode } from './radix-switch'
 import { RadixTextNode } from './radix-text'
 
@@ -22,6 +23,7 @@ export const generatedNodeNameNodeMap = {
   RadixContainer: RadixContainerNode,
   RadixDialog: RadixDialogNode,
   RadixFlex: RadixFlexNode,
+  RadixGrid: RadixGridNode,
   RadixSwitch: RadixSwitchNode,
   RadixText: RadixTextNode,
 }

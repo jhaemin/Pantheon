@@ -2,15 +2,15 @@ import {
   generatedNodeComponentMap,
   generatedNodeControlsMap,
 } from '@/__generated__/generated-node-map'
-import { FC } from 'react'
+import { type FC } from 'react'
+import { type InferNodeByName } from './infer-node-by-name'
 import {
   FragmentNodeComponent,
   FragmentNodeControls,
 } from './node-class/fragment'
 import { PageNodeComponent, PageNodeControls } from './node-class/page'
 import { TextNodeComponent, TextNodeControls } from './node-class/text'
-import { NodeName } from './node-name'
-import { InferNodeByName } from './node-name-node-map'
+import { type NodeName } from './node-name'
 
 export const nodeComponentMap: {
   [K in NodeName]: FC<{ node: InferNodeByName<K> }>

@@ -1,6 +1,6 @@
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'
-import { Node } from '@/node-class/node'
+import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
@@ -11,8 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
-import { FragmentNode } from '@/node-class/fragment'
-import type { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Dialog } from '@radix-ui/themes'
 
 export type RadixDialogNodeProps = {
@@ -33,6 +32,58 @@ export class RadixDialogNode extends Node {
   }
 
   readonly $props = map(this.defaultProps)
+
+  slotsInfo = {
+    content: {
+      required: true,
+      key: 'content',
+      label: 'content',
+    },
+
+    title: {
+      required: false,
+      key: 'title',
+      label: 'title',
+    },
+
+    description: {
+      required: false,
+      key: 'description',
+      label: 'description',
+    },
+
+    contentBody: {
+      required: true,
+      key: 'contentBody',
+      label: 'contentBody',
+    },
+  }
+
+  slotsInfoArray = [
+    {
+      required: true,
+      key: 'content',
+      label: 'content',
+    },
+
+    {
+      required: false,
+      key: 'title',
+      label: 'title',
+    },
+
+    {
+      required: false,
+      key: 'description',
+      label: 'description',
+    },
+
+    {
+      required: true,
+      key: 'contentBody',
+      label: 'contentBody',
+    },
+  ]
 
   readonly $slots = atom<{
     content: FragmentNode
@@ -55,21 +106,11 @@ export class RadixDialogNode extends Node {
       isUnselectable: true,
     })
 
-    this.setSlot(
-      'content',
-      new FragmentNode({
-        isRemovable: false,
-        isDraggable: false,
-      }),
-    )
+    // Enable required slot inside constructor instead of property initializer
+    // because enableSlot() sets parent of the slot
+    this.enableSlot('content')
 
-    this.setSlot(
-      'contentBody',
-      new FragmentNode({
-        isRemovable: false,
-        isDraggable: false,
-      }),
-    )
+    this.enableSlot('contentBody')
   }
 }
 

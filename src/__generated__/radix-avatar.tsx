@@ -1,4 +1,4 @@
-import { Node } from '@/node-class/node'
+import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
@@ -9,8 +9,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
-import { FragmentNode } from '@/node-class/fragment'
-import type { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Avatar } from '@radix-ui/themes'
 
 export type RadixAvatarNodeProps = {
@@ -58,12 +57,19 @@ export class RadixAvatarNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
+  slotsInfo = {}
+
+  slotsInfoArray = []
+
   readonly $slots = atom<{}>({})
 
   constructor() {
     super({
       isUnselectable: false,
     })
+
+    // Enable required slot inside constructor instead of property initializer
+    // because enableSlot() sets parent of the slot
   }
 
   get isDroppable() {

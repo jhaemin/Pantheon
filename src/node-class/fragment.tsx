@@ -2,29 +2,15 @@ import { useStore } from '@nanostores/react'
 import { Callout } from '@radix-ui/themes'
 import { EmptyPlaceholder } from '../empty-placeholder'
 import { renderChildren } from '../node-component'
-import { Node } from './node'
-
-export class FragmentNode extends Node {
-  readonly nodeName = 'Fragment'
-
-  public generateCode(): string {
-    if (this.children.length === 0) {
-      return ''
-    }
-
-    if (this.children.length === 1) {
-      return this.children[0].generateCode()
-    }
-
-    return `<>${this.children.map((child) => child.generateCode()).join('')}</>`
-  }
-}
+import { FragmentNode } from './node'
 
 export function FragmentNodeComponent({ node }: { node: FragmentNode }) {
   const children = useStore(node.$children)
+  const slotLabel = node.slotLabel
+  const emptyPlaceholderName = slotLabel ? `Slot: ${slotLabel}` : 'Fragment'
 
   return children.length === 0 ? (
-    <EmptyPlaceholder name="Fragment" />
+    <EmptyPlaceholder name={emptyPlaceholderName} />
   ) : (
     renderChildren(children)
   )

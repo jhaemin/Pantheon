@@ -293,6 +293,54 @@ export const flexDef: NodeDefinition = {
   ],
 }
 
+export const gridDef: NodeDefinition = {
+  nodeName: 'RadixGrid',
+  lib: {
+    mod: 'Grid',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'display',
+      type: ['none', 'inline-grid', 'grid'],
+      default: 'grid',
+    },
+    {
+      key: 'columns',
+      type: 'string',
+    },
+    {
+      key: 'rows',
+      type: 'string',
+    },
+    {
+      key: 'flow',
+      type: ['row', 'column', 'dense', 'row-dense', 'column-dense'],
+    },
+    {
+      key: 'align',
+      type: ['start', 'center', 'end', 'stretch', 'baseline'],
+    },
+    {
+      key: 'justify',
+      type: ['start', 'center', 'end', 'between'],
+    },
+    {
+      key: 'gap',
+      type: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'gapX',
+      type: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'gapY',
+      type: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    ...commonLayoutProps,
+  ],
+}
+
 export const containerDef: NodeDefinition = {
   nodeName: 'RadixContainer',
   lib: {

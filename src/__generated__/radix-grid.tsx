@@ -12,14 +12,18 @@ import {
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
 import { type ReactNode } from 'react'
+import { Grid } from '@radix-ui/themes'
 
-export type RadixFlexNodeProps = {
-  display?: 'none' | 'inline-flex' | 'flex'
-  direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
+export type RadixGridNodeProps = {
+  display?: 'none' | 'inline-grid' | 'grid'
+  columns?: string
+  rows?: string
+  flow?: 'row' | 'column' | 'dense' | 'row-dense' | 'column-dense'
   align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
   justify?: 'start' | 'center' | 'end' | 'between'
-  wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
   gap?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  gapX?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  gapY?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   p?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   px?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   py?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
@@ -37,10 +41,10 @@ export type RadixFlexNodeProps = {
   grow?: '0' | '1'
 }
 
-export class RadixFlexNode extends Node {
-  readonly nodeName = 'RadixFlex'
+export class RadixGridNode extends Node {
+  readonly nodeName = 'RadixGrid'
 
-  public readonly defaultProps: RadixFlexNodeProps = {}
+  public readonly defaultProps: RadixGridNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -60,22 +64,22 @@ export class RadixFlexNode extends Node {
   }
 }
 
-export function RadixFlexNodeComponent({ node }: { node: RadixFlexNode }) {
+export function RadixGridNodeComponent({ node }: { node: RadixGridNode }) {
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Flex {...props}>
+    <Grid {...props}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (
-        <EmptyPlaceholder name="RadixFlex" />
+        <EmptyPlaceholder name="RadixGrid" />
       )}
-    </Flex>
+    </Grid>
   )
 }
 
-export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
+export function RadixGridNodeControls({ nodes }: { nodes: RadixGridNode[] }) {
   return (
     <>
       <SelectControls
@@ -85,20 +89,31 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
         options={[
           { label: 'default', value: undefined },
           { label: 'none', value: 'none' },
-          { label: 'inline-flex', value: 'inline-flex' },
-          { label: 'flex', value: 'flex' },
+          { label: 'inline-grid', value: 'inline-grid' },
+          { label: 'grid', value: 'grid' },
         ]}
       />
-      <SelectControls
-        controlsLabel="direction"
+      <TextFieldControls
+        controlsLabel="columns"
         nodes={nodes}
-        propertyKey="direction"
+        propertyKey="columns"
+      />
+      <TextFieldControls
+        controlsLabel="rows"
+        nodes={nodes}
+        propertyKey="rows"
+      />
+      <SelectControls
+        controlsLabel="flow"
+        nodes={nodes}
+        propertyKey="flow"
         options={[
           { label: 'default', value: undefined },
           { label: 'row', value: 'row' },
-          { label: 'row-reverse', value: 'row-reverse' },
           { label: 'column', value: 'column' },
-          { label: 'column-reverse', value: 'column-reverse' },
+          { label: 'dense', value: 'dense' },
+          { label: 'row-dense', value: 'row-dense' },
+          { label: 'column-dense', value: 'column-dense' },
         ]}
       />
       <SelectControls
@@ -127,20 +142,45 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
         ]}
       />
       <SelectControls
-        controlsLabel="wrap"
-        nodes={nodes}
-        propertyKey="wrap"
-        options={[
-          { label: 'default', value: undefined },
-          { label: 'wrap', value: 'wrap' },
-          { label: 'nowrap', value: 'nowrap' },
-          { label: 'wrap-reverse', value: 'wrap-reverse' },
-        ]}
-      />
-      <SelectControls
         controlsLabel="gap"
         nodes={nodes}
         propertyKey="gap"
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="gapX"
+        nodes={nodes}
+        propertyKey="gapX"
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="gapY"
+        nodes={nodes}
+        propertyKey="gapY"
         options={[
           { label: 'default', value: undefined },
           { label: '0', value: '0' },

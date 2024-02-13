@@ -111,14 +111,13 @@ ${
 import { renderChildren } from '@/node-component'
 import { EmptyPlaceholder } from '@/empty-placeholder'`
 }
-import { Node } from '@/node-class/node'
+import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
 ${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls, TextFieldControls } from '@/control-center/controls-template'` : ''}
 import { NodeComponent } from '@/node-component'
-import { FragmentNode } from '@/node-class/fragment'
-import type { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 ${(() => {
   if (lib.from === '@radix-ui/themes') {
     if (lib.mod !== 'Card' && lib.mod !== 'Flex') {
@@ -159,6 +158,34 @@ export class ${nodeClassName} extends Node {
 
   readonly $props = map(this.defaultProps)
 
+  slotsInfo = {
+    ${allSlots
+      .map(
+        (slot) =>
+          `
+    ${slot.key}: {
+      required: ${slot.required ? 'true' : 'false'},
+      key: '${slot.key}',
+      label: '${slot.label ?? slot.key}',
+    }`,
+      )
+      .join(',\n')}
+  }
+
+  slotsInfoArray = [
+    ${allSlots
+      .map(
+        (slot) =>
+          `
+    {
+      required: ${slot.required ? 'true' : 'false'},
+      key: '${slot.key}',
+      label: '${slot.label ?? slot.key}',
+    }`,
+      )
+      .join(',\n')}
+  ]
+
   readonly $slots = atom<{ ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'FragmentNode' : 'FragmentNode | null'}`).join(';')} }>({
     ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'new FragmentNode()' : 'null'}`).join(',\n')}
   })
@@ -182,13 +209,12 @@ export class ${nodeClassName} extends Node {
       isUnselectable: ${unselectable ? 'true' : 'false'},
     })
 
+    // Enable required slot inside constructor instead of property initializer
+    // because enableSlot() sets parent of the slot
     ${allSlots
       .map((slot) => {
         if (slot.required) {
-          return `this.setSlot('${slot.key}', new FragmentNode({
-            isRemovable: ${slot.required ? 'false' : 'true'},
-            isDraggable: ${slot.required ? 'false' : 'true'},
-          }))`
+          return `this.enableSlot('${slot.key}')`
         }
         return ''
       })
@@ -277,7 +303,18 @@ export function ${nodeControlsName}({ nodes }: { nodes: ${nodeClassName}[] }) {
                   propertyKey="${key}"
                   options={[
                     ${!prop.required ? `{ label: 'default', value: undefined },` : ''}
-                    ${Array.isArray(type) ? type.map((t) => `{ label: '${t}', value: '${t}' }`).join(',\n') : ''}
+                    ${
+                      Array.isArray(type)
+                        ? type
+                            .map((t) => {
+                              const value = typeof t === 'string' ? t : t.value
+                              const label = typeof t === 'string' ? t : t.label
+
+                              return `{ label: '${label}', value: '${value}' }`
+                            })
+                            .join(',\n')
+                        : ''
+                    }
                   ]}
                 />`
             } else if (type === 'boolean') {

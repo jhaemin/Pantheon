@@ -2,11 +2,12 @@ import { Action, AddPageAction, RemovePageAction } from './action'
 import { $hoveredNode, $selectedNodes } from './atoms'
 import { Ground } from './ground'
 import { History, HistoryStackItem } from './history'
+import { type InferNodeByName } from './infer-node-by-name'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 import { isUnwrappableNode } from './node-lib'
 import { NodeName } from './node-name'
-import { InferNodeByName, nodeNameNodeMap } from './node-name-node-map'
+import { nodeNameNodeMap } from './node-name-node-map'
 import { studioApp } from './studio-app'
 
 export function commandAppendNodes(parent: Node, nodes: Node[]) {

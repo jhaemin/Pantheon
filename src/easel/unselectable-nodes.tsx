@@ -27,8 +27,8 @@ export function UnselectableNodes({ page }: { page: PageNode }) {
         {unselectableNodes.map((node) => (
           <Button
             key={node.id}
-            color="gray"
-            variant="ghost"
+            // color="gray"
+            variant="soft"
             onMouseDown={() => {
               $selectedNodes.set([node])
             }}
