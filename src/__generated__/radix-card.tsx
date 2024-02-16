@@ -20,6 +20,7 @@ export type RadixCardNodeProps = {
 
 export class RadixCardNode extends Node {
   readonly nodeName = 'RadixCard'
+  readonly componentName = 'Card'
 
   public readonly defaultProps: RadixCardNodeProps = {}
 

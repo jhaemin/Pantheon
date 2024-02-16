@@ -6,9 +6,12 @@ import { RadixButtonNode } from '@/__generated__/radix-button'
 import { RadixCalloutNode } from '@/__generated__/radix-callout'
 import { RadixCardNode } from '@/__generated__/radix-card'
 import { RadixCheckboxNode } from '@/__generated__/radix-checkbox'
+import { RadixCodeNode } from '@/__generated__/radix-code'
 import { RadixDialogNode } from '@/__generated__/radix-dialog'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixGridNode } from '@/__generated__/radix-grid'
+import { RadixHeadingNode } from '@/__generated__/radix-heading'
+import { RadixLinkNode } from '@/__generated__/radix-link'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { RadixTextNode } from '@/__generated__/radix-text'
 import { RadixTextFieldNode } from '@/__generated__/radix-text-field'
@@ -24,7 +27,10 @@ import {
   Callout,
   Card,
   Checkbox,
+  Code,
   Flex,
+  Heading,
+  Link,
   ScrollArea,
   Separator,
   Switch,
@@ -143,6 +149,36 @@ export function Drawer() {
             }}
           >
             <Text size="3">Radix Text</Text>
+          </DrawerItemWrapper>
+
+          <DrawerItemWrapper
+            createNode={() => {
+              const radixHeading = new RadixHeadingNode()
+              radixHeading.append(new TextNode('Heading'))
+              return radixHeading
+            }}
+          >
+            <Heading>Heading</Heading>
+          </DrawerItemWrapper>
+
+          <DrawerItemWrapper
+            createNode={() => {
+              const radixCode = new RadixCodeNode()
+              radixCode.append(new TextNode('console.log()'))
+              return radixCode
+            }}
+          >
+            <Code>console.log()</Code>
+          </DrawerItemWrapper>
+
+          <DrawerItemWrapper
+            createNode={() => {
+              const radixLink = new RadixLinkNode()
+              radixLink.append(new TextNode('Link'))
+              return radixLink
+            }}
+          >
+            <Link>Link</Link>
           </DrawerItemWrapper>
 
           <DrawerItemWrapper

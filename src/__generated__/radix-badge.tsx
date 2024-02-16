@@ -50,6 +50,7 @@ export type RadixBadgeNodeProps = {
 
 export class RadixBadgeNode extends Node {
   readonly nodeName = 'RadixBadge'
+  readonly componentName = 'Badge'
 
   public readonly defaultProps: RadixBadgeNodeProps = {}
 

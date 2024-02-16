@@ -49,6 +49,7 @@ export type RadixBlockquoteNodeProps = {
 
 export class RadixBlockquoteNode extends Node {
   readonly nodeName = 'RadixBlockquote'
+  readonly componentName = 'Blockquote'
 
   public readonly defaultProps: RadixBlockquoteNodeProps = {}
 

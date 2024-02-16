@@ -1,9 +1,10 @@
-import { triggerRerenderGuides } from '@/atoms'
+import { $selectedNodes, triggerRerenderGuides } from '@/atoms'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom } from 'nanostores'
 import { useCallback, useEffect } from 'react'
 import { Node } from './node'
+import { PageNode } from './page'
 
 export class TextNode extends Node {
   readonly nodeName = 'Text'
@@ -30,7 +31,15 @@ export class TextNode extends Node {
   }
 
   public generateCode(): string {
-    return `<span>${this.value}</span>`
+    if (this.parent instanceof PageNode) {
+      return `<span>${this.value}</span>`
+    }
+
+    if ($selectedNodes.get().includes(this)) {
+      return `'${this.value}'`
+    }
+
+    return `${this.value}`
   }
 }
 

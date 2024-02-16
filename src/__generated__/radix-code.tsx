@@ -1,3 +1,5 @@
+import { renderChildren } from '@/node-component'
+import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
@@ -10,11 +12,12 @@ import {
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
 import { type ReactNode } from 'react'
-import { Checkbox } from '@radix-ui/themes'
+import { Code } from '@radix-ui/themes'
 
-export type RadixCheckboxNodeProps = {
-  size?: '1' | '2' | '3'
-  variant?: 'classic' | 'surface' | 'soft'
+export type RadixCodeNodeProps = {
+  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  variant?: 'solid' | 'soft' | 'outline' | 'ghost'
+  weight?: 'light' | 'regular' | 'medium' | 'bold'
   color?:
     | 'tomato'
     | 'red'
@@ -45,11 +48,11 @@ export type RadixCheckboxNodeProps = {
   highContrast?: boolean
 }
 
-export class RadixCheckboxNode extends Node {
-  readonly nodeName = 'RadixCheckbox'
-  readonly componentName = 'Checkbox'
+export class RadixCodeNode extends Node {
+  readonly nodeName = 'RadixCode'
+  readonly componentName = 'Code'
 
-  public readonly defaultProps: RadixCheckboxNodeProps = {}
+  public readonly defaultProps: RadixCodeNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -67,27 +70,24 @@ export class RadixCheckboxNode extends Node {
     // Enable required slot inside constructor instead of property initializer
     // because enableSlot() sets parent of the slot
   }
-
-  get isDroppable() {
-    return false
-  }
 }
 
-export function RadixCheckboxNodeComponent({
-  node,
-}: {
-  node: RadixCheckboxNode
-}) {
+export function RadixCodeNodeComponent({ node }: { node: RadixCodeNode }) {
+  const children = useStore(node.$children)
   const props = useStore(node.$props)
 
-  return <Checkbox {...props} />
+  return (
+    <Code {...props}>
+      {children.length > 0 ? (
+        renderChildren(children)
+      ) : (
+        <EmptyPlaceholder name="RadixCode" />
+      )}
+    </Code>
+  )
 }
 
-export function RadixCheckboxNodeControls({
-  nodes,
-}: {
-  nodes: RadixCheckboxNode[]
-}) {
+export function RadixCodeNodeControls({ nodes }: { nodes: RadixCodeNode[] }) {
   return (
     <>
       <SelectControls
@@ -95,12 +95,18 @@ export function RadixCheckboxNodeControls({
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="size"
-        defaultValue="2"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
           { label: '2', value: '2' },
           { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
@@ -108,12 +114,27 @@ export function RadixCheckboxNodeControls({
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="variant"
-        defaultValue="surface"
+        defaultValue="soft"
         options={[
           { label: 'default', value: undefined },
-          { label: 'classic', value: 'classic' },
-          { label: 'surface', value: 'surface' },
+          { label: 'solid', value: 'solid' },
           { label: 'soft', value: 'soft' },
+          { label: 'outline', value: 'outline' },
+          { label: 'ghost', value: 'ghost' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="weight"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="weight"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'light', value: 'light' },
+          { label: 'regular', value: 'regular' },
+          { label: 'medium', value: 'medium' },
+          { label: 'bold', value: 'bold' },
         ]}
       />
       <SelectControls

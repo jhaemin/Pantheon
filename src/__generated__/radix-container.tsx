@@ -21,6 +21,7 @@ export type RadixContainerNodeProps = {
 
 export class RadixContainerNode extends Node {
   readonly nodeName = 'RadixContainer'
+  readonly componentName = 'Container'
 
   public readonly defaultProps: RadixContainerNodeProps = {}
 

@@ -21,6 +21,7 @@ import {
   RadixCheckboxNodeComponent,
   RadixCheckboxNodeControls,
 } from './radix-checkbox'
+import { RadixCodeNodeComponent, RadixCodeNodeControls } from './radix-code'
 import {
   RadixContainerNodeComponent,
   RadixContainerNodeControls,
@@ -31,6 +32,11 @@ import {
 } from './radix-dialog'
 import { RadixFlexNodeComponent, RadixFlexNodeControls } from './radix-flex'
 import { RadixGridNodeComponent, RadixGridNodeControls } from './radix-grid'
+import {
+  RadixHeadingNodeComponent,
+  RadixHeadingNodeControls,
+} from './radix-heading'
+import { RadixLinkNodeComponent, RadixLinkNodeControls } from './radix-link'
 import {
   RadixSwitchNodeComponent,
   RadixSwitchNodeControls,
@@ -50,10 +56,13 @@ export const generatedNodeComponentMap = {
   RadixCallout: RadixCalloutNodeComponent,
   RadixCard: RadixCardNodeComponent,
   RadixCheckbox: RadixCheckboxNodeComponent,
+  RadixCode: RadixCodeNodeComponent,
   RadixContainer: RadixContainerNodeComponent,
   RadixDialog: RadixDialogNodeComponent,
   RadixFlex: RadixFlexNodeComponent,
   RadixGrid: RadixGridNodeComponent,
+  RadixHeading: RadixHeadingNodeComponent,
+  RadixLink: RadixLinkNodeComponent,
   RadixSwitch: RadixSwitchNodeComponent,
   RadixText: RadixTextNodeComponent,
   RadixTextField: RadixTextFieldNodeComponent,
@@ -68,10 +77,13 @@ export const generatedNodeControlsMap = {
   RadixCallout: RadixCalloutNodeControls,
   RadixCard: RadixCardNodeControls,
   RadixCheckbox: RadixCheckboxNodeControls,
+  RadixCode: RadixCodeNodeControls,
   RadixContainer: RadixContainerNodeControls,
   RadixDialog: RadixDialogNodeControls,
   RadixFlex: RadixFlexNodeControls,
   RadixGrid: RadixGridNodeControls,
+  RadixHeading: RadixHeadingNodeControls,
+  RadixLink: RadixLinkNodeControls,
   RadixSwitch: RadixSwitchNodeControls,
   RadixText: RadixTextNodeControls,
   RadixTextField: RadixTextFieldNodeControls,

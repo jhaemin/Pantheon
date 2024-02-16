@@ -77,6 +77,117 @@ export const textDef: NodeDefinition = {
   ],
 }
 
+export const headingDef: NodeDefinition = {
+  nodeName: 'RadixHeading',
+  lib: {
+    mod: 'Heading',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'as',
+      type: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+      default: 'h1',
+    },
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+      default: '6',
+    },
+    {
+      key: 'weight',
+      type: ['light', 'regular', 'medium', 'bold'],
+      default: 'bold',
+    },
+    {
+      key: 'align',
+      type: ['left', 'center', 'right'],
+    },
+    {
+      key: 'trim',
+      type: ['normal', 'start', 'end', 'both'],
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+}
+
+export const codeDef: NodeDefinition = {
+  nodeName: 'RadixCode',
+  lib: {
+    mod: 'Code',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'variant',
+      type: ['solid', 'soft', 'outline', 'ghost'],
+      default: 'soft',
+    },
+    {
+      key: 'weight',
+      type: ['light', 'regular', 'medium', 'bold'],
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+}
+
+export const linkDef: NodeDefinition = {
+  nodeName: 'RadixLink',
+  lib: {
+    mod: 'Link',
+    from: importFrom,
+  },
+  props: [
+    {
+      key: 'href',
+      label: 'URL',
+      type: 'string',
+    },
+    {
+      key: 'size',
+      type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    },
+    {
+      key: 'weight',
+      type: ['light', 'regular', 'medium', 'bold'],
+    },
+    {
+      key: 'trim',
+      type: ['normal', 'start', 'end', 'both'],
+    },
+    {
+      key: 'underline',
+      type: ['auto', 'hover', 'always'],
+    },
+    {
+      key: 'color',
+      type: color,
+    },
+    {
+      key: 'highContrast',
+      type: 'boolean',
+    },
+  ],
+}
+
 export const buttonDef: NodeDefinition = {
   nodeName: 'RadixButton',
   lib: {
@@ -173,7 +284,39 @@ export const switchDef: NodeDefinition = {
 
 const zeroToNine = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
+const commonMarginProps: Prop[] = [
+  {
+    key: 'm',
+    type: zeroToNine,
+  },
+  {
+    key: 'mx',
+    type: zeroToNine,
+  },
+  {
+    key: 'my',
+    type: zeroToNine,
+  },
+  {
+    key: 'mt',
+    type: zeroToNine,
+  },
+  {
+    key: 'mr',
+    type: zeroToNine,
+  },
+  {
+    key: 'mb',
+    type: zeroToNine,
+  },
+  {
+    key: 'ml',
+    type: zeroToNine,
+  },
+]
+
 const commonLayoutProps: Prop[] = [
+  ...commonMarginProps,
   {
     key: 'p',
     type: zeroToNine,

@@ -1,3 +1,5 @@
+import { renderChildren } from '@/node-component'
+import { EmptyPlaceholder } from '@/empty-placeholder'
 import { Node, FragmentNode } from '@/node-class/node'
 import { useStore } from '@nanostores/react'
 import { atom, map } from 'nanostores'
@@ -10,11 +12,14 @@ import {
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
 import { type ReactNode } from 'react'
-import { Checkbox } from '@radix-ui/themes'
+import { Link } from '@radix-ui/themes'
 
-export type RadixCheckboxNodeProps = {
-  size?: '1' | '2' | '3'
-  variant?: 'classic' | 'surface' | 'soft'
+export type RadixLinkNodeProps = {
+  href?: string
+  size?: '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  weight?: 'light' | 'regular' | 'medium' | 'bold'
+  trim?: 'normal' | 'start' | 'end' | 'both'
+  underline?: 'auto' | 'hover' | 'always'
   color?:
     | 'tomato'
     | 'red'
@@ -45,11 +50,11 @@ export type RadixCheckboxNodeProps = {
   highContrast?: boolean
 }
 
-export class RadixCheckboxNode extends Node {
-  readonly nodeName = 'RadixCheckbox'
-  readonly componentName = 'Checkbox'
+export class RadixLinkNode extends Node {
+  readonly nodeName = 'RadixLink'
+  readonly componentName = 'Link'
 
-  public readonly defaultProps: RadixCheckboxNodeProps = {}
+  public readonly defaultProps: RadixLinkNodeProps = {}
 
   readonly $props = map(this.defaultProps)
 
@@ -67,53 +72,91 @@ export class RadixCheckboxNode extends Node {
     // Enable required slot inside constructor instead of property initializer
     // because enableSlot() sets parent of the slot
   }
-
-  get isDroppable() {
-    return false
-  }
 }
 
-export function RadixCheckboxNodeComponent({
-  node,
-}: {
-  node: RadixCheckboxNode
-}) {
+export function RadixLinkNodeComponent({ node }: { node: RadixLinkNode }) {
+  const children = useStore(node.$children)
   const props = useStore(node.$props)
 
-  return <Checkbox {...props} />
+  return (
+    <Link {...props}>
+      {children.length > 0 ? (
+        renderChildren(children)
+      ) : (
+        <EmptyPlaceholder name="RadixLink" />
+      )}
+    </Link>
+  )
 }
 
-export function RadixCheckboxNodeControls({
-  nodes,
-}: {
-  nodes: RadixCheckboxNode[]
-}) {
+export function RadixLinkNodeControls({ nodes }: { nodes: RadixLinkNode[] }) {
   return (
     <>
+      <TextFieldControls
+        controlsLabel="URL"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="href"
+        defaultValue={undefined}
+      />
       <SelectControls
         controlsLabel="size"
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="size"
-        defaultValue="2"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
           { label: '1', value: '1' },
           { label: '2', value: '2' },
           { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
         ]}
       />
       <SelectControls
-        controlsLabel="variant"
+        controlsLabel="weight"
         nodes={nodes}
         propsAtomKey="$props"
-        propertyKey="variant"
-        defaultValue="surface"
+        propertyKey="weight"
+        defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },
-          { label: 'classic', value: 'classic' },
-          { label: 'surface', value: 'surface' },
-          { label: 'soft', value: 'soft' },
+          { label: 'light', value: 'light' },
+          { label: 'regular', value: 'regular' },
+          { label: 'medium', value: 'medium' },
+          { label: 'bold', value: 'bold' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="trim"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="trim"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'normal', value: 'normal' },
+          { label: 'start', value: 'start' },
+          { label: 'end', value: 'end' },
+          { label: 'both', value: 'both' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="underline"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="underline"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: 'auto', value: 'auto' },
+          { label: 'hover', value: 'hover' },
+          { label: 'always', value: 'always' },
         ]}
       />
       <SelectControls

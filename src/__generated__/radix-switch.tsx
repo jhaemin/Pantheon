@@ -21,6 +21,7 @@ export type RadixSwitchNodeProps = {
 
 export class RadixSwitchNode extends Node {
   readonly nodeName = 'RadixSwitch'
+  readonly componentName = 'Switch'
 
   public readonly defaultProps: RadixSwitchNodeProps = {}
 

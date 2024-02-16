@@ -20,6 +20,13 @@ export type RadixFlexNodeProps = {
   justify?: 'start' | 'center' | 'end' | 'between'
   wrap?: 'wrap' | 'nowrap' | 'wrap-reverse'
   gap?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  m?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  mx?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  my?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  mt?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  mr?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  mb?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+  ml?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   p?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   px?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
   py?: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
@@ -39,6 +46,7 @@ export type RadixFlexNodeProps = {
 
 export class RadixFlexNode extends Node {
   readonly nodeName = 'RadixFlex'
+  readonly componentName = 'Flex'
 
   public readonly defaultProps: RadixFlexNodeProps = {}
 
@@ -152,6 +160,146 @@ export function RadixFlexNodeControls({ nodes }: { nodes: RadixFlexNode[] }) {
         nodes={nodes}
         propsAtomKey="$props"
         propertyKey="gap"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="m"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="m"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="mx"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="mx"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="my"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="my"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="mt"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="mt"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="mr"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="mr"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="mb"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="mb"
+        defaultValue={undefined}
+        options={[
+          { label: 'default', value: undefined },
+          { label: '0', value: '0' },
+          { label: '1', value: '1' },
+          { label: '2', value: '2' },
+          { label: '3', value: '3' },
+          { label: '4', value: '4' },
+          { label: '5', value: '5' },
+          { label: '6', value: '6' },
+          { label: '7', value: '7' },
+          { label: '8', value: '8' },
+          { label: '9', value: '9' },
+        ]}
+      />
+      <SelectControls
+        controlsLabel="ml"
+        nodes={nodes}
+        propsAtomKey="$props"
+        propertyKey="ml"
         defaultValue={undefined}
         options={[
           { label: 'default', value: undefined },

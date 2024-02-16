@@ -1,4 +1,4 @@
-import { $currentPage, $hoveredNode, $selectedNodes } from '@/atoms'
+import { $hoveredNode, $lastFocusedPage, $selectedNodes } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { Node } from '@/node-class/node'
 import { PageNode } from '@/node-class/page'
@@ -10,7 +10,7 @@ import styles from './tree.module.scss'
 
 export function Tree() {
   const ref = useRef<HTMLDivElement>(null!)
-  const currentPage = useStore($currentPage)
+  const currentPage = useStore($lastFocusedPage)
 
   useEffect(() => {
     const unsubscribe = $selectedNodes.subscribe((selectedNodes) => {
@@ -91,7 +91,9 @@ function NodeTree({ node }: { node: Node }) {
   useStore(node.$slots)
 
   const slotLabel = node.slotLabel ?? node.slotKey
-  const nodeLabel = slotLabel ? `Slot: ${slotLabel}` : node.nodeName
+  const nodeLabel = slotLabel
+    ? `Slot: ${slotLabel}`
+    : node.componentName ?? node.nodeName
 
   return (
     <Flex direction="column">
@@ -117,7 +119,7 @@ function NodeTree({ node }: { node: Node }) {
         </Flex>
       )}
       {node.childrenWithSlots.map((node) => (
-        <Box key={node.id} pl="2">
+        <Box key={node.id} ml="3">
           <NodeTree node={node} />
         </Box>
       ))}

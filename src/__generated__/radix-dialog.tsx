@@ -24,6 +24,7 @@ export type RadixDialogSlotContentProps = {
 
 export class RadixDialogNode extends Node {
   readonly nodeName = 'RadixDialog'
+  readonly componentName = 'Dialog.Root'
 
   public readonly defaultProps: RadixDialogNodeProps = {}
 

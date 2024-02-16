@@ -50,6 +50,7 @@ export type RadixAvatarNodeProps = {
 
 export class RadixAvatarNode extends Node {
   readonly nodeName = 'RadixAvatar'
+  readonly componentName = 'Avatar'
 
   public readonly defaultProps: RadixAvatarNodeProps = {
     fallback: 'A',

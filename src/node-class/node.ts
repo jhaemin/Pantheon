@@ -16,6 +16,7 @@ export abstract class Node {
   /** Unique ID */
   readonly id = alphanumericId(7)
   abstract readonly nodeName: NodeName
+  readonly componentName?: string
 
   readonly isUnselectable: boolean
 
@@ -380,14 +381,15 @@ export abstract class Node {
   public generateCode(): string {
     const props = this.props
     const serializedProps = serializeProps(props)
+    const componentName = this.componentName ?? this.nodeName
 
     if (this.children.length === 0) {
-      return `<${this.nodeName} ${serializedProps} />`
+      return `<${componentName} ${serializedProps} />`
     }
 
-    return `<${this.nodeName} ${serializedProps}>${this.children
+    return `<${componentName} ${serializedProps}>${this.children
       .map((child) => child.generateCode())
-      .join('')}</${this.nodeName}>`
+      .join('')}</${componentName}>`
   }
 }
 

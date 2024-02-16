@@ -6,10 +6,13 @@ import { RadixButtonNode } from './radix-button'
 import { RadixCalloutNode } from './radix-callout'
 import { RadixCardNode } from './radix-card'
 import { RadixCheckboxNode } from './radix-checkbox'
+import { RadixCodeNode } from './radix-code'
 import { RadixContainerNode } from './radix-container'
 import { RadixDialogNode } from './radix-dialog'
 import { RadixFlexNode } from './radix-flex'
 import { RadixGridNode } from './radix-grid'
+import { RadixHeadingNode } from './radix-heading'
+import { RadixLinkNode } from './radix-link'
 import { RadixSwitchNode } from './radix-switch'
 import { RadixTextNode } from './radix-text'
 import { RadixTextFieldNode } from './radix-text-field'
@@ -23,10 +26,13 @@ export const generatedNodeNameNodeMap = {
   RadixCallout: RadixCalloutNode,
   RadixCard: RadixCardNode,
   RadixCheckbox: RadixCheckboxNode,
+  RadixCode: RadixCodeNode,
   RadixContainer: RadixContainerNode,
   RadixDialog: RadixDialogNode,
   RadixFlex: RadixFlexNode,
   RadixGrid: RadixGridNode,
+  RadixHeading: RadixHeadingNode,
+  RadixLink: RadixLinkNode,
   RadixSwitch: RadixSwitchNode,
   RadixText: RadixTextNode,
   RadixTextField: RadixTextFieldNode,

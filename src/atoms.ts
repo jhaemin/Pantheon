@@ -1,5 +1,6 @@
-import { atom, computed } from 'nanostores'
+import { atom } from 'nanostores'
 import { Node } from './node-class/node'
+import { PageNode } from './node-class/page'
 
 /**
  * Use for finding the node by id when interacting with the DOM.
@@ -28,6 +29,18 @@ export const $isContextMenuOpen = atom(false)
 
 export const $hoveredNode = atom<Node | null>(null)
 export const $selectedNodes = atom<Node[]>([])
+
+$selectedNodes.listen(() => {
+  const selectedNodes = $selectedNodes.get()
+
+  if (selectedNodes.length === 0) return
+
+  if (
+    selectedNodes.every((node) => node.ownerPage === selectedNodes[0].ownerPage)
+  ) {
+    $lastFocusedPage.set(selectedNodes[0].ownerPage)
+  }
+})
 
 export const $isDraggingNode = atom(false)
 export const $isAnimatingGround = atom(false)
@@ -59,19 +72,7 @@ $interactionMode.listen((interactionMode) => {
   }
 })
 
-export const $currentPage = computed($selectedNodes, (selectedNodes) => {
-  if (selectedNodes.length === 0) {
-    return null
-  }
-
-  if (
-    selectedNodes.every((node) => node.ownerPage === selectedNodes[0].ownerPage)
-  ) {
-    return selectedNodes[0].ownerPage
-  }
-
-  return null
-})
+export const $lastFocusedPage = atom<PageNode | null>(null)
 
 export const $drawerHeight = atom(300)
 

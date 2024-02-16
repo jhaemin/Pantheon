@@ -52,6 +52,7 @@ export type RadixTextNodeProps = {
 
 export class RadixTextNode extends Node {
   readonly nodeName = 'RadixText'
+  readonly componentName = 'Text'
 
   public readonly defaultProps: RadixTextNodeProps = {}
 

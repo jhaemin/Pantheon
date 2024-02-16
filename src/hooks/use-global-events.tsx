@@ -85,10 +85,6 @@ export function useGlobalEvents() {
     }
 
     function onMouseDown(e: MouseEvent) {
-      if (document.activeElement?.tagName === 'IFRAME') {
-        ;(document.activeElement as HTMLElement).blur()
-      }
-
       // Radix Themes' Select component disables body pointer events
       // and make cursor click html element when click outside options.
       // This behavior makes the selection disappear.

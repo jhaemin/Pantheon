@@ -15,7 +15,6 @@ import {
   Tabs,
   Text,
 } from '@radix-ui/themes'
-import { AppControls } from './app-controls'
 import { TSX } from './tsx'
 
 export function ControlCenter() {
@@ -160,7 +159,9 @@ export function ControlCenter() {
                     )}
                   </Flex>
                 ) : (
-                  <AppControls />
+                  <Text align="center" size="2" color="gray">
+                    Select nodes to edit
+                  </Text>
                 )}
               </Flex>
             </Tabs.Content>

@@ -155,6 +155,7 @@ export type ${nodeName}Slot${pascalCase(slot.key)}Props = ${generatePropsType(pr
 
 export class ${nodeClassName} extends Node {
   readonly nodeName = '${nodeName}'
+  readonly componentName = '${componentName ?? lib.mod}'
 
   public readonly defaultProps: ${propsTypeName} = ${generateDefaultProps(props ?? [], nodeName)}
 

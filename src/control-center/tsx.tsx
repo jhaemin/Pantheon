@@ -1,22 +1,32 @@
+import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { format } from '@/format'
 import { Node } from '@/node-class/node'
+import { PageNode } from '@/node-class/page'
 import { useStore } from '@nanostores/react'
-import { CheckIcon, ClipboardIcon } from '@radix-ui/react-icons'
+import { CheckIcon, ClipboardIcon, SizeIcon } from '@radix-ui/react-icons'
 import {
   Box,
+  Button,
   Card,
+  Dialog,
   Flex,
   IconButton,
   Inset,
   ScrollArea,
   Text,
 } from '@radix-ui/themes'
+import { pascalCase } from 'change-case'
 import hljs from 'highlight.js'
 import { useEffect, useRef, useState } from 'react'
 
 export async function generateSourceCode(node: Node) {
+  const componentName =
+    node instanceof PageNode
+      ? pascalCase(node.$pageLabel.get() ?? 'UntitledPage')
+      : node.nodeName
+
   const sourceCode = `
-    function Component() {
+    function ${componentName}() {
       return ${node.generateCode()}
     }
   `
@@ -51,22 +61,59 @@ export function TSX({ node }: { node: Node }) {
     <Flex direction="column">
       <Flex align="center" justify="between">
         <Text size="2">TSX</Text>
-        <IconButton
-          variant="ghost"
-          color="gray"
-          onClick={() => {
-            navigator.clipboard.writeText(sourceCode.current)
-            setCopied(true)
 
-            window.clearTimeout(copyTimeout.current)
+        <Flex align="center" gap="3">
+          <Dialog.Root>
+            <Dialog.Trigger>
+              <IconButton variant="ghost" color="gray">
+                <SizeIcon />
+              </IconButton>
+            </Dialog.Trigger>
 
-            copyTimeout.current = window.setTimeout(() => {
-              setCopied(false)
-            }, 2000)
-          }}
-        >
-          {copied ? <CheckIcon /> : <ClipboardIcon />}
-        </IconButton>
+            <Dialog.Content {...keepNodeSelectionAttribute}>
+              <pre
+                style={{
+                  fontSize: 12,
+                  width: '100%',
+                  margin: 0,
+                  lineHeight: 1.4,
+                }}
+              >
+                <code
+                  style={{
+                    fontFamily: 'SF Mono, Menlo, monospace',
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: syntaxHighlighted,
+                  }}
+                />
+              </pre>
+
+              <Flex mt="6" justify="end">
+                <Dialog.Close>
+                  <Button>Close</Button>
+                </Dialog.Close>
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Root>
+
+          <IconButton
+            variant="ghost"
+            color="gray"
+            onClick={() => {
+              navigator.clipboard.writeText(sourceCode.current)
+              setCopied(true)
+
+              window.clearTimeout(copyTimeout.current)
+
+              copyTimeout.current = window.setTimeout(() => {
+                setCopied(false)
+              }, 2000)
+            }}
+          >
+            {copied ? <CheckIcon /> : <ClipboardIcon />}
+          </IconButton>
+        </Flex>
       </Flex>
 
       <Flex direction="column" mt="4">

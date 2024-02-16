@@ -49,6 +49,7 @@ export type RadixCalloutNodeProps = {
 
 export class RadixCalloutNode extends Node {
   readonly nodeName = 'RadixCallout'
+  readonly componentName = 'Callout.Root'
 
   public readonly defaultProps: RadixCalloutNodeProps = {}
 
