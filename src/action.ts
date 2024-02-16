@@ -42,63 +42,47 @@ export class RemovePageAction extends Action {
   }
 }
 
-/**
- * TODO: wrong implementation.
- * Inserting nodes can have different parent and nextSibling.
- * Current implementation is only for inserting nodes from the same parent.
- */
-export class InsertNodesAction extends Action {
-  private insertedNodes: Node[]
-  private oldContainableParent: Node | null
+export class InsertNodeAction extends Action {
+  private insertedNode: Node
+  private oldParent: Node | null
   private oldNextSibling: Node | null
-  private newContainableParent: Node
+  private newParent: Node
   private newNextSibling: Node | null
 
   constructor({
-    insertedNodes,
-    oldContainableParent,
+    insertedNode,
+    oldParent,
     oldNextSibling,
-    newContainableParent,
+    newParent,
     newNextSibling,
   }: {
-    insertedNodes: Node[]
-    oldContainableParent: Node | null
+    insertedNode: Node
+    oldParent: Node | null
     oldNextSibling: Node | null
-    newContainableParent: Node
+    newParent: Node
     newNextSibling: Node | null
   }) {
     super()
-    this.insertedNodes = insertedNodes
-    this.oldContainableParent = oldContainableParent
+    this.insertedNode = insertedNode
+    this.oldParent = oldParent
     this.oldNextSibling = oldNextSibling
-    this.newContainableParent = newContainableParent
+    this.newParent = newParent
     this.newNextSibling = newNextSibling
   }
 
   undo(): void {
-    if (this.oldContainableParent) {
-      this.oldContainableParent.insertBefore(
-        this.insertedNodes,
-        this.oldNextSibling,
-      )
-      $selectedNodes.set([...this.insertedNodes])
-    } else {
-      this.insertedNodes.forEach((child) => child.remove())
-      if (
-        this.insertedNodes.length > 0 &&
-        this.insertedNodes[0].parent instanceof Node
-      ) {
-        this.insertedNodes[0].parent.removeChildren(this.insertedNodes)
-      }
-      $selectedNodes.set([])
+    // Inserted from other parent
+    if (this.oldParent) {
+      this.oldParent.insertBefore(this.insertedNode, this.oldNextSibling)
+    }
+    // Inserted newly
+    else {
+      this.insertedNode.remove()
     }
   }
 
   redo(): void {
-    this.newContainableParent.insertBefore(
-      this.insertedNodes,
-      this.newNextSibling,
-    )
+    this.newParent.insertBefore(this.insertedNode, this.newNextSibling)
   }
 }
 
@@ -140,6 +124,44 @@ export class RemoveNodeAction extends Action {
   redo(): void {
     this.removedNode.remove()
     $selectedNodes.set([])
+  }
+}
+
+export class EnableSlotAction extends Action {
+  private slotParent: Node
+  private slot: Node
+
+  constructor({ slotParent, slot }: { slotParent: Node; slot: Node }) {
+    super()
+    this.slotParent = slotParent
+    this.slot = slot
+  }
+
+  undo(): void {
+    this.slotParent.disableSlot(this.slot)
+  }
+
+  redo(): void {
+    this.slotParent.setSlot(this.slot.slotKey!, this.slot)
+  }
+}
+
+export class DisableSlotAction extends Action {
+  private slotParent: Node
+  private slot: Node
+
+  constructor({ slotParent, slot }: { slotParent: Node; slot: Node }) {
+    super()
+    this.slotParent = slotParent
+    this.slot = slot
+  }
+
+  undo(): void {
+    this.slotParent.setSlot(this.slot.slotKey!, this.slot)
+  }
+
+  redo(): void {
+    this.slotParent.disableSlot(this.slot)
   }
 }
 

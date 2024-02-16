@@ -8,6 +8,7 @@
     "estree",
     "highlightjs",
     "hljs",
+    "minmax",
     "nanostores",
     "nums",
     "typecheck",

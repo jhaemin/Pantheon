@@ -72,3 +72,11 @@ export const $currentPage = computed($selectedNodes, (selectedNodes) => {
 
   return null
 })
+
+export const $drawerHeight = atom(300)
+
+$drawerHeight.subscribe((height) => {
+  if (typeof window == 'undefined') return
+
+  document.body.style.setProperty('--drawer-height', `${height}px`)
+})

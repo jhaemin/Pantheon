@@ -83,12 +83,12 @@ export class Ground {
     }
   }
 
-  static zoomIn(amount: number) {
-    Ground.setScale(Ground.$scale.get() + amount, 'center')
+  static zoomIn(amount: number, animation = false) {
+    Ground.setScale(Ground.$scale.get() + amount, 'center', animation)
   }
 
-  static zoomOut(amount: number) {
-    Ground.setScale(Ground.$scale.get() - amount, 'center')
+  static zoomOut(amount: number, animation = false) {
+    Ground.setScale(Ground.$scale.get() - amount, 'center', animation)
   }
 
   static setTranslate(x: number, y: number, animation = false) {

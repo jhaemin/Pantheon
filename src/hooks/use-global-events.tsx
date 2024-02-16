@@ -6,7 +6,7 @@ import {
   $selectionRerenderFlag,
   $showDevTools,
 } from '@/atoms'
-import { commandAddPage, commandDeleteNodes } from '@/command'
+import { commandAddPage, commandRemoveNodes } from '@/command'
 import { shouldKeepNodeSelection } from '@/data-attributes'
 import { Ground } from '@/ground'
 import { History } from '@/history'
@@ -40,7 +40,7 @@ export function useGlobalEvents() {
         const selectedNodes = $selectedNodes.get()
 
         if (selectedNodes.length > 0) {
-          commandDeleteNodes(selectedNodes)
+          commandRemoveNodes(selectedNodes)
         }
       } else if (e.key === 'a' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -78,6 +78,9 @@ export function useGlobalEvents() {
       } else if (e.key === '-' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         Ground.zoomOut(0.2)
+      } else if (e.key === '0' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        Ground.setScale(1)
       }
     }
 
@@ -107,16 +110,35 @@ export function useGlobalEvents() {
       $selectionRerenderFlag.set(!$selectionRerenderFlag.get())
     }
 
+    /**
+     * Some well-made accessible components like Radix Dialog automatically change focus to the element.
+     * To prevent stolen focus, blur the iframe when the window loses its focus.
+     */
+    function onBlur() {
+      const activeElement = document.activeElement
+
+      if (
+        activeElement instanceof HTMLElement &&
+        activeElement.tagName === 'IFRAME'
+      ) {
+        setTimeout(() => {
+          activeElement.blur()
+        }, 0)
+      }
+    }
+
     window.addEventListener('keydown', onKeyDown)
     window.addEventListener('mousedown', onMouseDown)
     window.addEventListener('contextmenu', onContextMenu)
     window.addEventListener('resize', onResize)
+    window.addEventListener('blur', onBlur)
 
     return () => {
       window.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('mousedown', onMouseDown)
       window.removeEventListener('contextmenu', onContextMenu)
       window.removeEventListener('resize', onResize)
+      window.removeEventListener('blur', onBlur)
     }
   }, [])
 }

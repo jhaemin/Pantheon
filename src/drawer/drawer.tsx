@@ -12,6 +12,7 @@ import { RadixGridNode } from '@/__generated__/radix-grid'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
 import { RadixTextNode } from '@/__generated__/radix-text'
 import { RadixTextFieldNode } from '@/__generated__/radix-text-field'
+import { $drawerHeight } from '@/atoms'
 import { TextNode } from '@/node-class/text'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import {
@@ -30,7 +31,9 @@ import {
   Text,
   TextField,
 } from '@radix-ui/themes'
+import minmax from 'minmax.js'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
+import styles from './drawer.module.scss'
 
 export function Drawer() {
   return (
@@ -56,11 +59,37 @@ export function Drawer() {
         height="4"
         mt="-2"
         align="center"
-        style={{
-          cursor: 'ns-resize',
+        className={styles.resizer}
+        onMouseDown={(e) => {
+          e.preventDefault()
+
+          const initialY = e.clientY
+          const initialHeight = $drawerHeight.get()
+
+          document.documentElement.classList.add('resizing-drawer')
+
+          const onMouseMove = (event: MouseEvent) => {
+            const deltaY = initialY - event.clientY
+            const newHeight = minmax(initialHeight + deltaY, 200, 600)
+
+            $drawerHeight.set(newHeight)
+          }
+
+          const onMouseUp = () => {
+            document.documentElement.classList.remove('resizing-drawer')
+            window.removeEventListener('mousemove', onMouseMove)
+            window.removeEventListener('mouseup', onMouseUp)
+          }
+
+          window.addEventListener('mousemove', onMouseMove)
+          window.addEventListener('mouseup', onMouseUp)
         }}
       >
-        <Separator orientation="horizontal" size="4" />
+        <Separator
+          orientation="horizontal"
+          size="4"
+          className={styles.separator}
+        />
       </Flex>
 
       <ScrollArea>

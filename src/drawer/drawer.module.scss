@@ -1,0 +1,24 @@
+.resizer {
+  z-index: 1;
+
+  &:hover {
+    cursor: ns-resize;
+
+    .separator {
+      background-color: var(--indigo-a9);
+      height: 4px;
+
+      transition:
+        background-color 200ms ease,
+        height 200ms ease;
+      transition-delay: 200ms;
+    }
+  }
+
+  @at-root :global(.resizing-drawer) & {
+    .separator {
+      background-color: var(--indigo-a9);
+      height: 4px;
+    }
+  }
+}

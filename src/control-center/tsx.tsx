@@ -26,6 +26,9 @@ export async function generateSourceCode(node: Node) {
   return formatted
 }
 
+/**
+ * TODO: Add large view button
+ */
 export function TSX({ node }: { node: Node }) {
   const additionalProps = useStore(node.$additionalProps)
   const props = useStore(node.$props)

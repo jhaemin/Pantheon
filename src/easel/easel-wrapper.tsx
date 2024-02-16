@@ -142,6 +142,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
       onMouseDown={(e) => onMouseDownIframe(e, page, false)}
     >
       <iframe
+        tabIndex={-1}
         id={getEaselIframeId(page.id)}
         className="easel-iframe"
         ref={iframeRef}

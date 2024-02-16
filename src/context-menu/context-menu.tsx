@@ -1,7 +1,7 @@
 import { $isContextMenuOpen, $selectedNodes } from '@/atoms'
 import {
-  commandDeleteNodes,
   commandFocusPage,
+  commandRemoveNodes,
   commandUnwrapNode,
   commandWrapNodes,
 } from '@/command'
@@ -211,7 +211,7 @@ export function ContextMenu() {
               const previousSibling = selectedNodes[0]?.previousSibling
 
               if (previousSibling && parent) {
-                parent.insertBefore([selectedNodes[0]], previousSibling)
+                parent.insertBefore(selectedNodes[0], previousSibling)
               }
             }}
           />
@@ -226,7 +226,7 @@ export function ContextMenu() {
               const nextSibling = selectedNodes[0]?.nextSibling
 
               if (nextSibling && parent) {
-                parent.insertBefore([selectedNodes[0]], nextSibling.nextSibling)
+                parent.insertBefore(selectedNodes[0], nextSibling.nextSibling)
               }
             }}
           />
@@ -245,7 +245,7 @@ export function ContextMenu() {
             label="Remove All Children"
             shortcut="⌫"
             icon={ChevronDownIcon}
-            onClick={() => commandDeleteNodes(selectedNodes[0].children)}
+            onClick={() => commandRemoveNodes(selectedNodes[0].children)}
           />
         )}
 
@@ -254,7 +254,7 @@ export function ContextMenu() {
             label="Remove"
             shortcut="⌫"
             icon={ChevronDownIcon}
-            onClick={() => commandDeleteNodes(selectedNodes)}
+            onClick={() => commandRemoveNodes(selectedNodes)}
           />
         )}
       </div>

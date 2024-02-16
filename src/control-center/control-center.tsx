@@ -1,5 +1,5 @@
 import { $hoveredNode, $selectedNodes } from '@/atoms'
-import { commandDeleteNodes } from '@/command'
+import { commandRemoveNodes } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { useStore } from '@nanostores/react'
@@ -58,7 +58,7 @@ export function ControlCenter() {
         <Box px="2">
           <Tabs.List>
             <Tabs.Trigger value="nodes">Nodes</Tabs.Trigger>
-            <Tabs.Trigger value="code">Code</Tabs.Trigger>
+            {/* <Tabs.Trigger value="code">Code</Tabs.Trigger> */}
           </Tabs.List>
         </Box>
 
@@ -133,7 +133,7 @@ export function ControlCenter() {
                                       e.stopPropagation()
                                     }}
                                     onClick={() => {
-                                      commandDeleteNodes([node])
+                                      commandRemoveNodes([node])
                                     }}
                                   >
                                     Remove
@@ -152,17 +152,23 @@ export function ControlCenter() {
                         </Flex>
                       )
                     })}
+                    {selectedNodes.length === 1 && firstSelectedNode && (
+                      <>
+                        <Separator size="4" />
+                        <TSX node={firstSelectedNode} />
+                      </>
+                    )}
                   </Flex>
                 ) : (
                   <AppControls />
                 )}
               </Flex>
             </Tabs.Content>
-            <Tabs.Content value="code">
+            {/* <Tabs.Content value="code">
               {selectedNodes.length === 1 && firstSelectedNode && (
                 <TSX node={firstSelectedNode} />
               )}
-            </Tabs.Content>
+            </Tabs.Content> */}
           </Box>
         </ScrollArea>
         {/* </Box> */}

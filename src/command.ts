@@ -1,4 +1,11 @@
-import { Action, AddPageAction, RemovePageAction } from './action'
+import {
+  Action,
+  AddPageAction,
+  DisableSlotAction,
+  InsertNodeAction,
+  RemoveNodeAction,
+  RemovePageAction,
+} from './action'
 import { $hoveredNode, $selectedNodes } from './atoms'
 import { Ground } from './ground'
 import { History, HistoryStackItem } from './history'
@@ -10,33 +17,27 @@ import { NodeName } from './node-name'
 import { nodeNameNodeMap } from './node-name-node-map'
 import { studioApp } from './studio-app'
 
-export function commandAppendNodes(parent: Node, nodes: Node[]) {
-  const insertAction = parent.append(...nodes)
-
-  if (!insertAction) return
-
-  History.push({
-    actions: [insertAction],
-    previousSelectedNodes: $selectedNodes.get(),
-    nextSelectedNodes: nodes,
-  })
-
-  setTimeout(() => {
-    $selectedNodes.set(nodes)
-  }, 0)
-}
-
 export function commandInsertNodes(
   parent: Node,
   nodes: Node[],
   before: Node | null,
 ) {
-  const insertAction = parent.insertBefore(nodes, before)
+  const removableNodes = nodes.filter((node) => node.isRemovable)
 
-  if (!insertAction) return
+  const actions = removableNodes.map((node) => {
+    return new InsertNodeAction({
+      insertedNode: node,
+      oldParent: node.parent,
+      oldNextSibling: node.nextSibling,
+      newParent: parent,
+      newNextSibling: before,
+    })
+  })
+
+  parent.insertBefore(nodes, before)
 
   History.push({
-    actions: [insertAction],
+    actions,
     previousSelectedNodes: $selectedNodes.get(),
     nextSelectedNodes: nodes,
   })
@@ -46,25 +47,48 @@ export function commandInsertNodes(
   }, 0)
 }
 
-export function commandDeleteNodes(nodes: Node[]) {
-  const nextSelectionCandidate = nodes[0]?.previousSibling ?? nodes[0]?.parent
+export function commandRemoveNodes(nodes: Node[]) {
+  const removableNodes = nodes.filter((node) => node.isRemovable)
+
+  const nextSelectionCandidate =
+    removableNodes[0]?.previousSibling ?? removableNodes[0]?.parent
   const nextSelectedNodes = nextSelectionCandidate
     ? [nextSelectionCandidate]
     : []
 
+  const actions = removableNodes.map((node) => {
+    const action = (() => {
+      if (node.slotKey) {
+        if (!node.parent) {
+          throw new Error('Node has no parent')
+        }
+
+        return new DisableSlotAction({
+          slot: node,
+          slotParent: node.parent,
+        })
+      }
+
+      return new RemoveNodeAction({
+        removedNode: node,
+        oldParent: node.parent,
+        oldNextSibling: node.nextSibling,
+      })
+    })()
+
+    node.remove()
+
+    return action
+  })
+
   const historyItem: HistoryStackItem = {
-    actions: [],
+    actions,
     previousSelectedNodes: [...$selectedNodes.get()],
     nextSelectedNodes,
   }
 
-  nodes.forEach((node) => {
-    const removeAction = node.remove()
-
-    if (removeAction) {
-      historyItem.actions.push(removeAction)
-    }
-  })
+  // If nothing to delete, ignore.
+  if (actions.length === 0) return
 
   History.push(historyItem)
 
@@ -76,7 +100,8 @@ export function commandWrapNodes<T extends NodeName>(
   nodes: Node[],
   wrappingNodeName: T,
 ): InferNodeByName<T> | undefined {
-  if (nodes.length === 0) return
+  const removableNodes = nodes.filter((node) => node.isRemovable)
+  if (removableNodes.length === 0) return
 
   const firstSelectedNode = $selectedNodes.get()[0]
 
@@ -85,7 +110,7 @@ export function commandWrapNodes<T extends NodeName>(
     return
   }
 
-  const firstNode = nodes[0]
+  const firstNode = removableNodes[0]
 
   if (!firstNode) return
 
@@ -97,7 +122,9 @@ export function commandWrapNodes<T extends NodeName>(
 
   let loopCount = 0
 
-  while (nodes.find((node) => node.id === nextSibling?.id) !== undefined) {
+  while (
+    removableNodes.find((node) => node.id === nextSibling?.id) !== undefined
+  ) {
     if (nextSibling) {
       nextSibling = nextSibling.nextSibling
     }
@@ -109,15 +136,46 @@ export function commandWrapNodes<T extends NodeName>(
     }
   }
 
-  const newWrapperNode = new nodeNameNodeMap[wrappingNodeName]()
-
-  const appendAction = newWrapperNode.append(...nodes)
-  const insertBeforeAction = parent.insertBefore([newWrapperNode], nextSibling)
-
   const actions: Action[] = []
 
-  if (appendAction) actions.push(appendAction)
-  if (insertBeforeAction) actions.push(insertBeforeAction)
+  const newWrapperNode = new nodeNameNodeMap[wrappingNodeName]()
+
+  removableNodes.forEach((node) => {
+    if (node.slotKey) {
+      if (!node.parent) {
+        throw new Error('Node has no parent')
+      }
+
+      actions.push(
+        new DisableSlotAction({
+          slot: node,
+          slotParent: node.parent,
+        }),
+      )
+    } else {
+      actions.push(
+        new RemoveNodeAction({
+          removedNode: node,
+          oldParent: node.parent,
+          oldNextSibling: node.nextSibling,
+        }),
+      )
+    }
+  })
+
+  newWrapperNode.append(...removableNodes)
+
+  actions.push(
+    new InsertNodeAction({
+      insertedNode: newWrapperNode,
+      oldParent: newWrapperNode.parent,
+      oldNextSibling: newWrapperNode.nextSibling,
+      newParent: parent,
+      newNextSibling: nextSibling,
+    }),
+  )
+
+  parent.insertBefore(newWrapperNode, nextSibling)
 
   History.push({
     actions,
@@ -136,20 +194,32 @@ export function commandUnwrapNode(unwrappingNode: Node) {
 
   if (!(parent instanceof Node)) return
 
+  const actions: Action[] = []
+
+  actions.push(
+    new RemoveNodeAction({
+      removedNode: unwrappingNode,
+      oldParent: unwrappingNode.parent,
+      oldNextSibling: unwrappingNode.nextSibling,
+    }),
+  )
+
   // First remove the unwrapping node from its parent
-  const removeAction = parent.removeChild(unwrappingNode)
-  const insertAction = parent.insertBefore(unwrappingNode.children, nextSibling)
+  parent.removeChild(unwrappingNode)
 
-  // TODO: Implement remove actions and History.push
+  unwrappingNode.children.forEach((child) => {
+    actions.push(
+      new InsertNodeAction({
+        insertedNode: child,
+        oldParent: child.parent,
+        oldNextSibling: child.nextSibling,
+        newParent: parent,
+        newNextSibling: nextSibling,
+      }),
+    )
+  })
 
-  // const actions: Action[] = removeAction ? [removeAction] : []
-  // if (insertAction) actions.push(insertAction)
-
-  // History.push({
-  //   actions,
-  //   previousSelectedNodes: $selectedNodes.get(),
-  //   nextSelectedNodes: unwrappingNode.children,
-  // })
+  parent.insertBefore(unwrappingNode.children, nextSibling)
 }
 
 export function commandFocusPage(page: PageNode, animation = false) {

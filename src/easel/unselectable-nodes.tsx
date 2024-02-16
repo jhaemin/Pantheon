@@ -4,6 +4,9 @@ import { PageNode } from '@/node-class/page'
 import { useStore } from '@nanostores/react'
 import { Button, Card, Flex, Text } from '@radix-ui/themes'
 
+/**
+ * TODO: rename to unreachable
+ */
 export function UnselectableNodes({ page }: { page: PageNode }) {
   const scale = useStore(Ground.$scale)
   const unselectableNodes = useStore(page.$unselectableNodes)
@@ -13,6 +16,7 @@ export function UnselectableNodes({ page }: { page: PageNode }) {
   return (
     <Card
       size="2"
+      variant="classic"
       style={{
         position: 'absolute',
         left: 'calc(100% + 10px)',
@@ -22,7 +26,7 @@ export function UnselectableNodes({ page }: { page: PageNode }) {
     >
       <Flex direction="column" gap="2" align="start">
         <Text size="2" weight="bold">
-          Unselectables
+          Unreachable
         </Text>
         {unselectableNodes.map((node) => (
           <Button

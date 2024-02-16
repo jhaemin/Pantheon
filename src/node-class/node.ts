@@ -2,7 +2,6 @@ import { alphanumericId } from '@/alphanumeric'
 import { NodeName } from '@/node-name'
 import { serializeProps } from '@/serialize-props'
 import { MapStore, atom, computed, map } from 'nanostores'
-import { InsertNodesAction, RemoveNodeAction } from '../action'
 import { type PageNode } from './page'
 
 export type NodePreOptions = {
@@ -190,18 +189,10 @@ export abstract class Node {
     return null
   }
 
-  public append(...children: Node[]): InsertNodesAction | undefined {
+  public append(...children: Node[]) {
     if (children.length === 0) return
 
     const removableChildren = children.filter((child) => child.isRemovable)
-
-    const insertNodesAction = new InsertNodesAction({
-      insertedNodes: removableChildren,
-      newContainableParent: this,
-      newNextSibling: null,
-      oldContainableParent: removableChildren[0].parent,
-      oldNextSibling: removableChildren[0].nextSibling,
-    })
 
     removableChildren.forEach((child) => {
       child.remove()
@@ -209,30 +200,21 @@ export abstract class Node {
     })
 
     this.children = [...this.children, ...removableChildren]
-
-    return insertNodesAction
   }
 
-  public insertBefore(
-    children: Node[],
-    referenceNode: Node | null,
-  ): InsertNodesAction | undefined {
-    if (children.length === 0) return
+  public insertBefore(children: Node[] | Node, referenceNode: Node | null) {
+    const childrenArray = Array.isArray(children) ? children : [children]
 
-    const removableChildren = children.filter((child) => child.isRemovable)
+    if (childrenArray.length === 0) return
+
+    const removableChildren = childrenArray.filter((child) => child.isRemovable)
 
     if (!referenceNode) {
-      return this.append(...removableChildren)
+      this.append(...removableChildren)
+      return
     }
 
-    const insertNodesAction = new InsertNodesAction({
-      insertedNodes: removableChildren,
-      newContainableParent: this,
-      newNextSibling: referenceNode,
-      oldContainableParent: removableChildren[0].parent,
-      oldNextSibling: removableChildren[0].nextSibling,
-    })
-
+    // Remember referenceNode's nextSibling
     const referenceNodeNextSibling = referenceNode.nextSibling
 
     removableChildren.forEach((child) => {
@@ -243,10 +225,15 @@ export abstract class Node {
     // After removing inserting nodes,
     // if inserting nodes include referenceNode, we cannot find referenceNode.
     if (removableChildren.includes(referenceNode)) {
+      // If referenceNode was the last child of the parent, append to the end.
       if (referenceNodeNextSibling === null) {
-        return this.append(...removableChildren)
-      } else {
-        return this.insertBefore(removableChildren, referenceNodeNextSibling)
+        this.append(...removableChildren)
+        return
+      }
+      // Insert before referenceNode's nextSibling
+      else {
+        this.insertBefore(removableChildren, referenceNodeNextSibling)
+        return
       }
     }
 
@@ -257,8 +244,6 @@ export abstract class Node {
       ...removableChildren,
       ...this.children.slice(referenceIndex),
     ]
-
-    return insertNodesAction
   }
 
   public removeChild(child: Node) {
@@ -320,15 +305,16 @@ export abstract class Node {
     const { required, key, label } = slotInfo
 
     if (slotInfo) {
-      this.setSlot(
-        slotKey,
-        new FragmentNode({
-          slotKey: key,
-          slotLabel: label ?? key,
-          isRemovable: !required,
-          isDraggable: false,
-        }),
-      )
+      const newSlot = new FragmentNode({
+        slotKey: key,
+        slotLabel: label ?? key,
+        isRemovable: !required,
+        isDraggable: false,
+      })
+
+      this.setSlot(slotKey, newSlot)
+
+      return newSlot
     } else {
       throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
     }
@@ -385,20 +371,10 @@ export abstract class Node {
   /**
    * Remove itself from its parent.
    */
-  remove(): RemoveNodeAction | null {
+  remove() {
     if (this.parent) {
-      const removeNodeAction = new RemoveNodeAction({
-        removedNode: this,
-        oldParent: this.parent,
-        oldNextSibling: this.nextSibling,
-      })
-
       this.parent.removeChild(this)
-
-      return removeNodeAction
     }
-
-    return null
   }
 
   public generateCode(): string {

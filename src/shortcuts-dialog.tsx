@@ -37,6 +37,18 @@ const shortcuts: { action: string; key: string }[] = [
     action: 'Redo',
     key: '⇧ ⌘ Z',
   },
+  {
+    action: 'Zoom In',
+    key: '⌘ +',
+  },
+  {
+    action: 'Zoom Out',
+    key: '⌘ -',
+  },
+  {
+    action: 'Reset Zoom',
+    key: '⌘ 0',
+  },
 ]
 
 export function ShortcutsDialog() {

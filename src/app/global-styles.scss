@@ -40,6 +40,6 @@ code {
   outline: none;
 }
 
-:root {
-  --drawer-height: 500px;
+.resizing-drawer {
+  cursor: ns-resize;
 }
