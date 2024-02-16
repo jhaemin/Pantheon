@@ -19,6 +19,7 @@
     "change-case": "^5.4.2",
     "clsx": "^2.1.0",
     "highlight.js": "^11.9.0",
+    "minmax.js": "^1.0.0",
     "nanoid": "^5.0.5",
     "nanostores": "^0.9.5",
     "next": "14.1.0",
