@@ -1,18 +1,15 @@
-import {
-  $allRenderedNodes,
-  $devToolsRerenderFlag,
-  $showDevTools,
-} from '@/atoms'
+import { $devToolsRerenderFlag, $showDevTools } from '@/atoms'
 import { Node } from '@/node-class/node'
 import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import styles from './dev-tools.module.scss'
 
+/**
+ * TODO: Redesign dev tools
+ */
 export function DevTools() {
   const pages = useStore(studioApp.$pages)
   useStore($devToolsRerenderFlag)
-
-  const allRenderedNodes = useStore($allRenderedNodes)
 
   const show = useStore($showDevTools)
 
@@ -25,8 +22,8 @@ export function DevTools() {
       previousSibling: node.previousSibling?.id,
       nextSibling: node.nextSibling?.id,
       children: onlyChildIds
-        ? node.childrenWithSlots.map((child) => child.id)
-        : node.childrenWithSlots.map((child) =>
+        ? node.childrenAndSlots.map((child) => child.id)
+        : node.childrenAndSlots.map((child) =>
             toHumanReadable(child, onlyChildIds),
           ),
     }
@@ -46,7 +43,7 @@ export function DevTools() {
           display: show ? 'block' : 'none',
         }}
       />
-      <textarea
+      {/* <textarea
         className={styles.nodeAtoms}
         readOnly
         value={JSON.stringify(
@@ -59,7 +56,7 @@ export function DevTools() {
         style={{
           display: show ? 'block' : 'none',
         }}
-      />
+      /> */}
       <button
         className={styles.toggle}
         onClick={() => {

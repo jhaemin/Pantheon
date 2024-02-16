@@ -17,12 +17,14 @@ import {
 } from '@radix-ui/themes'
 import { pascalCase } from 'change-case'
 import hljs from 'highlight.js'
+import { atom } from 'nanostores'
 import { useEffect, useRef, useState } from 'react'
 
 export async function generateSourceCode(node: Node) {
+  // TODO: allow only available javascript function name
   const componentName =
     node instanceof PageNode
-      ? pascalCase(node.$pageLabel.get() ?? 'UntitledPage')
+      ? pascalCase(node.$pageLabel.get().trim() || 'UntitledPage')
       : node.nodeName
 
   const sourceCode = `
@@ -40,6 +42,10 @@ export async function generateSourceCode(node: Node) {
  * TODO: Add large view button
  */
 export function TSX({ node }: { node: Node }) {
+  const pageLabel = useStore(
+    node instanceof PageNode ? node.$pageLabel : atom(''),
+  )
+  const slots = useStore(node.$slots)
   const additionalProps = useStore(node.$additionalProps)
   const props = useStore(node.$props)
   const copyTimeout = useRef<number>(0)
@@ -55,7 +61,7 @@ export function TSX({ node }: { node: Node }) {
       }).value
       setSyntaxHighlighted(highlighted)
     })
-  }, [node, props, additionalProps])
+  }, [node, props, additionalProps, slots, pageLabel])
 
   return (
     <Flex direction="column">

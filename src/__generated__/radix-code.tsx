@@ -56,8 +56,6 @@ export class RadixCodeNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {}
-
   slotsInfoArray = []
 
   readonly $slots = atom<{}>({})

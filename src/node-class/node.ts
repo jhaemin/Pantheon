@@ -1,6 +1,7 @@
 import { alphanumericId } from '@/alphanumeric'
 import { NodeName } from '@/node-name'
 import { serializeProps } from '@/serialize-props'
+import { studioApp } from '@/studio-app'
 import { MapStore, atom, computed, map } from 'nanostores'
 import { type PageNode } from './page'
 
@@ -30,7 +31,7 @@ export abstract class Node {
 
     this.isUnselectable = preOptions?.isUnselectable ?? false
 
-    this.$children.listen(() => {
+    this.$children.listen((children) => {
       if (this.ownerPage) {
         this.ownerPage.refreshUnselectableNodes()
       }
@@ -108,15 +109,17 @@ export abstract class Node {
     return this._isDraggable
   }
 
-  get ownerPage(): PageNode | null {
-    return this.parent?.ownerPage ?? null
-  }
-
   get closestSlotOwner(): Node | null {
     if (Object.keys(this.$slots.get()).length > 0) {
       return this
     }
     return this.parent?.closestSlotOwner ?? null
+  }
+
+  private _ownerPage: PageNode | null = null
+
+  get ownerPage() {
+    return this._ownerPage
   }
 
   /** Only root node(PageNode)'s parent is null */
@@ -136,11 +139,28 @@ export abstract class Node {
     return parents
   }
 
+  /**
+   * Release parent and ownerPage from the node and its children including slots.
+   */
   protected static releaseParent(node: Node) {
+    ;[node, ...node.allNestedChildrenAndSlots].forEach((child) => {
+      child._ownerPage = null
+    })
+
     node._parent = null
   }
 
+  /**
+   * Assign parent and transfer parent's ownerPage to the node and its children including slots.
+   */
   protected static assignParent(node: Node, parent: Node) {
+    if (parent.ownerPage) {
+      ;[node, ...node.allNestedChildrenAndSlots].forEach((child) => {
+        child._ownerPage = parent.ownerPage
+        studioApp.allNodes[child.id] = child
+      })
+    }
+
     node._parent = parent
   }
 
@@ -157,11 +177,10 @@ export abstract class Node {
   /**
    * Return all children including slots.
    */
-  get childrenWithSlots() {
+  get childrenAndSlots() {
     const slots = this.$slots.get()
-    const slotNodes = Object.values(slots).filter((node) => !!node) as Node[]
 
-    return [...this.$children.get(), ...slotNodes]
+    return [...this.$children.get(), ...this.slotsArray]
   }
 
   set children(children: Node[]) {
@@ -170,6 +189,13 @@ export abstract class Node {
 
   get allNestedChildren(): Node[] {
     return this.children.flatMap((child) => [child, ...child.allNestedChildren])
+  }
+
+  get allNestedChildrenAndSlots(): Node[] {
+    return this.childrenAndSlots.flatMap((child) => [
+      child,
+      ...child.allNestedChildrenAndSlots,
+    ])
   }
 
   get previousSibling(): Node | null {
@@ -193,7 +219,9 @@ export abstract class Node {
   public append(...children: Node[]) {
     if (children.length === 0) return
 
-    const removableChildren = children.filter((child) => child.isRemovable)
+    const removableChildren = children.filter(
+      (child) => child.isRemovable && child !== this,
+    )
 
     removableChildren.forEach((child) => {
       child.remove()
@@ -208,7 +236,9 @@ export abstract class Node {
 
     if (childrenArray.length === 0) return
 
-    const removableChildren = childrenArray.filter((child) => child.isRemovable)
+    const removableChildren = childrenArray.filter(
+      (child) => child.isRemovable && child !== this,
+    )
 
     if (!referenceNode) {
       this.append(...removableChildren)
@@ -293,13 +323,22 @@ export abstract class Node {
       .filter((node) => !!node) as Node[]
   }
 
-  public slotsInfo: Record<
-    string,
-    { required: boolean; key: string; label: string }
-  > = {}
-
   public slotsInfoArray: { required: boolean; key: string; label: string }[] =
     []
+
+  // private _slotsInfo: Record<
+  //   string,
+  //   { required: boolean; key: string; label: string }
+  // > = {}
+
+  /**
+   * TODO: improve performance by memoizing because it never changes
+   */
+  get slotsInfo() {
+    return Object.fromEntries(
+      this.slotsInfoArray.map((slotInfo) => [slotInfo.key, slotInfo]),
+    )
+  }
 
   enableSlot(slotKey: string) {
     const slotInfo = this.slotsInfo[slotKey]
@@ -334,6 +373,10 @@ export abstract class Node {
   }
 
   setSlot(slotKey: string, node: Node) {
+    if (this.slotsInfo[slotKey] === undefined) {
+      throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
+    }
+
     const previousSlot = this.$slots.get()[slotKey]
 
     if (previousSlot) {

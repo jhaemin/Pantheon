@@ -30,6 +30,7 @@ export function DrawerItemWrapper({
             elmY: e.clientY - rect.top,
             elementScale: 1,
             draggingNode: createNode(),
+            draggingElm: ref.current.firstElementChild!,
           })
         }}
         onClick={() => {

@@ -59,20 +59,6 @@ export class RadixCalloutNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {
-    icon: {
-      required: false,
-      key: 'icon',
-      label: 'icon',
-    },
-
-    text: {
-      required: true,
-      key: 'text',
-      label: 'text',
-    },
-  }
-
   slotsInfoArray = [
     {
       required: false,

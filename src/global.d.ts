@@ -1,5 +1,4 @@
 import { WritableAtom } from 'nanostores'
-import { $allRenderedNodes } from './atoms'
 import { PageNode } from './node-class/node'
 
 type Shared = {
@@ -10,7 +9,6 @@ type Shared = {
    * They're injected from `EaselWrapper` component.
    */
   $designMode: WritableAtom<boolean>
-  $allRenderedNodes: typeof $allRenderedNodes
 }
 
 declare global {

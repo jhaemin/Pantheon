@@ -117,9 +117,12 @@ export function useGlobalEvents() {
         activeElement instanceof HTMLElement &&
         activeElement.tagName === 'IFRAME'
       ) {
-        setTimeout(() => {
-          activeElement.blur()
-        }, 0)
+        // Allow focus on iframe when in interaction mode
+        if (!$interactionMode.get()) {
+          setTimeout(() => {
+            activeElement.blur()
+          }, 0)
+        }
       }
     }
 

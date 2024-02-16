@@ -1,5 +1,4 @@
 import {
-  $allRenderedNodes,
   $dropZone,
   $hoveredNode,
   $isContextMenuOpen,
@@ -20,10 +19,11 @@ import { PageNode } from './node-class/page'
 import {
   findEaselIframe,
   findNodeElm,
-  getClosestMoveableNodeSet,
+  getClosestDraggableNodeSet,
   getClosestSelectableNodeSet,
-  getRenderedNodeById,
+  getNodeById,
 } from './node-lib'
+import { studioApp } from './studio-app'
 import { selectNode } from './ui-guides/selection-guide'
 
 const TEMP_DROP_ZONE_CLASS_NAME = 'studio-temp-dropzone'
@@ -42,15 +42,27 @@ export function onMouseDownForDragAndDropNode(
   e: React.MouseEvent,
   data: {
     draggingNode: Node
+    draggingElm: Element
     cloneTargetElm: Element
     elmX: number
     elmY: number
     elementScale: number
   },
+  callbacks?: {
+    onDragTriggered?: () => void
+    onDragEnd?: () => void
+  },
 ) {
-  const { draggingNode, cloneTargetElm, elmX, elmY, elementScale } = data
+  const {
+    draggingNode,
+    draggingElm,
+    cloneTargetElm,
+    elmX,
+    elmY,
+    elementScale,
+  } = data
 
-  const draggingElm = findNodeElm(draggingNode)
+  if (!draggingNode.isDraggable) return
 
   const scale = Ground.scale
 
@@ -86,6 +98,8 @@ export function onMouseDownForDragAndDropNode(
   window.addEventListener('mouseup', onMouseUp)
 
   const triggerDragStart = () => {
+    callbacks?.onDragTriggered?.()
+
     $isDraggingNode.set(true)
     $hoveredNode.set(null)
     $selectedNodes.set([])
@@ -200,7 +214,7 @@ export function onMouseDownForDragAndDropNode(
 
               if (!targetId) return
 
-              const targetNode = getRenderedNodeById(targetId)
+              const targetNode = getNodeById(targetId)
 
               if (!targetNode) return
 
@@ -209,7 +223,10 @@ export function onMouseDownForDragAndDropNode(
                 undefined
 
               // Hover on temporary drop zone around droppable node
-              if (dropZoneElm.classList.contains(TEMP_DROP_ZONE_CLASS_NAME)) {
+              if (
+                dropZoneElm.classList.contains(TEMP_DROP_ZONE_CLASS_NAME) ||
+                !dropZoneElm.hasAttribute(dataAttributes.node)
+              ) {
                 $dropZone.set({
                   dropZoneElm: dropZoneElm,
                   targetNode,
@@ -254,6 +271,8 @@ export function onMouseDownForDragAndDropNode(
     }
 
     const onMouseUpAfterDrag = () => {
+      callbacks?.onDragEnd?.()
+
       window.removeEventListener('mousemove', onMouseMoveAfterDrag)
       window.removeEventListener('mouseup', onMouseUpAfterDrag)
 
@@ -271,7 +290,7 @@ export function onMouseDownForDragAndDropNode(
         commandInsertNodes(
           targetNode,
           [dropNode],
-          before ? $allRenderedNodes.get()[before] : null,
+          before ? studioApp.allNodes[before] : null,
         )
       }
 
@@ -620,7 +639,7 @@ export function onMouseDownIframe(
 
       // Find closest moveable node and start dragging it on mouse down
       const { node: movableNode, elm: movableElement } = elementAtCursor
-        ? getClosestMoveableNodeSet(elementAtCursor)
+        ? getClosestDraggableNodeSet(elementAtCursor)
         : {
             node: null,
             elm: null,
@@ -630,8 +649,13 @@ export function onMouseDownIframe(
         const movableElmRect = movableElement.getBoundingClientRect()
         const scale = Ground.scale
 
+        const draggingElm = findNodeElm(movableNode)
+
+        if (!draggingElm) return
+
         onMouseDownForDragAndDropNode(e, {
           draggingNode: movableNode,
+          draggingElm,
           cloneTargetElm: movableElement,
           elmX: e.clientX - rect.left - movableElmRect.left * scale,
           elmY: e.clientY - rect.top - movableElmRect.top * scale,

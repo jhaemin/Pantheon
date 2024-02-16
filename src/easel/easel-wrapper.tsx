@@ -1,5 +1,4 @@
 import {
-  $allRenderedNodes,
   $designMode,
   $hoveredNode,
   $interactionMode,
@@ -13,7 +12,6 @@ import {
 } from '@/data-attributes'
 import { onMouseDownIframe } from '@/events'
 import { Ground } from '@/ground'
-import { Node } from '@/node-class/node'
 import { PageNode } from '@/node-class/page'
 import { getClosestSelectableNodeSet } from '@/node-lib'
 import { useStore } from '@nanostores/react'
@@ -61,7 +59,6 @@ export function EaselWrapper({ page }: { page: PageNode }) {
 
     // Inject shared data
     iframeWindow.shared = {
-      $allRenderedNodes,
       $designMode,
     }
 
@@ -72,25 +69,14 @@ export function EaselWrapper({ page }: { page: PageNode }) {
       }
 
       Object.entries(attributes).forEach(([key, value]) => {
-        iframeWindow.document.body.setAttribute(key, value)
+        if (value) {
+          iframeWindow.document.body.setAttribute(key, value)
+        }
       })
     })
 
     return () => {
       PageNode.detachIframeElement(page)
-
-      const nextAllRenderedNodes = { ...$allRenderedNodes.get() }
-
-      function removeNodesFromAllRenderedNodes(...nodes: Node[]) {
-        nodes.forEach((node) => {
-          delete nextAllRenderedNodes[node.id]
-          removeNodesFromAllRenderedNodes(...node.children)
-        })
-      }
-
-      removeNodesFromAllRenderedNodes(page)
-
-      $allRenderedNodes.set(nextAllRenderedNodes)
     }
   }, [page])
 

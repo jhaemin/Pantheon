@@ -3,9 +3,11 @@ import { Node } from './node-class/node'
 export const dataAttributes = {
   node: 'data-studio-node',
   nodeId: 'data-studio-node-id',
+  ownerPageId: 'data-studio-owner-page-id',
   keepNodeSelection: 'data-studio-keep-node-selection',
   dropZone: 'data-studio-drop-zone',
   dropZoneId: 'data-studio-drop-zone-id',
+  dropZoneOwnerPageId: 'data-studio-drop-zone-owner-page-id',
   dropZoneTargetNodeId: 'data-studio-drop-zone-target-node-id',
   dropZoneBefore: 'data-studio-drop-zone-before',
 }
@@ -18,6 +20,7 @@ export function makeNodeAttributes(node: Node) {
   return {
     [dataAttributes.node]: 'true',
     [dataAttributes.nodeId]: node.id,
+    [dataAttributes.ownerPageId]: node.ownerPage?.id,
   }
 }
 
@@ -27,6 +30,7 @@ export function makeNodeDropZoneAttributes(node: Node) {
     [dataAttributes.dropZoneId]: node.id,
     [dataAttributes.dropZoneTargetNodeId]: node.id,
     [dataAttributes.dropZoneBefore]: '',
+    [dataAttributes.dropZoneOwnerPageId]: node.ownerPage?.id,
   }
 }
 

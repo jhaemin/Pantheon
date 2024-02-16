@@ -54,8 +54,6 @@ export class RadixTextFieldNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {}
-
   slotsInfoArray = []
 
   readonly $slots = atom<{}>({})

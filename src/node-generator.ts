@@ -171,20 +171,6 @@ export class ${nodeClassName} extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {
-    ${allSlots
-      .map(
-        (slot) =>
-          `
-    ${slot.key}: {
-      required: ${slot.required ? 'true' : 'false'},
-      key: '${slot.key}',
-      label: '${slot.label ?? slot.key}',
-    }`,
-      )
-      .join(',\n')}
-  }
-
   slotsInfoArray = [
     ${allSlots
       .map(

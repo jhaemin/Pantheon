@@ -1,23 +1,21 @@
-import { $allRenderedNodes } from '@/atoms'
 import { dataAttributes } from './data-attributes'
 import { getEaselIframeId } from './easel/easel-wrapper'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 import { NodeName } from './node-name'
+import { studioApp } from './studio-app'
 
 /**
  * Only use when you have to get node atom from HTML element
  */
-export function getRenderedNodeById(nodeId: string) {
+export function getNodeById(nodeId: string) {
   // Finding from Window is for Easel iframe
-  const node = $allRenderedNodes.get()[nodeId]
+  const node = studioApp.allNodes[nodeId]
 
   if (!node) {
     console.group('getRenderedNodeById - NOT FOUND')
-    console.log('allRenderedNodes', $allRenderedNodes.get())
-    console.warn(
-      `Node is not rendered: ${nodeId}. Maybe it is unmounted or not rendered yet.`,
-    )
+    console.log('allNodes', studioApp.allNodes)
+    console.warn(`Node is not registered in the app: ${nodeId}`)
     console.groupEnd()
     return null
   }
@@ -76,7 +74,7 @@ export function getClosestNodeElm(target: Element):
 
     return {
       elm: target.ownerDocument.body,
-      node: getRenderedNodeById(nodeId)!,
+      node: getNodeById(nodeId)!,
     }
   }
 
@@ -95,7 +93,7 @@ export function getClosestNodeElm(target: Element):
     throw new Error('Node does not have an id')
   }
 
-  const node = getRenderedNodeById(nodeId)
+  const node = getNodeById(nodeId)
 
   if (!node) {
     return {
@@ -160,7 +158,7 @@ export function getClosestSelectableNodeSet(elm: Element):
   }
 }
 
-export function getClosestMoveableNodeSet(elm: Element):
+export function getClosestDraggableNodeSet(elm: Element):
   | {
       elm: Element
       node: Node
@@ -181,7 +179,7 @@ export function getClosestMoveableNodeSet(elm: Element):
   if (!closestNode.isDraggable) {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
-    return getClosestMoveableNodeSet(
+    return getClosestDraggableNodeSet(
       closestNodeElm.parentElement?.parentElement ?? document.body,
     )
   }

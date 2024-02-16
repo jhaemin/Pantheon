@@ -55,8 +55,6 @@ export class RadixBlockquoteNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {}
-
   slotsInfoArray = []
 
   readonly $slots = atom<{}>({})

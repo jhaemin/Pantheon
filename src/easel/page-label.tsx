@@ -8,6 +8,7 @@ import styles from './page-label.module.scss'
 export function PageLabel({ page }: { page: PageNode }) {
   const scale = useStore(Ground.$scale)
   const pageLabel = useStore(page.$pageLabel)
+  const trimmedPageLabel = pageLabel.trim()
 
   return (
     <div
@@ -21,7 +22,7 @@ export function PageLabel({ page }: { page: PageNode }) {
       }}
       onMouseDown={(e) => onMouseDownIframe(e, page, true)}
     >
-      {pageLabel}
+      {trimmedPageLabel || 'Untitled'}
     </div>
   )
 }

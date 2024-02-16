@@ -2,11 +2,6 @@ import { atom } from 'nanostores'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 
-/**
- * Use for finding the node by id when interacting with the DOM.
- */
-export const $allRenderedNodes = atom<Record<string, Node>>({})
-
 export const $devToolsRerenderFlag = atom(false)
 export const $selectionRerenderFlag = atom(false)
 export const $hoverRerenderFlag = atom(false)
@@ -43,6 +38,15 @@ $selectedNodes.listen(() => {
 })
 
 export const $isDraggingNode = atom(false)
+
+$isDraggingNode.listen((isDraggingNode) => {
+  if (isDraggingNode) {
+    document.body.classList.add('dragging-node')
+  } else {
+    document.body.classList.remove('dragging-node')
+  }
+})
+
 export const $isAnimatingGround = atom(false)
 
 export const $isResizingIframe = atom(false)

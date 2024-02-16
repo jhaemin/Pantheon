@@ -34,32 +34,6 @@ export class RadixDialogNode extends Node {
 
   readonly $props = map(this.defaultProps)
 
-  slotsInfo = {
-    content: {
-      required: true,
-      key: 'content',
-      label: 'content',
-    },
-
-    title: {
-      required: false,
-      key: 'title',
-      label: 'title',
-    },
-
-    description: {
-      required: false,
-      key: 'description',
-      label: 'description',
-    },
-
-    contentBody: {
-      required: true,
-      key: 'contentBody',
-      label: 'contentBody',
-    },
-  }
-
   slotsInfoArray = [
     {
       required: true,

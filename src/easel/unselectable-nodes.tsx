@@ -19,7 +19,7 @@ export function UnselectableNodes({ page }: { page: PageNode }) {
       variant="classic"
       style={{
         position: 'absolute',
-        left: 'calc(100% + 10px)',
+        left: `calc(100% + ${10 / scale}px)`,
         transformOrigin: 'top left',
         transform: `scale(${1 / scale})`,
       }}

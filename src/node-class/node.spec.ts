@@ -217,13 +217,13 @@ test('Tree', () => {
 class TestNode extends Node {
   readonly nodeName = 'Fragment'
 
-  slotsInfo = {
-    content: {
+  slotsInfoArray = [
+    {
       required: false,
       key: 'content',
       label: 'Content',
     },
-  }
+  ]
 }
 
 test('Slot', () => {
@@ -247,7 +247,8 @@ test('Slot', () => {
   expect(frag.slots.content).toBe(null)
 
   frag.setSlot('content', content)
-  expect(frag.childrenWithSlots.length).toBe(1)
+  expect(frag.slotsArray.length).toBe(1)
+  expect(frag.childrenAndSlots.length).toBe(1)
 
   frag.removeAllChildren()
   expect(frag.slots.content).toBe(content)

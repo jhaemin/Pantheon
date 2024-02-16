@@ -32,11 +32,6 @@ export function NodeComponent({ node }: { node: Node }) {
    * So, to delete a PageNode, we need to run below logic in `EaselWrapper` component again.
    */
   useEffect(() => {
-    window.shared.$allRenderedNodes.set({
-      ...window.shared.$allRenderedNodes.get(),
-      [node.id]: node,
-    })
-
     // Page's wrapper element is the body of the iframe
     if (node.nodeName === 'Page') {
       Node.attachWrapperElement(node, document.body)
@@ -47,10 +42,6 @@ export function NodeComponent({ node }: { node: Node }) {
     }
 
     return () => {
-      const allRenderedNodes = window.shared.$allRenderedNodes.get()
-      delete allRenderedNodes[node.id]
-      window.shared.$allRenderedNodes.set({ ...allRenderedNodes })
-
       Node.detachWrapperElement(node)
     }
   }, [node])

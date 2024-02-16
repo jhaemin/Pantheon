@@ -1,12 +1,22 @@
 .treeNode {
   white-space: nowrap;
-  height: 24px;
+  height: 25px;
+}
 
-  &:hover {
-    box-shadow: inset 0 0 0 1.5px var(--orange-9);
+.treeNodeContainer {
+  border-radius: var(--radius-2);
+
+  &.hovered {
+    background-color: var(--orange-3);
+    // box-shadow: inset 0 0 0 1.5px var(--orange-9);
+  }
+
+  @at-root :global(.dragging-node) &:hover {
+    box-shadow: none;
   }
 
   &.selected {
-    box-shadow: inset 0 0 0 1.5px var(--accent-11);
+    background-color: var(--accent-3);
+    // box-shadow: inset 0 0 0 1.5px var(--accent-9);
   }
 }

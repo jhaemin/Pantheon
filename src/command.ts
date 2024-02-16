@@ -22,7 +22,9 @@ export function commandInsertNodes(
   nodes: Node[],
   before: Node | null,
 ) {
-  const removableNodes = nodes.filter((node) => node.isRemovable)
+  const removableNodes = nodes.filter(
+    (node) => node.isRemovable && node !== parent,
+  )
 
   const actions = removableNodes.map((node) => {
     return new InsertNodeAction({
@@ -182,6 +184,10 @@ export function commandWrapNodes<T extends NodeName>(
     previousSelectedNodes: $selectedNodes.get(),
     nextSelectedNodes: [newWrapperNode],
   })
+
+  setTimeout(() => {
+    $selectedNodes.set([newWrapperNode])
+  }, 0)
 
   return newWrapperNode as InferNodeByName<T>
 }

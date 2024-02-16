@@ -18,7 +18,6 @@ import {
   $selectionRerenderFlag,
 } from '../atoms'
 import { EaselContainer } from '../easel/easel-container'
-import { DropZoneGuide } from '../ui-guides/drop-zone-guide'
 
 const SelectionGuide = dynamic(
   () => import('@/ui-guides/selection-guide').then((mod) => mod.SelectionGuide),
@@ -90,7 +89,6 @@ export function GroundComponent() {
 
       <SelectionGuide />
       <HoverGuide />
-      <DropZoneGuide />
 
       <Actions />
       <UndoRedo />

@@ -1,10 +1,10 @@
 .dropZoneGuide {
-  box-shadow: 0 0 0 1.8px #0dc780;
+  box-shadow: 0 0 0 1.8px var(--green-8);
 
-  background-color: rgba(0, 255, 145, 0.05);
+  background-color: var(--green-a2);
 
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
 
   pointer-events: none;
 }
