@@ -63,6 +63,17 @@ export function TSX({ node }: { node: Node }) {
     })
   }, [node, props, additionalProps, slots, pageLabel])
 
+  function copyToClipboard() {
+    navigator.clipboard.writeText(sourceCode.current)
+    setCopied(true)
+
+    window.clearTimeout(copyTimeout.current)
+
+    copyTimeout.current = window.setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+  }
+
   return (
     <Flex direction="column">
       <Flex align="center" justify="between">
@@ -77,25 +88,42 @@ export function TSX({ node }: { node: Node }) {
             </Dialog.Trigger>
 
             <Dialog.Content {...keepNodeSelectionAttribute}>
-              <pre
-                style={{
-                  fontSize: 12,
-                  width: '100%',
-                  margin: 0,
-                  lineHeight: 1.4,
-                }}
-              >
-                <code
-                  style={{
-                    fontFamily: 'SF Mono, Menlo, monospace',
-                  }}
-                  dangerouslySetInnerHTML={{
-                    __html: syntaxHighlighted,
-                  }}
-                />
-              </pre>
+              <Dialog.Title>TSX</Dialog.Title>
 
-              <Flex mt="6" justify="end">
+              <Card>
+                <Inset>
+                  <ScrollArea>
+                    <Box p="3">
+                      <pre
+                        style={{
+                          fontSize: 12,
+                          width: '100%',
+                          margin: 0,
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        <code
+                          style={{
+                            fontFamily: 'SF Mono, Menlo, monospace',
+                          }}
+                          dangerouslySetInnerHTML={{
+                            __html: syntaxHighlighted,
+                          }}
+                        />
+                      </pre>
+                    </Box>
+                  </ScrollArea>
+                </Inset>
+              </Card>
+
+              <Flex mt="6" align="center" justify="between">
+                <IconButton
+                  onClick={copyToClipboard}
+                  variant="soft"
+                  color={copied ? 'green' : undefined}
+                >
+                  {copied ? <CheckIcon /> : <ClipboardIcon />}
+                </IconButton>
                 <Dialog.Close>
                   <Button>Close</Button>
                 </Dialog.Close>
@@ -105,17 +133,8 @@ export function TSX({ node }: { node: Node }) {
 
           <IconButton
             variant="ghost"
-            color="gray"
-            onClick={() => {
-              navigator.clipboard.writeText(sourceCode.current)
-              setCopied(true)
-
-              window.clearTimeout(copyTimeout.current)
-
-              copyTimeout.current = window.setTimeout(() => {
-                setCopied(false)
-              }, 2000)
-            }}
+            color={copied ? 'green' : 'gray'}
+            onClick={copyToClipboard}
           >
             {copied ? <CheckIcon /> : <ClipboardIcon />}
           </IconButton>
@@ -148,15 +167,6 @@ export function TSX({ node }: { node: Node }) {
             </ScrollArea>
           </Inset>
         </Card>
-        {/* <pre
-              style={{
-                fontSize: 12,
-                width: '100%',
-                overflow: 'auto',
-              }}
-            >
-              <code>{sourceCode}</code>
-            </pre> */}
       </Flex>
     </Flex>
   )

@@ -7,11 +7,7 @@ import {
 } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { PageNode } from '@/node-class/page'
-import {
-  getChildNodeIndex,
-  isSelectableNode,
-  isUnwrappableNode,
-} from '@/node-lib'
+import { getChildNodeIndex, isUnwrappableNode } from '@/node-lib'
 import { useStore } from '@nanostores/react'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import clsx from 'clsx'
@@ -74,14 +70,14 @@ export function ContextMenu() {
   const canSelectChildren =
     selectedNodes.length === 1 &&
     selectedNodes[0].children.length > 0 &&
-    selectedNodes[0].children.every((child) => isSelectableNode(child))
+    selectedNodes[0].children.every((child) => !child.isUnselectable)
 
   const canSelectParent = selectedNodes.every((node) => {
     const parent = node.parent
     return (
       parent &&
       parent.id === selectedNodes[0]?.parent?.id &&
-      isSelectableNode(parent)
+      !parent.isUnselectable
     )
   })
 

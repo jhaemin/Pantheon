@@ -144,7 +144,7 @@ export function getClosestSelectableNodeSet(elm: Element):
     }
   }
 
-  if (!isSelectableNode(closestNode)) {
+  if (closestNode.isUnselectable) {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
     return getClosestSelectableNodeSet(
@@ -188,15 +188,6 @@ export function getClosestDraggableNodeSet(elm: Element):
     elm: closestNodeElm,
     node: closestNode,
   }
-}
-
-/**
- * TODO: separate into selectable and sibling droppable.
- * For example, with Text Editing turned off, TextNode is not selectable and not editable, but other nodes can be dropped around it by drag and drop.
- * It's very important user experience.
- */
-export function isSelectableNode(node: Node) {
-  return true
 }
 
 /**
