@@ -37,7 +37,7 @@ export function makeNodeDropZoneAttributes(node: Node) {
 export function makeDropZoneAttributes(dropZoneData: {
   dropZoneId: string
   dropZoneTargetNodeId: string
-  dropZoneBefore: string
+  dropZoneBefore: string | undefined
 }) {
   const { dropZoneId, dropZoneTargetNodeId, dropZoneBefore } = dropZoneData
 
