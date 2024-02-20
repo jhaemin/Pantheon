@@ -104,6 +104,8 @@ export function onMouseDownForDragAndDropNode(
     $hoveredNode.set(null)
     $selectedNodes.set([])
 
+    const allNestedChildren = draggingNode.allNestedChildrenAndSlots
+
     const clone = cloneTargetElm.cloneNode(true) as HTMLElement
 
     clone.style.width = cloneTargetElm.clientWidth + 'px'
@@ -162,7 +164,7 @@ export function onMouseDownForDragAndDropNode(
       ) {
         previousMouseOverElement = elementAtCursor // Update previous element
 
-        // Mouseover an element.
+        // FROM HERE, simulate mouseover an element.
 
         // Clear temporary drop zones
         if (!elementAtCursor.closest(`.${TEMP_DROP_ZONE_CLASS_NAME}`)) {
@@ -175,6 +177,17 @@ export function onMouseDownForDragAndDropNode(
         } else {
           const { elm: closestNodeElm, node: closestNode } =
             getClosestSelectableNodeSet(elementAtCursor)
+
+          // If closest node is the dragging node or its children, ignore it.
+          // Because it's not possible to drop node into itself or its children.
+          if (
+            closestNode &&
+            (closestNode === draggingNode ||
+              allNestedChildren.includes(closestNode))
+          ) {
+            $dropZone.set(null)
+            return
+          }
 
           const parent = closestNode?.parent
 
