@@ -7,6 +7,9 @@ import {
 import { Node } from './node-class/node'
 import styles from './node-component.module.scss'
 
+/**
+ * TODO: inject data attributes to the node component directly
+ */
 export function NodeComponent({ node }: { node: Node }) {
   const nodeWrapperElementRef = useRef<HTMLDivElement>(null!)
   const Component = nodeComponentMap[node.nodeName]

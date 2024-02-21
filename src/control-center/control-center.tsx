@@ -2,11 +2,14 @@ import { $hoveredNode, $selectedNodes } from '@/atoms'
 import { commandRemoveNodes } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
+import { serializeApp } from '@/serial'
+import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import { DotsHorizontalIcon, TargetIcon } from '@radix-ui/react-icons'
 import {
   Badge,
   Box,
+  Button,
   DropdownMenu,
   Flex,
   IconButton,
@@ -159,9 +162,26 @@ export function ControlCenter() {
                     )}
                   </Flex>
                 ) : (
-                  <Text align="center" size="2" color="gray">
-                    Select nodes to edit
-                  </Text>
+                  // <Text align="center" size="2" color="gray">
+                  //   Select nodes to edit
+                  // </Text>
+                  <Button
+                    onClick={() => {
+                      const serial = serializeApp(studioApp)
+
+                      const str = JSON.stringify(serial)
+                      const base64 = btoa(str)
+
+                      const dataUri = `data:application/json;base64,${base64}`
+
+                      const downloadLink = document.createElement('a')
+                      downloadLink.href = dataUri
+                      downloadLink.download = 'studio-app.json'
+                      downloadLink.click()
+                    }}
+                  >
+                    Serialize
+                  </Button>
                 )}
               </Flex>
             </Tabs.Content>

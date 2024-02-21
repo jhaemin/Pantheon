@@ -1,4 +1,5 @@
 import { alphanumericId } from '@/alphanumeric'
+import { NodeDefinition } from '@/node-definition'
 import { NodeName } from '@/node-name'
 import { serializeProps } from '@/serialize-props'
 import { studioApp } from '@/studio-app'
@@ -31,10 +32,26 @@ export abstract class Node {
 
     this.isUnselectable = preOptions?.isUnselectable ?? false
 
-    this.$children.listen((children) => {
+    this._$children.listen((children) => {
       if (this.ownerPage) {
         this.ownerPage.refreshUnselectableNodes()
       }
+    })
+
+    this._$children.subscribe((newChildren, oldChildren) => {
+      oldChildren?.forEach((child) => Node.releaseParent(child))
+      newChildren.forEach((child) => Node.assignParent(child, this))
+    })
+
+    this.$slots.subscribe((newSlots, oldSlots) => {
+      if (oldSlots) {
+        Object.values(oldSlots).forEach(
+          (slot) => slot && Node.releaseParent(slot),
+        )
+      }
+      Object.values(newSlots).forEach(
+        (slot) => slot && Node.assignParent(slot, this),
+      )
     })
   }
 
@@ -142,8 +159,10 @@ export abstract class Node {
   /**
    * Release parent and ownerPage from the node and its children including slots.
    */
-  protected static releaseParent(node: Node) {
-    ;[node, ...node.allNestedChildrenAndSlots].forEach((child) => {
+  private static releaseParent(node: Node) {
+    const updateTargets = [node, ...node.allNestedChildrenAndSlots]
+
+    updateTargets.forEach((child) => {
       child._ownerPage = null
     })
 
@@ -153,9 +172,10 @@ export abstract class Node {
   /**
    * Assign parent and transfer parent's ownerPage to the node and its children including slots.
    */
-  protected static assignParent(node: Node, parent: Node) {
+  private static assignParent(node: Node, parent: Node) {
     if (parent.ownerPage) {
-      ;[node, ...node.allNestedChildrenAndSlots].forEach((child) => {
+      const updateTargets = [node, ...node.allNestedChildrenAndSlots]
+      updateTargets.forEach((child) => {
         child._ownerPage = parent.ownerPage
         studioApp.allNodes[child.id] = child
       })
@@ -225,7 +245,6 @@ export abstract class Node {
 
     removableChildren.forEach((child) => {
       child.remove()
-      Node.assignParent(child, this)
     })
 
     this.children = [...this.children, ...removableChildren]
@@ -250,7 +269,6 @@ export abstract class Node {
 
     removableChildren.forEach((child) => {
       child.remove() // TODO: bulk remove by parent to avoid unnecessary re-render
-      Node.assignParent(child, this)
     })
 
     // After removing inserting nodes,
@@ -289,8 +307,6 @@ export abstract class Node {
     const removableChildren = children.filter((child) => child.isRemovable)
 
     removableChildren.forEach((child) => {
-      Node.releaseParent(child)
-
       const isSlot = child.slotKey !== undefined
 
       if (isSlot && !this.slotsInfo[child.slotKey].required) {
@@ -312,6 +328,8 @@ export abstract class Node {
   public readonly slotLabel?: string
 
   public readonly $slots = atom<Record<string, Node | null>>({})
+
+  public readonly slotsDefinitions: NodeDefinition['slots'] = []
 
   get slots() {
     return this.$slots.get()
@@ -377,13 +395,6 @@ export abstract class Node {
       throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
     }
 
-    const previousSlot = this.$slots.get()[slotKey]
-
-    if (previousSlot) {
-      Node.releaseParent(previousSlot)
-    }
-
-    Node.assignParent(node, this)
     this.$slots.set({ ...this.$slots.get(), [slotKey]: node })
   }
 
@@ -397,8 +408,6 @@ export abstract class Node {
       if (slotInfo.required) {
         throw new Error(`Slot ${slotName} is required. Cannot be disabled.`)
       }
-
-      Node.releaseParent(node)
 
       newSlots[slotName] = null
       this.$slots.set(newSlots)
@@ -421,6 +430,9 @@ export abstract class Node {
     }
   }
 
+  /**
+   * TODO: slots
+   */
   public generateCode(): string {
     const props = this.props
     const serializedProps = serializeProps(props)
@@ -433,6 +445,20 @@ export abstract class Node {
     return `<${componentName} ${serializedProps}>${this.children
       .map((child) => child.generateCode())
       .join('')}</${componentName}>`
+  }
+
+  public serialize(): any {
+    return {
+      nodeName: this.nodeName,
+      props: this.props,
+      children: this.children.map((child) => child.serialize()),
+      slots: Object.fromEntries(
+        Object.entries(this.$slots.get()).map(([key, value]) => [
+          key,
+          value?.serialize(),
+        ]),
+      ),
+    }
   }
 }
 

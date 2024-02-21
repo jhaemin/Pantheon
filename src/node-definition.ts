@@ -39,6 +39,9 @@ export type Prop = {
  * TODO: ReactNode as a prop is not supported yet.
  */
 export type NodeDefinition = {
+  /**
+   * Unique identifier for the node.
+   */
   nodeName: string
   lib: {
     mod: string
@@ -51,9 +54,16 @@ export type NodeDefinition = {
    * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
    */
   componentName?: string
+  /**
+   * Display name for the node.
+   */
+  displayName?: string
   fragment?: boolean
   unselectable?: boolean
   allowNested?: boolean
+  /**
+   * If true, it is not droppable which means it can't have children.
+   */
   leaf?: boolean
   portal?: boolean
   arbitraryChildren?: boolean

@@ -4,7 +4,6 @@ import { GroundComponent } from '@/app/ground'
 import { GlobalHeader } from '@/app/header/global-header'
 import { ControlCenter } from '@/control-center/control-center'
 import { DevTools } from '@/dev-tools/dev-tools'
-import { Drawer } from '@/drawer/drawer'
 import { useGlobalEvents } from '@/hooks/use-global-events'
 import { ShortcutsDialog } from '@/shortcuts-dialog'
 import { Tree } from '@/tree/tree'
@@ -19,6 +18,11 @@ const ContextMenu = dynamic(
   { ssr: false },
 )
 
+const Drawer = dynamic(
+  () => import('@/drawer/drawer').then((mod) => mod.Drawer),
+  { ssr: false },
+)
+
 export default function Home() {
   useGlobalEvents()
 
@@ -28,8 +32,10 @@ export default function Home() {
         <GlobalHeader />
 
         <div className={styles.content}>
-          <Drawer />
-          <Tree />
+          <div id="left-panel" className={styles.leftPanel}>
+            <Tree />
+            <Drawer />
+          </div>
           <GroundComponent />
           <ControlCenter />
         </div>

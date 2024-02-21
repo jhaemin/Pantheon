@@ -41,6 +41,34 @@ import {
   RadixSwitchNodeComponent,
   RadixSwitchNodeControls,
 } from './radix-switch'
+import {
+  RadixTableBodyNodeComponent,
+  RadixTableBodyNodeControls,
+} from './radix-table-body'
+import {
+  RadixTableCellNodeComponent,
+  RadixTableCellNodeControls,
+} from './radix-table-cell'
+import {
+  RadixColumnHeaderCellNodeComponent,
+  RadixColumnHeaderCellNodeControls,
+} from './radix-column-header-cell'
+import {
+  RadixTableHeaderNodeComponent,
+  RadixTableHeaderNodeControls,
+} from './radix-table-header'
+import {
+  RadixTableRootNodeComponent,
+  RadixTableRootNodeControls,
+} from './radix-table-root'
+import {
+  RadixTableRowNodeComponent,
+  RadixTableRowNodeControls,
+} from './radix-table-row'
+import {
+  RadixRowHeaderCellNodeComponent,
+  RadixRowHeaderCellNodeControls,
+} from './radix-row-header-cell'
 import { RadixTextNodeComponent, RadixTextNodeControls } from './radix-text'
 import {
   RadixTextFieldNodeComponent,
@@ -64,6 +92,13 @@ export const generatedNodeComponentMap = {
   RadixHeading: RadixHeadingNodeComponent,
   RadixLink: RadixLinkNodeComponent,
   RadixSwitch: RadixSwitchNodeComponent,
+  RadixTableBody: RadixTableBodyNodeComponent,
+  RadixTableCell: RadixTableCellNodeComponent,
+  RadixColumnHeaderCell: RadixColumnHeaderCellNodeComponent,
+  RadixTableHeader: RadixTableHeaderNodeComponent,
+  RadixTableRoot: RadixTableRootNodeComponent,
+  RadixTableRow: RadixTableRowNodeComponent,
+  RadixRowHeaderCell: RadixRowHeaderCellNodeComponent,
   RadixText: RadixTextNodeComponent,
   RadixTextField: RadixTextFieldNodeComponent,
 }
@@ -85,6 +120,13 @@ export const generatedNodeControlsMap = {
   RadixHeading: RadixHeadingNodeControls,
   RadixLink: RadixLinkNodeControls,
   RadixSwitch: RadixSwitchNodeControls,
+  RadixTableBody: RadixTableBodyNodeControls,
+  RadixTableCell: RadixTableCellNodeControls,
+  RadixColumnHeaderCell: RadixColumnHeaderCellNodeControls,
+  RadixTableHeader: RadixTableHeaderNodeControls,
+  RadixTableRoot: RadixTableRootNodeControls,
+  RadixTableRow: RadixTableRowNodeControls,
+  RadixRowHeaderCell: RadixRowHeaderCellNodeControls,
   RadixText: RadixTextNodeControls,
   RadixTextField: RadixTextFieldNodeControls,
 }

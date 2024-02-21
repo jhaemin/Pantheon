@@ -715,3 +715,57 @@ export const textFieldDef: NodeDefinition = {
     },
   ],
 }
+
+export const tableRootDef: NodeDefinition = {
+  nodeName: 'RadixTableRoot',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.Root',
+  props: [
+    {
+      key: 'size',
+      type: ['1', '2', '3'],
+      default: '2',
+    },
+    {
+      key: 'variant',
+      type: ['surface', 'ghost'],
+      default: 'ghost',
+    },
+  ],
+}
+
+export const tableHeaderDef: NodeDefinition = {
+  nodeName: 'RadixTableHeader',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.Header',
+}
+
+export const tableBodyDef: NodeDefinition = {
+  nodeName: 'RadixTableBody',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.Body',
+}
+
+export const tableRowDef: NodeDefinition = {
+  nodeName: 'RadixTableRow',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.Row',
+}
+
+export const tableCellDef: NodeDefinition = {
+  nodeName: 'RadixTableCell',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.Cell',
+}
+
+export const tableColumnHeaderCellDef: NodeDefinition = {
+  nodeName: 'RadixColumnHeaderCell',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.ColumnHeaderCell',
+}
+
+export const tableRowHeaderCellDef: NodeDefinition = {
+  nodeName: 'RadixRowHeaderCell',
+  lib: { mod: 'Table', from: importFrom },
+  componentName: 'Table.RowHeaderCell',
+}

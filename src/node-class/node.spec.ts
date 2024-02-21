@@ -234,9 +234,12 @@ test('Slot', () => {
 
   expect(frag.slots.content).toBe(content)
   expect(frag.slots.content?.parent).toBe(frag)
+  expect(content.parent).toBe(frag)
+  expect(content.slotKey).toBe('content')
 
   frag.disableSlot(content)
   expect(frag.slots.content).toBe(null)
+  expect(content.parent).toBe(null)
 
   frag.setSlot('content', content)
   content.remove()

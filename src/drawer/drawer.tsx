@@ -7,16 +7,22 @@ import { RadixCalloutNode } from '@/__generated__/radix-callout'
 import { RadixCardNode } from '@/__generated__/radix-card'
 import { RadixCheckboxNode } from '@/__generated__/radix-checkbox'
 import { RadixCodeNode } from '@/__generated__/radix-code'
+import { RadixColumnHeaderCellNode } from '@/__generated__/radix-column-header-cell'
 import { RadixDialogNode } from '@/__generated__/radix-dialog'
 import { RadixFlexNode } from '@/__generated__/radix-flex'
 import { RadixGridNode } from '@/__generated__/radix-grid'
 import { RadixHeadingNode } from '@/__generated__/radix-heading'
 import { RadixLinkNode } from '@/__generated__/radix-link'
 import { RadixSwitchNode } from '@/__generated__/radix-switch'
+import { RadixTableCellNode } from '@/__generated__/radix-table-cell'
+import { RadixTableHeaderNode } from '@/__generated__/radix-table-header'
+import { RadixTableRootNode } from '@/__generated__/radix-table-root'
+import { RadixTableRowNode } from '@/__generated__/radix-table-row'
 import { RadixTextNode } from '@/__generated__/radix-text'
 import { RadixTextFieldNode } from '@/__generated__/radix-text-field'
-import { $drawerHeight } from '@/atoms'
+import { $drawerHeight, $isDrawerLoaded } from '@/atoms'
 import { TextNode } from '@/node-class/text'
+import { useStore } from '@nanostores/react'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import {
   Avatar,
@@ -34,6 +40,7 @@ import {
   ScrollArea,
   Separator,
   Switch,
+  Table,
   Text,
   TextField,
 } from '@radix-ui/themes'
@@ -42,20 +49,13 @@ import { DrawerItemWrapper } from './drawer-item-wrapper'
 import styles from './drawer.module.scss'
 
 export function Drawer() {
+  const isDrawerLoaded = useStore($isDrawerLoaded)
+
   return (
     <Flex
       direction="column"
-      style={{
-        width: 300,
-        position: 'fixed',
-        left: 0,
-        // top: 'var(--space-8)',
-        bottom: 0,
-        height: 'var(--drawer-height)',
-        backgroundColor: '#fff',
-        borderRight: '1px solid var(--gray-4)',
-        zIndex: 100,
-      }}
+      className={styles.drawer}
+      style={{ display: isDrawerLoaded ? undefined : 'none' }}
     >
       <Flex
         position="absolute"
@@ -71,6 +71,8 @@ export function Drawer() {
 
           const initialY = e.clientY
           const initialHeight = $drawerHeight.get()
+
+          if (!initialHeight) return
 
           document.documentElement.classList.add('resizing-drawer')
 
@@ -316,6 +318,69 @@ export function Drawer() {
                 </Box>
               </Flex>
             </Card>
+          </DrawerItemWrapper>
+
+          <DrawerItemWrapper
+            createNode={() => {
+              const table = new RadixTableRootNode()
+
+              const header = new RadixTableHeaderNode()
+              const body = new RadixTableHeaderNode()
+
+              table.append(header, body)
+
+              const headerRow = new RadixTableRowNode()
+              const headerCell1 = new RadixColumnHeaderCellNode()
+              headerCell1.append(new TextNode('First'))
+              const headerCell2 = new RadixColumnHeaderCellNode()
+              headerCell2.append(new TextNode('Second'))
+              const headerCell3 = new RadixColumnHeaderCellNode()
+              headerCell3.append(new TextNode('Third'))
+              const headerCell4 = new RadixColumnHeaderCellNode()
+              headerCell4.append(new TextNode('Fourth'))
+
+              headerRow.append(
+                headerCell1,
+                headerCell2,
+                headerCell3,
+                headerCell4,
+              )
+              header.append(headerRow)
+
+              const bodyRow = new RadixTableRowNode()
+              const bodyCell1 = new RadixTableCellNode()
+              bodyCell1.append(new TextNode('One'))
+              const bodyCell2 = new RadixTableCellNode()
+              bodyCell2.append(new TextNode('Two'))
+              const bodyCell3 = new RadixTableCellNode()
+              bodyCell3.append(new TextNode('Three'))
+              const bodyCell4 = new RadixTableCellNode()
+              bodyCell4.append(new TextNode('Four'))
+
+              bodyRow.append(bodyCell1, bodyCell2, bodyCell3, bodyCell4)
+              body.append(bodyRow)
+
+              return table
+            }}
+          >
+            <Table.Root>
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>First</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Second</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Third</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Fourth</Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell>One</Table.Cell>
+                  <Table.Cell>Two</Table.Cell>
+                  <Table.Cell>Three</Table.Cell>
+                  <Table.Cell>Four</Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table.Root>
           </DrawerItemWrapper>
         </Flex>
       </ScrollArea>

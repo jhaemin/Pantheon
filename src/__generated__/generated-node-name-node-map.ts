@@ -14,6 +14,13 @@ import { RadixGridNode } from './radix-grid'
 import { RadixHeadingNode } from './radix-heading'
 import { RadixLinkNode } from './radix-link'
 import { RadixSwitchNode } from './radix-switch'
+import { RadixTableBodyNode } from './radix-table-body'
+import { RadixTableCellNode } from './radix-table-cell'
+import { RadixColumnHeaderCellNode } from './radix-column-header-cell'
+import { RadixTableHeaderNode } from './radix-table-header'
+import { RadixTableRootNode } from './radix-table-root'
+import { RadixTableRowNode } from './radix-table-row'
+import { RadixRowHeaderCellNode } from './radix-row-header-cell'
 import { RadixTextNode } from './radix-text'
 import { RadixTextFieldNode } from './radix-text-field'
 
@@ -34,6 +41,13 @@ export const generatedNodeNameNodeMap = {
   RadixHeading: RadixHeadingNode,
   RadixLink: RadixLinkNode,
   RadixSwitch: RadixSwitchNode,
+  RadixTableBody: RadixTableBodyNode,
+  RadixTableCell: RadixTableCellNode,
+  RadixColumnHeaderCell: RadixColumnHeaderCellNode,
+  RadixTableHeader: RadixTableHeaderNode,
+  RadixTableRoot: RadixTableRootNode,
+  RadixTableRow: RadixTableRowNode,
+  RadixRowHeaderCell: RadixRowHeaderCellNode,
   RadixText: RadixTextNode,
   RadixTextField: RadixTextFieldNode,
 }

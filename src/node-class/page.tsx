@@ -114,6 +114,13 @@ export class PageNode extends Node {
 
     return `${openTag}${this.children.map((child) => child.generateCode()).join('')}${closeTag}`
   }
+
+  public serialize() {
+    return {
+      ...super.serialize(),
+      label: this.$pageLabel.get(),
+    }
+  }
 }
 
 export function PageNodeComponent({ node }: { node: PageNode }) {

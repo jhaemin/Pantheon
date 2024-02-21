@@ -1,4 +1,4 @@
-import { atom } from 'nanostores'
+import { atom, onMount } from 'nanostores'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 
@@ -78,10 +78,24 @@ $interactionMode.listen((interactionMode) => {
 
 export const $lastFocusedPage = atom<PageNode | null>(null)
 
-export const $drawerHeight = atom(300)
+export const $drawerHeight = atom<number | undefined>(undefined)
+
+export const $isDrawerLoaded = atom(false)
+
+onMount($drawerHeight, () => {
+  if (typeof window == 'undefined') return
+
+  const height = localStorage.getItem('drawer-height') ?? '300'
+
+  $drawerHeight.set(parseInt(height))
+  $isDrawerLoaded.set(true)
+})
 
 $drawerHeight.subscribe((height) => {
   if (typeof window == 'undefined') return
 
-  document.body.style.setProperty('--drawer-height', `${height}px`)
+  if (typeof height === 'number') {
+    localStorage.setItem('drawer-height', height.toString())
+    document.body.style.setProperty('--drawer-height', `${height}px`)
+  }
 })

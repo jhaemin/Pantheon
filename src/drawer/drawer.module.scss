@@ -1,3 +1,12 @@
+.drawer {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: var(--drawer-height);
+  z-index: 100;
+}
+
 .resizer {
   z-index: 1;
 

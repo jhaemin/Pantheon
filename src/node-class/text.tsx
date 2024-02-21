@@ -41,6 +41,13 @@ export class TextNode extends Node {
 
     return `${this.value}`
   }
+
+  public serialize() {
+    return {
+      ...super.serialize(),
+      value: this.value,
+    }
+  }
 }
 
 export function TextNodeComponent({ node }: { node: TextNode }) {
@@ -55,7 +62,6 @@ export function TextNodeControls({ nodes }: { nodes: TextNode[] }) {
 
   const handleEmpty = useCallback(() => {
     if (nodes[0].value.trim().length === 0) {
-      console.log(nodes)
       nodes.forEach((node) => node.$value.set('Text'))
     }
   }, [nodes])

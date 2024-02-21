@@ -1,6 +1,12 @@
-import { $hoveredNode, $lastFocusedPage, $selectedNodes } from '@/atoms'
+import {
+  $hoveredNode,
+  $isDraggingNode,
+  $lastFocusedPage,
+  $selectedNodes,
+} from '@/atoms'
 import {
   keepNodeSelectionAttribute,
+  makeDropZoneAttributes,
   makeNodeDropZoneAttributes,
 } from '@/data-attributes'
 import { onMouseDownForDragAndDropNode } from '@/events'
@@ -56,20 +62,7 @@ export function Tree() {
   }, [])
 
   return (
-    <Box
-      ref={ref}
-      style={{
-        position: 'fixed',
-        left: 0,
-        width: 300,
-        height: 'calc(100% - var(--space-8) - var(--drawer-height))',
-        backgroundColor: '#fff',
-        borderRight: '1px solid var(--gray-4)',
-        top: 'var(--space-8)',
-        zIndex: 99,
-      }}
-      {...keepNodeSelectionAttribute}
-    >
+    <Box ref={ref} className={styles.tree} {...keepNodeSelectionAttribute}>
       <ScrollArea>
         <Box p="4">
           {currentPage ? <NodeTree node={currentPage} /> : <AppTree />}
@@ -87,10 +80,11 @@ function PageLabel({ page }: { page: PageNode }) {
     <Flex
       id={`tree-node-${page.id}`}
       className={styles.treeNode}
-      {...makeNodeDropZoneAttributes(page)}
       align="center"
       px="2"
       onMouseEnter={() => {
+        if ($isDraggingNode.get()) return
+
         $hoveredNode.set(page)
       }}
       onMouseLeave={() => {
@@ -123,41 +117,62 @@ function NodeTree({ node }: { node: Node }) {
       className={styles.treeNodeContainer}
       direction="column"
       {...(node.isDroppable ? makeNodeDropZoneAttributes(node) : {})}
+      onMouseOver={(e) => {
+        if ($isDraggingNode.get()) return
+
+        e.stopPropagation()
+        $hoveredNode.set(node)
+      }}
+      onMouseOut={(e) => {
+        e.stopPropagation()
+        $hoveredNode.set(null)
+      }}
+      onMouseDown={(e) => {
+        e.stopPropagation()
+        $selectedNodes.set([node])
+
+        const elm = document.getElementById(`tree-node-container-${node.id}`)!
+        const elmRect = elm.getBoundingClientRect()
+
+        onMouseDownForDragAndDropNode(e, {
+          cloneTargetElm: elm,
+          elmX: e.clientX - elmRect.left,
+          elmY: e.clientY - elmRect.top,
+          elementScale: 1,
+          draggingElm: elm,
+          draggingNode: node,
+        })
+      }}
     >
       {node instanceof PageNode ? (
         <PageLabel page={node} />
       ) : (
-        <Flex
-          id={`tree-node-${node.id}`}
-          align="center"
-          px="2"
-          className={styles.treeNode}
-          onMouseEnter={() => {
-            $hoveredNode.set(node)
-          }}
-          onMouseLeave={() => {
-            $hoveredNode.set(null)
-          }}
-          onMouseDown={(e) => {
-            $selectedNodes.set([node])
-
-            const elm = document.getElementById(
-              `tree-node-container-${node.id}`,
-            )!
-            const elmRect = elm.getBoundingClientRect()
-
-            onMouseDownForDragAndDropNode(e, {
-              cloneTargetElm: elm,
-              elmX: e.clientX - elmRect.left,
-              elmY: e.clientY - elmRect.top,
-              elementScale: 1,
-              draggingElm: elm,
-              draggingNode: node,
-            })
-          }}
-        >
-          <Text size="2">{nodeLabel}</Text>
-        </Flex>
+        <>
+          <Flex
+            id={`tree-node-${node.id}`}
+            align="center"
+            px="2"
+            className={styles.treeNode}
+          >
+            <Text size="2">{nodeLabel}</Text>
+          </Flex>
+          <div
+            className={styles.previousDropZone}
+            {...makeDropZoneAttributes({
+              dropZoneId: node.id,
+              dropZoneBefore: node.id,
+              dropZoneTargetNodeId: node.parent?.id!,
+            })}
+          />
+          <div
+            className={styles.nextDropZone}
+            {...makeDropZoneAttributes({
+              dropZoneId: node.id,
+              dropZoneBefore: node.nextSibling?.id,
+              dropZoneTargetNodeId: node.parent?.id!,
+            })}
+          />
+        </>
       )}
       {node.childrenAndSlots.map((node) => (
         <Box key={node.id} ml="3">
