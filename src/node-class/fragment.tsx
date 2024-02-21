@@ -1,3 +1,4 @@
+import { makeNodeProps } from '@/data-attributes'
 import { useStore } from '@nanostores/react'
 import { Callout } from '@radix-ui/themes'
 import { EmptyPlaceholder } from '../empty-placeholder'
@@ -10,7 +11,7 @@ export function FragmentNodeComponent({ node }: { node: FragmentNode }) {
   const emptyPlaceholderName = slotLabel ? `Slot: ${slotLabel}` : 'Fragment'
 
   return children.length === 0 ? (
-    <EmptyPlaceholder name={emptyPlaceholderName} />
+    <EmptyPlaceholder name={emptyPlaceholderName} {...makeNodeProps(node)} />
   ) : (
     renderChildren(children)
   )

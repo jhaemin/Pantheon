@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Blockquote } from '@radix-ui/themes'
 
@@ -74,11 +75,12 @@ export function RadixBlockquoteNodeComponent({
 }: {
   node: RadixBlockquoteNode
 }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Blockquote {...props}>
+    <Blockquote {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

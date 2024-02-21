@@ -34,3 +34,4 @@ bun run build
 
 - [ ] Clone node
 - [ ] Declare drawer item with node then clone node when drag and drop to easel
+- [ ] Write UI guides in Vanilla

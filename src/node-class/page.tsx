@@ -27,7 +27,7 @@ export class PageNode extends Node {
   }
 
   get element() {
-    return this.wrapperElement
+    return this._iframeElement?.contentDocument?.body ?? null
   }
 
   private onIframeMountCallbacks: ((

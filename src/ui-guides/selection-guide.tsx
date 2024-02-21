@@ -9,7 +9,6 @@ import {
 import { Ground } from '@/ground'
 import { Node } from '@/node-class/node'
 import { PageNode } from '@/node-class/page'
-import { findEaselIframe, findNodeElm } from '@/node-lib'
 import { GuideDimension } from '@/types/guide-dimension'
 import { useStore } from '@nanostores/react'
 import { useEffect, useState } from 'react'
@@ -61,8 +60,8 @@ export function SelectionGuide() {
     const newDimensions = selectedNodes.map((node) => {
       if (!node.ownerPage) return null
 
-      const iframe = findEaselIframe(node.ownerPage)
-      const nodeElm = findNodeElm(node)
+      const iframe = node.ownerPage.iframeElement
+      const nodeElm = node.element
 
       if (!iframe || !nodeElm) {
         return null

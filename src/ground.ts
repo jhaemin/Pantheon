@@ -10,7 +10,6 @@ import { GROUND_ID } from './app/ground'
 import { $isAnimatingGround } from './atoms'
 import { EASEL_CONTAINER_ID } from './easel/easel-container'
 import { PageNode } from './node-class/page'
-import { findEaselIframe } from './node-lib'
 
 const MAX_SCALE = 3
 const MIN_SCALE = 0.1
@@ -107,7 +106,7 @@ export class Ground {
   }
 
   static focus(page: PageNode, animation = false) {
-    const pageElm = findEaselIframe(page)
+    const pageElm = page.iframeElement
 
     if (!pageElm) return
 

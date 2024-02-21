@@ -9,6 +9,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { TextField } from '@radix-ui/themes'
 
@@ -77,9 +78,11 @@ export function RadixTextFieldNodeComponent({
 }: {
   node: RadixTextFieldNode
 }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
 
-  return <TextField.Input {...props} />
+  return <TextField.Input {...props} {...nodeProps} />
 }
 
 export function RadixTextFieldNodeControls({

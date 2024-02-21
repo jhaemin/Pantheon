@@ -1,5 +1,5 @@
-import { StudioApp } from './studio-app'
+import { studioApp } from './studio-app'
 
-export function serializeApp(app: StudioApp) {
-  return app.pages.map((page) => page.serialize())
+export function serializeApp() {
+  return studioApp.pages.map((page) => page.serialize())
 }

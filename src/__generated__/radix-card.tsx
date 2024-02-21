@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 
 export type RadixCardNodeProps = {
@@ -41,11 +42,12 @@ export class RadixCardNode extends Node {
 }
 
 export function RadixCardNodeComponent({ node }: { node: RadixCardNode }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Card {...props}>
+    <Card {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

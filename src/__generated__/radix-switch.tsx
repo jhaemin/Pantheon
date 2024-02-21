@@ -9,6 +9,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Switch } from '@radix-ui/themes'
 
@@ -46,9 +47,11 @@ export class RadixSwitchNode extends Node {
 }
 
 export function RadixSwitchNodeComponent({ node }: { node: RadixSwitchNode }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
 
-  return <Switch {...props} />
+  return <Switch {...props} {...nodeProps} />
 }
 
 export function RadixSwitchNodeControls({

@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Badge } from '@radix-ui/themes'
 
@@ -71,11 +72,12 @@ export class RadixBadgeNode extends Node {
 }
 
 export function RadixBadgeNodeComponent({ node }: { node: RadixBadgeNode }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Badge {...props}>
+    <Badge {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

@@ -39,46 +39,46 @@ export abstract class Node {
     })
 
     this._$children.subscribe((newChildren, oldChildren) => {
-      oldChildren?.forEach((child) => Node.releaseParent(child))
-      newChildren.forEach((child) => Node.assignParent(child, this))
+      if (oldChildren) {
+        oldChildren.forEach((child) => {
+          Node.releaseParent(child)
+          delete studioApp.allNodes[child.id]
+        })
+      }
+
+      newChildren.forEach((child) => {
+        Node.assignParent(child, this)
+        studioApp.allNodes[child.id] = child
+      })
     })
 
     this.$slots.subscribe((newSlots, oldSlots) => {
       if (oldSlots) {
-        Object.values(oldSlots).forEach(
-          (slot) => slot && Node.releaseParent(slot),
-        )
+        Object.values(oldSlots).forEach((slot) => {
+          if (slot) {
+            Node.releaseParent(slot)
+            delete studioApp.allNodes[slot.id]
+          }
+        })
       }
-      Object.values(newSlots).forEach(
-        (slot) => slot && Node.assignParent(slot, this),
-      )
+
+      Object.values(newSlots).forEach((slot) => {
+        if (slot) {
+          Node.assignParent(slot, this)
+          studioApp.allNodes[slot.id] = slot
+        }
+      })
     })
-  }
-
-  /**
-   * Wrapper element for the node.
-   * `display: contents` is used to make the wrapper element invisible and let the children take its place.
-   */
-  private _wrapperElement: HTMLElement | null = null
-
-  get wrapperElement() {
-    return this._wrapperElement
-  }
-
-  static attachWrapperElement(node: Node, wrapperElement: HTMLElement) {
-    node._wrapperElement = wrapperElement
-
-    node.onMountCallbacks.forEach((callback) => callback(node.element))
-  }
-
-  static detachWrapperElement(node: Node) {
-    node._wrapperElement = null
   }
 
   private onMountCallbacks: ((element: HTMLElement | null) => void)[] = []
 
   onMount(callback: (element: HTMLElement | null) => void) {
     this.onMountCallbacks.push(callback)
+  }
+
+  executeOnMountCallbacks() {
+    this.onMountCallbacks.forEach((callback) => callback(this.element))
   }
 
   /**
@@ -89,7 +89,11 @@ export abstract class Node {
    * TODO: What about overlay?
    */
   get element(): HTMLElement | null {
-    return (this._wrapperElement?.firstElementChild as HTMLElement) ?? null
+    return (
+      this.ownerPage?.iframeElement?.contentDocument?.getElementById(
+        `node-${this.id}`,
+      ) ?? null
+    )
   }
 
   /**

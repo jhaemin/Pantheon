@@ -13,7 +13,7 @@ import {
 import { onMouseDownIframe } from '@/events'
 import { Ground } from '@/ground'
 import { PageNode } from '@/node-class/page'
-import { getClosestSelectableNodeSet } from '@/node-lib'
+import { getClosestSelectableNodeFromElm } from '@/node-lib'
 import { useStore } from '@nanostores/react'
 import clsx from 'clsx'
 import { useEffect, useRef } from 'react'
@@ -117,8 +117,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
         ) {
           previousMouseOverElement = elementAtCursor
 
-          const { node: hoveredNode } =
-            getClosestSelectableNodeSet(elementAtCursor)
+          const hoveredNode = getClosestSelectableNodeFromElm(elementAtCursor)
 
           if (hoveredNode) {
             $hoveredNode.set(hoveredNode)

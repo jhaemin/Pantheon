@@ -1,4 +1,5 @@
 import { $selectedNodes, triggerRerenderGuides } from '@/atoms'
+import { makeNodeProps } from '@/data-attributes'
 import { useStore } from '@nanostores/react'
 import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom } from 'nanostores'
@@ -53,7 +54,7 @@ export class TextNode extends Node {
 export function TextNodeComponent({ node }: { node: TextNode }) {
   const value = useStore(node.$value)
 
-  return <span>{value}</span>
+  return <span {...makeNodeProps(node)}>{value}</span>
 }
 
 export function TextNodeControls({ nodes }: { nodes: TextNode[] }) {

@@ -1,6 +1,5 @@
 import { $dropZone } from '@/atoms'
 import { Ground } from '@/ground'
-import { findEaselIframe } from '@/node-lib'
 import { useStore } from '@nanostores/react'
 import styles from './drop-zone-guide.module.scss'
 
@@ -13,7 +12,7 @@ export function DropZoneGuide() {
   const { targetNode, dropZoneElm } = dropZone
 
   const dropZoneRect = dropZoneElm.getBoundingClientRect()
-  const iframe = findEaselIframe(targetNode.ownerPage!)
+  const iframe = targetNode.ownerPage!.iframeElement
 
   if (iframe) {
     const iframeRect = iframe.getBoundingClientRect()

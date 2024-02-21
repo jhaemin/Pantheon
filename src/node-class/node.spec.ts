@@ -1,6 +1,6 @@
 import { PageNode } from '@/node-class/page'
 import { TextNode } from '@/node-class/text'
-import { StudioApp } from '@/studio-app'
+import { studioApp } from '@/studio-app'
 import { expect, test } from 'bun:test'
 import { FragmentNode, Node } from './node'
 
@@ -48,6 +48,35 @@ test('Append children', () => {
   expect(frag.children[0].nextSibling).toBe(text2)
   expect(frag.children[1].previousSibling).toBe(text1)
   expect(frag.children[1].nextSibling).toBe(null)
+})
+
+test('All nodes', () => {
+  const page = new PageNode()
+  studioApp.addPage(page)
+  expect(studioApp.allNodes[page.id]).toBe(page)
+  const text = new TextNode()
+  page.append(text)
+  expect(studioApp.allNodes[text.id]).toBe(text)
+
+  class TestNode extends Node {
+    readonly nodeName = 'Fragment'
+
+    slotsInfoArray = [
+      {
+        required: false,
+        key: 'content',
+        label: 'Content',
+      },
+    ]
+  }
+
+  const frag = new TestNode()
+  const text2 = new TextNode()
+  frag.setSlot('content', text2)
+
+  expect(studioApp.allNodes[text2.id]).toBe(text2)
+
+  studioApp.removePage(page)
 })
 
 test('Move', () => {
@@ -135,8 +164,6 @@ test('Insert before', () => {
 })
 
 test('Page creation, removal', () => {
-  const studioApp = new StudioApp()
-
   expect(studioApp.pages.length).toBe(0)
   expect(studioApp.$pages.get().length).toBe(0)
 

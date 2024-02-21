@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 
 export type RadixFlexNodeProps = {
@@ -67,11 +68,12 @@ export class RadixFlexNode extends Node {
 }
 
 export function RadixFlexNodeComponent({ node }: { node: RadixFlexNode }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Flex {...props}>
+    <Flex {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

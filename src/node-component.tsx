@@ -5,7 +5,6 @@ import {
   makeNodeDropZoneAttributes,
 } from './data-attributes'
 import { Node } from './node-class/node'
-import styles from './node-component.module.scss'
 
 /**
  * TODO: inject data attributes to the node component directly
@@ -16,56 +15,18 @@ export function NodeComponent({ node }: { node: Node }) {
 
   const commonNodeElementProps = {
     ...makeNodeAttributes(node),
-
-    onClick: (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-    },
-
     ...(node.isDroppable ? makeNodeDropZoneAttributes(node) : undefined),
   }
 
   /**
-   * VERY IMPORTANT LOGIC
-   *
-   * When a node is mounted, we need to register it to `allEaselNodeAtoms`.
-   * Then when a node is unmounted, we need to unregister it from `allEaselNodeAtoms`.
-   *
    * Note that PageNode cannot be unmounted because once it is deleted, its iframe is removed from the DOM. Which means there is no chance for the PageNode to be unmounted.
    * So, to delete a PageNode, we need to run below logic in `EaselWrapper` component again.
    */
   useEffect(() => {
-    // Page's wrapper element is the body of the iframe
-    if (node.nodeName === 'Page') {
-      Node.attachWrapperElement(node, document.body)
-    }
-    // Otherwise
-    else {
-      Node.attachWrapperElement(node, nodeWrapperElementRef.current)
-    }
-
-    return () => {
-      Node.detachWrapperElement(node)
-    }
+    node.executeOnMountCallbacks()
   }, [node])
 
-  // PageNode's wrapper element is the body itself
-  if (node.nodeName === 'Page') {
-    return <Component node={node as never} />
-  }
-
-  return (
-    // display: contents wrapper
-    <span
-      ref={nodeWrapperElementRef}
-      id={node.id}
-      className={styles.nodeComponentWrapper}
-      {...commonNodeElementProps}
-    >
-      <Component node={node as never} />
-      {/* guaranteed type safety */}
-    </span>
-  )
+  return <Component node={node as never} {...commonNodeElementProps} />
 }
 
 export function renderChildren(children: Node[]) {

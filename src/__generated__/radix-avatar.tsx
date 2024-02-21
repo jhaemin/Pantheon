@@ -9,6 +9,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Avatar } from '@radix-ui/themes'
 
@@ -77,9 +78,11 @@ export class RadixAvatarNode extends Node {
 }
 
 export function RadixAvatarNodeComponent({ node }: { node: RadixAvatarNode }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
 
-  return <Avatar {...props} />
+  return <Avatar {...props} {...nodeProps} />
 }
 
 export function RadixAvatarNodeControls({

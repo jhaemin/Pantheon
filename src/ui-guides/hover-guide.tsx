@@ -6,7 +6,6 @@ import {
 } from '@/atoms'
 import { Ground } from '@/ground'
 import { PageNode } from '@/node-class/page'
-import { findEaselIframe, findNodeElm } from '@/node-lib'
 import { GuideDimension } from '@/types/guide-dimension'
 import { useStore } from '@nanostores/react'
 import { useEffect, useState } from 'react'
@@ -38,8 +37,8 @@ export function HoverGuide() {
       return
     }
 
-    const iframe = findEaselIframe(hoveredNode.ownerPage)
-    const nodeElm = findNodeElm(hoveredNode)
+    const iframe = hoveredNode.ownerPage.iframeElement
+    const nodeElm = hoveredNode.element
 
     if (!iframe || !nodeElm) {
       setDimension(initialDimension)

@@ -1,6 +1,7 @@
-export function EmptyPlaceholder({ name }: { name?: string }) {
+export function EmptyPlaceholder({ name, ...rest }: { name?: string }) {
   return (
     <span
+      {...rest}
       style={{
         // display: 'inline-flex',
         // alignItems: 'center',

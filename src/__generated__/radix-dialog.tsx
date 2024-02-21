@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Dialog } from '@radix-ui/themes'
 
@@ -90,12 +91,14 @@ export class RadixDialogNode extends Node {
 }
 
 export function RadixDialogNodeComponent({ node }: { node: RadixDialogNode }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
   const slots = useStore(node.$slots)
   const contentProps = useStore(node.$contentProps)
 
   return (
-    <Dialog.Root {...props}>
+    <Dialog.Root {...props} {...nodeProps}>
       {slots.content && (
         <Dialog.Content {...contentProps}>
           {slots.title && (

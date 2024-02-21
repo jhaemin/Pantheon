@@ -1,5 +1,4 @@
 import { generateSourceCode } from '@/generate-source-code'
-import { studioApp } from '@/studio-app'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { Button, Flex } from '@radix-ui/themes'
 
@@ -9,7 +8,7 @@ export function AppControls() {
       <Button
         variant="ghost"
         onClick={async () => {
-          const sourceCode = await generateSourceCode(studioApp)
+          const sourceCode = await generateSourceCode()
 
           console.log(sourceCode)
 

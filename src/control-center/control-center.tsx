@@ -3,7 +3,6 @@ import { commandRemoveNodes } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { nodeControlsMap } from '@/node-map'
 import { serializeApp } from '@/serial'
-import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import { DotsHorizontalIcon, TargetIcon } from '@radix-ui/react-icons'
 import {
@@ -167,7 +166,7 @@ export function ControlCenter() {
                   // </Text>
                   <Button
                     onClick={() => {
-                      const serial = serializeApp(studioApp)
+                      const serial = serializeApp()
 
                       const str = JSON.stringify(serial)
                       const base64 = btoa(str)

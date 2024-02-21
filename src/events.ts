@@ -17,11 +17,8 @@ import { History } from './history'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 import {
-  findEaselIframe,
-  findNodeElm,
   getClosestDraggableNodeSet,
-  getClosestSelectableNodeSet,
-  getNodeById,
+  getClosestSelectableNodeFromElm,
 } from './node-lib'
 import { studioApp } from './studio-app'
 import { selectNode } from './ui-guides/selection-guide'
@@ -164,7 +161,9 @@ export function onMouseDownForDragAndDropNode(
       ) {
         previousMouseOverElement = elementAtCursor // Update previous element
 
-        // FROM HERE, simulate mouseover an element.
+        /////////////////////////////////////
+        // Simulated mouseover occurs here //
+        /////////////////////////////////////
 
         // Clear temporary drop zones
         if (!elementAtCursor.closest(`.${TEMP_DROP_ZONE_CLASS_NAME}`)) {
@@ -175,8 +174,8 @@ export function onMouseDownForDragAndDropNode(
           // Ignore elements inside dragging element
           $dropZone.set(null)
         } else {
-          const { elm: closestNodeElm, node: closestNode } =
-            getClosestSelectableNodeSet(elementAtCursor)
+          const closestNode = getClosestSelectableNodeFromElm(elementAtCursor)
+          const closestNodeElm = closestNode?.element
 
           // If closest node is the dragging node or its children, ignore it.
           // Because it's not possible to drop node into itself or its children.
@@ -194,6 +193,7 @@ export function onMouseDownForDragAndDropNode(
           // Append temporary drop zones around the element
           if (
             closestNode &&
+            closestNodeElm &&
             !(closestNode instanceof PageNode) && // Do not add temporary drop zones to page node
             parent &&
             parent.isDroppable
@@ -227,7 +227,7 @@ export function onMouseDownForDragAndDropNode(
 
               if (!targetId) return
 
-              const targetNode = getNodeById(targetId)
+              const targetNode = studioApp.getNodeById(targetId)
 
               if (!targetNode) return
 
@@ -260,17 +260,12 @@ export function onMouseDownForDragAndDropNode(
                 }
                 // Hover on droppable node
                 else {
-                  const firstElementChild = dropZoneElm.firstElementChild
-
-                  // If it doesn't exist, it means React component renders itself whole in somewhere else with portal.
-                  if (firstElementChild) {
-                    $dropZone.set({
-                      dropZoneElm: firstElementChild,
-                      targetNode,
-                      dropNode: draggingNode,
-                      before,
-                    })
-                  }
+                  $dropZone.set({
+                    dropZoneElm,
+                    targetNode,
+                    dropNode: draggingNode,
+                    before,
+                  })
                 }
               }
             }
@@ -366,7 +361,7 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
   )
 
   const easelRect = node.ownerPage
-    ? findEaselIframe(node.ownerPage)?.getBoundingClientRect()
+    ? node.ownerPage.iframeElement?.getBoundingClientRect()
     : undefined
 
   // ahead/behind drop zones are always affected by zoom
@@ -620,7 +615,7 @@ export function onMouseDownIframe(
     e.preventDefault()
 
     const node = elementAtCursor
-      ? getClosestSelectableNodeSet(elementAtCursor).node
+      ? getClosestSelectableNodeFromElm(elementAtCursor)
       : page
 
     if (node && !$selectedNodes.get().includes(node)) {
@@ -635,7 +630,7 @@ export function onMouseDownIframe(
   if (e.button === 0) {
     // Find closest selectable node and select it on mouse down
     const nodeAtCursor = elementAtCursor
-      ? getClosestSelectableNodeSet(elementAtCursor).node
+      ? getClosestSelectableNodeFromElm(elementAtCursor)
       : page
 
     // Node exists under cursor
@@ -651,18 +646,16 @@ export function onMouseDownIframe(
       }
 
       // Find closest moveable node and start dragging it on mouse down
-      const { node: movableNode, elm: movableElement } = elementAtCursor
+      const movableNode = elementAtCursor
         ? getClosestDraggableNodeSet(elementAtCursor)
-        : {
-            node: null,
-            elm: null,
-          }
+        : null
+      const movableElement = movableNode?.element
 
-      if (movableNode) {
+      if (movableNode && movableElement) {
         const movableElmRect = movableElement.getBoundingClientRect()
         const scale = Ground.scale
 
-        const draggingElm = findNodeElm(movableNode)
+        const draggingElm = movableNode.element
 
         if (!draggingElm) return
 

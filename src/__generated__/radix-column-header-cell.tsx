@@ -6,6 +6,7 @@ import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
 
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Table } from '@radix-ui/themes'
 
@@ -38,11 +39,12 @@ export function RadixColumnHeaderCellNodeComponent({
 }: {
   node: RadixColumnHeaderCellNode
 }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Table.ColumnHeaderCell {...props}>
+    <Table.ColumnHeaderCell {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

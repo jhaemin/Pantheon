@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Code } from '@radix-ui/themes'
 
@@ -71,11 +72,12 @@ export class RadixCodeNode extends Node {
 }
 
 export function RadixCodeNodeComponent({ node }: { node: RadixCodeNode }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Code {...props}>
+    <Code {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

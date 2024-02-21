@@ -9,6 +9,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Checkbox } from '@radix-ui/themes'
 
@@ -76,9 +77,11 @@ export function RadixCheckboxNodeComponent({
 }: {
   node: RadixCheckboxNode
 }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
 
-  return <Checkbox {...props} />
+  return <Checkbox {...props} {...nodeProps} />
 }
 
 export function RadixCheckboxNodeControls({

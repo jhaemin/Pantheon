@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Grid } from '@radix-ui/themes'
 
@@ -71,11 +72,12 @@ export class RadixGridNode extends Node {
 }
 
 export function RadixGridNodeComponent({ node }: { node: RadixGridNode }) {
+  const nodeProps = makeNodeProps(node)
   const children = useStore(node.$children)
   const props = useStore(node.$props)
 
   return (
-    <Grid {...props}>
+    <Grid {...props} {...nodeProps}>
       {children.length > 0 ? (
         renderChildren(children)
       ) : (

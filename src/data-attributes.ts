@@ -55,3 +55,11 @@ export function makeDropZoneAttributes(dropZoneData: {
 export function shouldKeepNodeSelection(target: Element) {
   return target.closest(`[${dataAttributes.keepNodeSelection}]`)
 }
+
+export function makeNodeProps(node: Node) {
+  return {
+    id: `node-${node.id}`,
+    ...makeNodeAttributes(node),
+    ...(node.isDroppable ? makeNodeDropZoneAttributes(node) : undefined),
+  }
+}

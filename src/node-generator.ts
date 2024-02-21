@@ -111,7 +111,7 @@ async function generateNode(nodeDef: NodeDefinition) {
   const nodeComponentName = `${nodeName}NodeComponent`
   const nodeControlsName = `${nodeName}NodeControls`
   const tagName = fragment ? '' : `${componentName ?? lib.mod}`
-  const openTag = `${tagName}${fragment ? '' : ' {...props}'}`
+  const openTag = `${tagName}${fragment ? '' : ' {...props} {...nodeProps}'}`
 
   const allSlots = flattenSlots(slots ?? [])
 
@@ -129,6 +129,7 @@ import { atom, map } from 'nanostores'
 import { Card, Flex } from '@radix-ui/themes'
 ${hasProps ? `import { SelectControls, SwitchControls, SlotToggleControls, TextFieldControls } from '@/control-center/controls-template'` : ''}
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 ${(() => {
   if (lib.from === '@radix-ui/themes') {
@@ -232,6 +233,7 @@ export class ${nodeClassName} extends Node {
 }
 
 export function ${nodeComponentName}({ node }: { node: ${nodeClassName} }) {
+  const nodeProps = makeNodeProps(node)
   ${leaf || hasSlots ? '' : 'const children = useStore(node.$children)'}
   const props = useStore(node.$props)
   ${slots ? `const slots = useStore(node.$slots)` : ''}

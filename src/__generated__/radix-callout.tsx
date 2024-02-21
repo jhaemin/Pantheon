@@ -11,6 +11,7 @@ import {
   TextFieldControls,
 } from '@/control-center/controls-template'
 import { NodeComponent } from '@/node-component'
+import { makeNodeProps } from '@/data-attributes'
 import { type ReactNode } from 'react'
 import { Callout } from '@radix-ui/themes'
 
@@ -95,11 +96,13 @@ export function RadixCalloutNodeComponent({
 }: {
   node: RadixCalloutNode
 }) {
+  const nodeProps = makeNodeProps(node)
+
   const props = useStore(node.$props)
   const slots = useStore(node.$slots)
 
   return (
-    <Callout.Root {...props}>
+    <Callout.Root {...props} {...nodeProps}>
       {slots.icon && (
         <Callout.Icon>
           <NodeComponent node={slots.icon} />

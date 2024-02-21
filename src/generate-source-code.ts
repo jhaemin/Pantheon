@@ -1,7 +1,7 @@
 import { format } from './format'
-import { StudioApp } from './studio-app'
+import { studioApp } from './studio-app'
 
-export async function generateSourceCode(studioApp: StudioApp) {
+export async function generateSourceCode() {
   const firstPage = studioApp.pages[0]
 
   const sourceCode = `
