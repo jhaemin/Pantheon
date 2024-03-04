@@ -28,6 +28,9 @@ export function Resizer({ page }: { page: PageNode }) {
         translate: `${-10 / scale}px ${-10 / scale}px`,
       }}
       onMouseDown={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
         $isResizingIframe.set(true)
 
         const startX = e.clientX
