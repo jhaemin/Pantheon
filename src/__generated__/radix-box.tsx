@@ -51,7 +51,7 @@ export class RadixBoxNode extends Node {
 
   slotsInfoArray = []
 
-  readonly $slots = atom<{}>({})
+  slotsDefinition = undefined
 
   constructor() {
     super({

@@ -29,7 +29,7 @@ export class RadixCardNode extends Node {
 
   slotsInfoArray = []
 
-  readonly $slots = atom<{}>({})
+  slotsDefinition = undefined
 
   constructor() {
     super({

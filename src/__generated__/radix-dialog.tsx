@@ -19,11 +19,17 @@ export type RadixDialogNodeProps = {
   open?: boolean
 }
 
+export type RadixDialogSlotKey =
+  | 'content'
+  | 'title'
+  | 'description'
+  | 'contentBody'
+
 export type RadixDialogSlotContentProps = {
   size?: '1' | '2' | '3' | '4'
 }
 
-export class RadixDialogNode extends Node {
+export class RadixDialogNode extends Node<RadixDialogSlotKey> {
   readonly nodeName = 'RadixDialog'
   readonly componentName = 'Dialog.Root'
 
@@ -38,40 +44,45 @@ export class RadixDialogNode extends Node {
   slotsInfoArray = [
     {
       required: true,
-      key: 'content',
+      key: 'content' as RadixDialogSlotKey,
       label: 'content',
+      componentName: 'Dialog.Content',
     },
 
     {
       required: false,
-      key: 'title',
+      key: 'title' as RadixDialogSlotKey,
       label: 'title',
+      componentName: 'Dialog.Title',
     },
 
     {
       required: false,
-      key: 'description',
+      key: 'description' as RadixDialogSlotKey,
       label: 'description',
+      componentName: 'Dialog.Description',
     },
 
     {
       required: true,
-      key: 'contentBody',
+      key: 'contentBody' as RadixDialogSlotKey,
       label: 'contentBody',
     },
   ]
 
-  readonly $slots = atom<{
-    content: FragmentNode
-    title: FragmentNode | null
-    description: FragmentNode | null
-    contentBody: FragmentNode
-  }>({
-    content: new FragmentNode(),
-    title: null,
-    description: null,
-    contentBody: new FragmentNode(),
-  })
+  slotsDefinition = [
+    {
+      key: 'content',
+      required: true,
+      componentName: 'Dialog.Content',
+      props: [{ key: 'size', type: ['1', '2', '3', '4'], default: '3' }],
+      slots: [
+        { key: 'title', componentName: 'Dialog.Title' },
+        { key: 'description', componentName: 'Dialog.Description' },
+        { key: 'contentBody', required: true },
+      ],
+    },
+  ]
 
   public readonly contentDefaultProps: RadixDialogSlotContentProps = {}
 

@@ -30,7 +30,7 @@ export class RadixSwitchNode extends Node {
 
   slotsInfoArray = []
 
-  readonly $slots = atom<{}>({})
+  slotsDefinition = undefined
 
   constructor() {
     super({

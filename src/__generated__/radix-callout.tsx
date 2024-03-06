@@ -48,7 +48,9 @@ export type RadixCalloutNodeProps = {
   highContrast?: boolean
 }
 
-export class RadixCalloutNode extends Node {
+export type RadixCalloutSlotKey = 'icon' | 'text'
+
+export class RadixCalloutNode extends Node<RadixCalloutSlotKey> {
   readonly nodeName = 'RadixCallout'
   readonly componentName = 'Callout.Root'
 
@@ -63,21 +65,23 @@ export class RadixCalloutNode extends Node {
   slotsInfoArray = [
     {
       required: false,
-      key: 'icon',
+      key: 'icon' as RadixCalloutSlotKey,
       label: 'icon',
+      componentName: 'Callout.Icon',
     },
 
     {
       required: true,
-      key: 'text',
+      key: 'text' as RadixCalloutSlotKey,
       label: 'text',
+      componentName: 'Callout.Text',
     },
   ]
 
-  readonly $slots = atom<{ icon: FragmentNode | null; text: FragmentNode }>({
-    icon: null,
-    text: new FragmentNode(),
-  })
+  slotsDefinition = [
+    { key: 'icon', componentName: 'Callout.Icon' },
+    { key: 'text', componentName: 'Callout.Text', required: true },
+  ]
 
   constructor() {
     super({

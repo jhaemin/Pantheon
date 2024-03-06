@@ -142,6 +142,12 @@ ${(() => {
 
 export type ${propsTypeName} = ${generatePropsType(props)}
 
+${
+  hasSlots
+    ? `export type ${nodeName}SlotKey = ${allSlots.map((slot) => `'${slot.key}'`).join(' | ')}`
+    : ''
+}
+
 ${allSlots
   .map((slot) => {
     const { props } = slot
@@ -154,7 +160,7 @@ export type ${nodeName}Slot${pascalCase(slot.key)}Props = ${generatePropsType(pr
   })
   .join('')}
 
-export class ${nodeClassName} extends Node {
+export class ${nodeClassName} extends Node${hasSlots ? `<${nodeName}SlotKey>` : ''} {
   readonly nodeName = '${nodeName}'
   readonly componentName = '${componentName ?? lib.mod}'
 
@@ -179,16 +185,15 @@ export class ${nodeClassName} extends Node {
           `
     {
       required: ${slot.required ? 'true' : 'false'},
-      key: '${slot.key}',
+      key: '${slot.key}' as ${nodeName}SlotKey,
       label: '${slot.label ?? slot.key}',
+      ${slot.componentName ? `componentName: '${slot.componentName}',` : ''}
     }`,
       )
       .join(',\n')}
   ]
 
-  readonly $slots = atom<{ ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'FragmentNode' : 'FragmentNode | null'}`).join(';')} }>({
-    ${allSlots.map((slot) => `${slot.key}: ${slot.required ? 'new FragmentNode()' : 'null'}`).join(',\n')}
-  })
+  slotsDefinition = ${JSON.stringify(slots)}
 
   ${allSlots
     .map((slot) => {
