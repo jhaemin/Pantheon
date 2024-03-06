@@ -4,7 +4,22 @@ import './global-styles.scss'
 
 export const metadata: Metadata = {
   title: 'Radix Studio',
-  description: 'Radix Studio',
+  description: 'A WYSIWYG web design editor',
+  openGraph: {
+    type: 'website',
+    locale: 'en',
+    siteName: 'Radix Studio',
+    title: 'Radix Studio',
+    description: 'A WYSIWYG web design editor',
+    images: [
+      {
+        url: 'https://radix-ui.studio/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Radix Studio',
+      },
+    ],
+  },
   icons: [
     {
       rel: 'icon',
@@ -33,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html>
+    <html lang="en">
       <body suppressHydrationWarning>{children}</body>
     </html>
   )
