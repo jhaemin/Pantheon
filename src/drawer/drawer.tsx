@@ -68,6 +68,7 @@ export function Drawer() {
         className={styles.resizer}
         onMouseDown={(e) => {
           e.preventDefault()
+          e.stopPropagation()
 
           const initialY = e.clientY
           const initialHeight = $drawerHeight.get()
@@ -225,7 +226,7 @@ export function Drawer() {
             createNode={() => {
               const callout = new RadixCalloutNode()
               const text = new TextNode()
-              callout.$slots.get().text.append(text)
+              callout.$slots.get().text!.append(text)
               return callout
             }}
           >
