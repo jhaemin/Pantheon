@@ -12,9 +12,10 @@ export type NodePreOptions = {
   isUnselectable?: boolean
   slotKey?: string
   slotLabel?: string
+  componentName?: string
 }
 
-export abstract class Node {
+export abstract class Node<SlotKey extends string = string> {
   /** Unique ID */
   readonly id = alphanumericId(7)
   abstract readonly nodeName: NodeName
@@ -28,6 +29,7 @@ export abstract class Node {
       this._isDraggable = preOptions.isDraggable ?? true
       this.slotKey = preOptions.slotKey
       this.slotLabel = preOptions.slotLabel
+      this.componentName = preOptions.componentName
     }
 
     this.isUnselectable = preOptions?.isUnselectable ?? false
@@ -38,6 +40,9 @@ export abstract class Node {
       }
     })
 
+    /**
+     * Automatically update parent and ownerPage when children are changed.
+     */
     this._$children.subscribe((newChildren, oldChildren) => {
       if (oldChildren) {
         oldChildren.forEach((child) => {
@@ -52,6 +57,9 @@ export abstract class Node {
       })
     })
 
+    /**
+     * Automatically update parent and ownerPage when slots are changed.
+     */
     this.$slots.subscribe((newSlots, oldSlots) => {
       if (oldSlots) {
         Object.values(oldSlots).forEach((slot) => {
@@ -188,6 +196,9 @@ export abstract class Node {
     node._parent = parent
   }
 
+  /**
+   * Do not override this property in subclasses because it has a subscription in the constructor.
+   */
   protected _$children = atom<Node[]>([])
   public readonly $children = computed(this._$children, (children) => children)
 
@@ -331,9 +342,14 @@ export abstract class Node {
   public readonly slotKey?: string
   public readonly slotLabel?: string
 
-  public readonly $slots = atom<Record<string, Node | null>>({})
+  /**
+   * Do not override this property in subclasses because it has a subscription in the constructor.
+   */
+  public readonly $slots = atom<{
+    [key in SlotKey]?: Node | null
+  }>({})
 
-  public readonly slotsDefinitions: NodeDefinition['slots'] = []
+  public readonly slotsDefinition: NodeDefinition['slots'] = []
 
   get slots() {
     return this.$slots.get()
@@ -345,26 +361,31 @@ export abstract class Node {
       .filter((node) => !!node) as Node[]
   }
 
-  public slotsInfoArray: { required: boolean; key: string; label: string }[] =
-    []
+  public slotsInfoArray: {
+    required: boolean
+    key: SlotKey
+    label: string
+    componentName?: string
+  }[] = []
 
-  // private _slotsInfo: Record<
-  //   string,
-  //   { required: boolean; key: string; label: string }
-  // > = {}
+  private _slotsInfo: Record<
+    string,
+    { required: boolean; key: SlotKey; label: string; componentName?: string }
+  > | null = null
 
-  /**
-   * TODO: improve performance by memoizing because it never changes
-   */
   get slotsInfo() {
-    return Object.fromEntries(
-      this.slotsInfoArray.map((slotInfo) => [slotInfo.key, slotInfo]),
-    )
+    if (this._slotsInfo === null) {
+      this._slotsInfo = Object.fromEntries(
+        this.slotsInfoArray.map((slotInfo) => [slotInfo.key, slotInfo]),
+      )
+    }
+
+    return this._slotsInfo
   }
 
   enableSlot(slotKey: string) {
     const slotInfo = this.slotsInfo[slotKey]
-    const { required, key, label } = slotInfo
+    const { required, key, label, componentName } = slotInfo
 
     if (slotInfo) {
       const newSlot = new FragmentNode({
@@ -372,9 +393,15 @@ export abstract class Node {
         slotLabel: label ?? key,
         isRemovable: !required,
         isDraggable: false,
+        componentName,
       })
 
       this.setSlot(slotKey, newSlot)
+
+      this.$slots.set({
+        ...this.$slots.get(),
+        [slotKey]: newSlot,
+      })
 
       return newSlot
     } else {
@@ -382,7 +409,7 @@ export abstract class Node {
     }
   }
 
-  toggleSlot(slotKey: string) {
+  toggleSlot(slotKey: SlotKey) {
     if (this.slotsInfo[slotKey].required) {
       throw new Error(`Slot ${slotKey} is required`)
     }
@@ -394,17 +421,22 @@ export abstract class Node {
     }
   }
 
-  setSlot(slotKey: string, node: Node) {
+  setSlot(slotKey: string, node: Node | null) {
     if (this.slotsInfo[slotKey] === undefined) {
       throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
     }
 
-    this.$slots.set({ ...this.$slots.get(), [slotKey]: node })
+    this.$slots.set({
+      ...this.$slots.get(),
+      [slotKey]: node,
+    })
   }
 
   disableSlot(node: Node) {
     const newSlots = { ...this.$slots.get() }
-    const slotName = Object.keys(newSlots).find((key) => newSlots[key] === node)
+    const slotName = Object.keys(newSlots).find(
+      (key) => newSlots[key as SlotKey] === node,
+    )
 
     if (slotName) {
       const slotInfo = this.slotsInfo[slotName]
@@ -413,12 +445,11 @@ export abstract class Node {
         throw new Error(`Slot ${slotName} is required. Cannot be disabled.`)
       }
 
-      newSlots[slotName] = null
-      this.$slots.set(newSlots)
+      this.setSlot(slotName, null)
     }
   }
 
-  disableSlotByKey(slotKey: string) {
+  disableSlotByKey(slotKey: SlotKey) {
     const slot = this.$slots.get()[slotKey]
     if (slot) {
       this.disableSlot(slot)
@@ -442,13 +473,46 @@ export abstract class Node {
     const serializedProps = serializeProps(props)
     const componentName = this.componentName ?? this.nodeName
 
-    if (this.children.length === 0) {
+    const generateSlots = (
+      slotsDefinition: NodeDefinition['slots'],
+    ): string => {
+      if (!slotsDefinition || slotsDefinition.length === 0) {
+        return ''
+      }
+
+      return slotsDefinition
+        .map((slotDef) => {
+          const slotNode = this.$slots.get()[slotDef.key as SlotKey]
+
+          const openTag = slotDef.componentName
+            ? `<${slotDef.componentName} ${serializeProps(slotNode?.props ?? {})}>`
+            : ''
+          const closeTag = slotDef.componentName
+            ? `</${slotDef.componentName}>`
+            : ''
+
+          if (slotNode) {
+            return `${openTag}
+              ${generateSlots(slotDef.slots)}
+              ${slotNode.generateCode()}
+            ${closeTag}`
+          }
+
+          return ''
+        })
+        .join('')
+    }
+
+    const slots = generateSlots(this.slotsDefinition)
+
+    if (this.childrenAndSlots.length === 0) {
       return `<${componentName} ${serializedProps} />`
     }
 
-    return `<${componentName} ${serializedProps}>${this.children
-      .map((child) => child.generateCode())
-      .join('')}</${componentName}>`
+    return `<${componentName} ${serializedProps}>
+      ${slots}
+      ${this.children.map((child) => child.generateCode()).join('')}
+    </${componentName}>`
   }
 
   public serialize(): any {
@@ -459,13 +523,16 @@ export abstract class Node {
       slots: Object.fromEntries(
         Object.entries(this.$slots.get()).map(([key, value]) => [
           key,
-          value?.serialize(),
+          (value as Node)?.serialize(),
         ]),
       ),
     }
   }
 }
 
+/**
+ * This class should reside in this file because it extends Node and Node uses it.
+ */
 export class FragmentNode extends Node {
   readonly nodeName = 'Fragment'
 
