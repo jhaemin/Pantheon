@@ -8,6 +8,8 @@ The main goal is to destroy the barrier between design and development by elimin
 
 [Radix Themes](https://www.radix-ui.com/) is the primary component library for the editor as you can see in the name. But any other component library or even custom components including the native DOM elements can be used.
 
+Try the demo at [radix-ui.studio](https://radix-ui.studio/) and see how it works. You can't save or load your work yet.
+
 > **Note**: It is still in development and not ready for production.
 
 ## Dev
@@ -108,3 +110,7 @@ bun run dev
 - [x] Wrap common node props to a single object. (instead of rest props)
 - ~~Inject node attributes to the outermost element of components.~~
 - [ ] State management
+
+## License
+
+Radix Studio is licensed under the [MIT License](LICENSE).
