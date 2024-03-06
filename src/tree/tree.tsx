@@ -10,6 +10,7 @@ import {
   makeNodeDropZoneAttributes,
 } from '@/data-attributes'
 import { onMouseDownForDragAndDropNode } from '@/events'
+import { Ground } from '@/ground'
 import { Node } from '@/node-class/node'
 import { PageNode } from '@/node-class/page'
 import { studioApp } from '@/studio-app'
@@ -107,9 +108,7 @@ function NodeTree({ node }: { node: Node }) {
   useStore(node.$slots)
 
   const slotLabel = node.slotLabel ?? node.slotKey
-  const nodeLabel = slotLabel
-    ? `Slot: ${slotLabel}`
-    : node.componentName ?? node.nodeName
+  const nodeLabel = slotLabel ? `Slot: ${slotLabel}` : node.nodeName
 
   return (
     <Flex
@@ -117,6 +116,11 @@ function NodeTree({ node }: { node: Node }) {
       className={styles.treeNodeContainer}
       direction="column"
       {...(node.isDroppable ? makeNodeDropZoneAttributes(node) : {})}
+      onDoubleClick={() => {
+        if (node instanceof PageNode) {
+          Ground.focus(node, true)
+        }
+      }}
       onMouseOver={(e) => {
         if ($isDraggingNode.get()) return
 
