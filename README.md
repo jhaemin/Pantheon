@@ -20,7 +20,7 @@ The main goal is to destroy the barrier between design and development by elimin
 
 ```sh
 bun install
-bun dev
+bun run dev
 ```
 
 ## Roadmap
