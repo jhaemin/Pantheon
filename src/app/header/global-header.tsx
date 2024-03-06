@@ -1,11 +1,13 @@
 import { $designMode, $interactionMode } from '@/atoms'
 import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
 import { useStore } from '@nanostores/react'
+import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import {
   Badge,
   Button,
   Flex,
   Heading,
+  IconButton,
   Kbd,
   Separator,
   Switch,
@@ -96,6 +98,18 @@ export function GlobalHeader() {
             </Flex>
           </Text>
         </Button>
+
+        <Separator orientation="vertical" />
+
+        <IconButton
+          variant="ghost"
+          color="gray"
+          onClick={() => {
+            window.open('https://github.com/jhaemin/radix-studio', '_blank')
+          }}
+        >
+          <GitHubLogoIcon width="17" height="17" />
+        </IconButton>
       </Flex>
     </Flex>
   )
