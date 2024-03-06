@@ -22,7 +22,7 @@
     "minmax.js": "^1.0.0",
     "nanoid": "^5.0.6",
     "nanostores": "^0.10.0",
-    "next": "14.1.1",
+    "next": "14.1.2",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -33,7 +33,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.1.1",
+    "eslint-config-next": "14.1.2",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.2.5",
     "sass": "^1.71.1",
