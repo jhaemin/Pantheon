@@ -52,12 +52,6 @@ export function commandInsertNodes(
 export function commandRemoveNodes(nodes: Node[]) {
   const removableNodes = nodes.filter((node) => node.isRemovable)
 
-  const nextSelectionCandidate =
-    removableNodes[0]?.previousSibling ?? removableNodes[0]?.parent
-  const nextSelectedNodes = nextSelectionCandidate
-    ? [nextSelectionCandidate]
-    : []
-
   const actions = removableNodes.map((node) => {
     const action = (() => {
       if (node.slotKey) {
@@ -82,6 +76,8 @@ export function commandRemoveNodes(nodes: Node[]) {
 
     return action
   })
+
+  const nextSelectedNodes: Node[] = []
 
   const historyItem: HistoryStackItem = {
     actions,
