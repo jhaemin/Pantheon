@@ -23,6 +23,7 @@ import {
   SwitchControls,
   TextFieldControls,
 } from './controls-template'
+import { TSX } from './tsx'
 
 export function DynamicControlCenter() {
   const selectedNodes = useStore($selectedNodes)
@@ -204,6 +205,13 @@ export function DynamicControlCenter() {
                       }
                     })}
                   </Flex>
+
+                  {selectedNodes.length === 1 && (
+                    <>
+                      <Separator size="4" />
+                      <TSX node={firstSelectedNode} />
+                    </>
+                  )}
                 </Flex>
               </>
             )}
