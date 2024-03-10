@@ -73,9 +73,9 @@ export function Tree() {
   )
 }
 
-function PageLabel({ page }: { page: PageNode }) {
-  const pageLabel = useStore(page.$pageLabel)
-  const trimmedPageLabel = pageLabel.trim()
+function PageTitle({ page }: { page: PageNode }) {
+  const { title } = useStore(page.$props, { keys: ['title'] })
+  const trimmedPageLabel = title.trim()
 
   return (
     <Flex
@@ -149,7 +149,7 @@ function NodeTree({ node }: { node: Node }) {
       }}
     >
       {node instanceof PageNode ? (
-        <PageLabel page={node} />
+        <PageTitle page={node} />
       ) : (
         <>
           <Flex
@@ -193,7 +193,7 @@ function AppTree() {
   return (
     <Flex direction="column">
       {pages.map((page) => (
-        <PageLabel key={page.id} page={page} />
+        <PageTitle key={page.id} page={page} />
       ))}
     </Flex>
   )

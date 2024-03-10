@@ -1,3 +1,6 @@
+/**
+ * TODO: get required information and remove props that are falsy and not required
+ */
 export function serializeProps(props: Record<string, any>) {
   return Object.entries(props)
     .map(([key, value]) => {

@@ -1,25 +1,27 @@
-import { RadixAvatarNode } from '@/__generated__/radix-avatar'
-import { RadixBadgeNode } from '@/__generated__/radix-badge'
-import { RadixBlockquoteNode } from '@/__generated__/radix-blockquote'
-import { RadixBoxNode } from '@/__generated__/radix-box'
-import { RadixButtonNode } from '@/__generated__/radix-button'
-import { RadixCalloutNode } from '@/__generated__/radix-callout'
-import { RadixCardNode } from '@/__generated__/radix-card'
-import { RadixCheckboxNode } from '@/__generated__/radix-checkbox'
-import { RadixCodeNode } from '@/__generated__/radix-code'
-import { RadixColumnHeaderCellNode } from '@/__generated__/radix-column-header-cell'
-import { RadixDialogNode } from '@/__generated__/radix-dialog'
-import { RadixFlexNode } from '@/__generated__/radix-flex'
-import { RadixGridNode } from '@/__generated__/radix-grid'
-import { RadixHeadingNode } from '@/__generated__/radix-heading'
-import { RadixLinkNode } from '@/__generated__/radix-link'
-import { RadixSwitchNode } from '@/__generated__/radix-switch'
-import { RadixTableCellNode } from '@/__generated__/radix-table-cell'
-import { RadixTableHeaderNode } from '@/__generated__/radix-table-header'
-import { RadixTableRootNode } from '@/__generated__/radix-table-root'
-import { RadixTableRowNode } from '@/__generated__/radix-table-row'
-import { RadixTextNode } from '@/__generated__/radix-text'
-import { RadixTextFieldNode } from '@/__generated__/radix-text-field'
+import {
+  RadixAvatarNode,
+  RadixBadgeNode,
+  RadixBlockquoteNode,
+  RadixBoxNode,
+  RadixButtonNode,
+  RadixCalloutNode,
+  RadixCardNode,
+  RadixCheckboxNode,
+  RadixCodeNode,
+  RadixDialogNode,
+  RadixFlexNode,
+  RadixGridNode,
+  RadixHeadingNode,
+  RadixLinkNode,
+  RadixSwitchNode,
+  RadixTableCellNode,
+  RadixTableColumnHeaderCellNode,
+  RadixTableHeaderNode,
+  RadixTableNode,
+  RadixTableRowNode,
+  RadixTextFieldNode,
+  RadixTextNode,
+} from '@/__generated__/radix-themes-2.0.3'
 import { $drawerHeight, $isDrawerLoaded } from '@/atoms'
 import { TextNode } from '@/node-class/text'
 import { useStore } from '@nanostores/react'
@@ -323,7 +325,7 @@ export function Drawer() {
 
           <DrawerItemWrapper
             createNode={() => {
-              const table = new RadixTableRootNode()
+              const table = new RadixTableNode()
 
               const header = new RadixTableHeaderNode()
               const body = new RadixTableHeaderNode()
@@ -331,13 +333,13 @@ export function Drawer() {
               table.append(header, body)
 
               const headerRow = new RadixTableRowNode()
-              const headerCell1 = new RadixColumnHeaderCellNode()
+              const headerCell1 = new RadixTableColumnHeaderCellNode()
               headerCell1.append(new TextNode('First'))
-              const headerCell2 = new RadixColumnHeaderCellNode()
+              const headerCell2 = new RadixTableColumnHeaderCellNode()
               headerCell2.append(new TextNode('Second'))
-              const headerCell3 = new RadixColumnHeaderCellNode()
+              const headerCell3 = new RadixTableColumnHeaderCellNode()
               headerCell3.append(new TextNode('Third'))
-              const headerCell4 = new RadixColumnHeaderCellNode()
+              const headerCell4 = new RadixTableColumnHeaderCellNode()
               headerCell4.append(new TextNode('Fourth'))
 
               headerRow.append(

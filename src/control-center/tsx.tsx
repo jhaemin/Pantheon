@@ -17,15 +17,14 @@ import {
 } from '@radix-ui/themes'
 import { pascalCase } from 'change-case'
 import hljs from 'highlight.js'
-import { atom } from 'nanostores'
 import { useEffect, useRef, useState } from 'react'
 
 export async function generateSourceCode(node: Node) {
   // TODO: allow only available javascript function name
   const componentName =
     node instanceof PageNode
-      ? pascalCase(node.$pageLabel.get().trim() || 'UntitledPage')
-      : node.nodeName
+      ? pascalCase(node.$props.get().title.trim() || 'UntitledPage')
+      : pascalCase(node.componentName ?? node.nodeName)
 
   const sourceCode = `
     function ${componentName}() {
@@ -42,12 +41,10 @@ export async function generateSourceCode(node: Node) {
  * TODO: Add large view button
  */
 export function TSX({ node }: { node: Node }) {
-  const pageLabel = useStore(
-    node instanceof PageNode ? node.$pageLabel : atom(''),
-  )
   const slots = useStore(node.$slots)
   const additionalProps = useStore(node.$additionalProps)
   const props = useStore(node.$props)
+  const pageTitle = node instanceof PageNode ? props.title : undefined
   const copyTimeout = useRef<number>(0)
   const [copied, setCopied] = useState(false)
   const sourceCode = useRef('')
@@ -61,7 +58,7 @@ export function TSX({ node }: { node: Node }) {
       }).value
       setSyntaxHighlighted(highlighted)
     })
-  }, [node, props, additionalProps, slots, pageLabel])
+  }, [node, props, additionalProps, slots, pageTitle])
 
   function copyToClipboard() {
     navigator.clipboard.writeText(sourceCode.current)

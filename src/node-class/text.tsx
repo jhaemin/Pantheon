@@ -1,16 +1,27 @@
-import { $selectedNodes, triggerRerenderGuides } from '@/atoms'
+import { $selectedNodes } from '@/atoms'
 import { makeNodeProps } from '@/data-attributes'
+import { Prop } from '@/node-definition'
 import { useStore } from '@nanostores/react'
-import { Flex, Text, TextField } from '@radix-ui/themes'
-import { atom } from 'nanostores'
-import { useCallback, useEffect } from 'react'
+import { map } from 'nanostores'
 import { Node } from './node'
 import { PageNode } from './page'
 
 export class TextNode extends Node {
   readonly nodeName = 'Text'
 
-  readonly $value = atom('Text')
+  readonly $props = map({
+    value: 'Text',
+  })
+
+  public propsDefinition: Prop[] = [
+    {
+      key: 'value',
+      type: 'string',
+      default: 'Text',
+      label: 'Value',
+      required: true,
+    },
+  ]
 
   constructor(value?: string) {
     super()
@@ -24,11 +35,11 @@ export class TextNode extends Node {
   }
 
   get value() {
-    return this.$value.get()
+    return this.$props.get().value
   }
 
   set value(value: string) {
-    this.$value.set(value)
+    this.$props.setKey('value', value)
   }
 
   public generateCode(): string {
@@ -37,7 +48,7 @@ export class TextNode extends Node {
     }
 
     if ($selectedNodes.get().includes(this)) {
-      return `'${this.value}'`
+      return `\`${this.value.replace(/`/g, '\\`')}\``
     }
 
     return `${this.value}`
@@ -52,44 +63,7 @@ export class TextNode extends Node {
 }
 
 export function TextNodeComponent({ node }: { node: TextNode }) {
-  const value = useStore(node.$value)
+  const { value } = useStore(node.$props, { keys: ['value'] })
 
   return <span {...makeNodeProps(node)}>{value}</span>
-}
-
-export function TextNodeControls({ nodes }: { nodes: TextNode[] }) {
-  const value = useStore(nodes[0].$value)
-  const allSame = nodes.every((node) => node.$value.get() === value)
-
-  const handleEmpty = useCallback(() => {
-    if (nodes[0].value.trim().length === 0) {
-      nodes.forEach((node) => node.$value.set('Text'))
-    }
-  }, [nodes])
-
-  useEffect(() => {
-    return () => {
-      handleEmpty()
-    }
-  }, [handleEmpty])
-
-  useEffect(() => {
-    triggerRerenderGuides(true)
-  }, [value])
-
-  return (
-    <Flex direction="row" align="center" justify="between">
-      <Text size="2">Value</Text>
-      <TextField.Root>
-        <TextField.Input
-          value={allSame ? value : ''}
-          placeholder={allSame ? '' : 'Multiple values'}
-          onBlur={handleEmpty} // Set default value on blur without text
-          onChange={(e) => {
-            nodes.forEach((node) => node.$value.set(e.currentTarget.value))
-          }}
-        />
-      </TextField.Root>
-    </Flex>
-  )
 }

@@ -1,10 +1,7 @@
-import { nodeComponentMap } from '@/node-map'
 import { useEffect, useRef } from 'react'
-import {
-  makeNodeAttributes,
-  makeNodeDropZoneAttributes,
-} from './data-attributes'
+import { makeNodeProps } from './data-attributes'
 import { Node } from './node-class/node'
+import { nodeComponentMap } from './node-map'
 
 /**
  * TODO: inject data attributes to the node component directly
@@ -13,20 +10,20 @@ export function NodeComponent({ node }: { node: Node }) {
   const nodeWrapperElementRef = useRef<HTMLDivElement>(null!)
   const Component = nodeComponentMap[node.nodeName]
 
-  const commonNodeElementProps = {
-    ...makeNodeAttributes(node),
-    ...(node.isDroppable ? makeNodeDropZoneAttributes(node) : undefined),
-  }
-
   /**
-   * Note that PageNode cannot be unmounted because once it is deleted, its iframe is removed from the DOM. Which means there is no chance for the PageNode to be unmounted.
-   * So, to delete a PageNode, we need to run below logic in `EaselWrapper` component again.
+   * Note that PageNode cannot be unmounted because once it is deleted,
+   * its iframe is immediately removed from the DOM.
+   * Which means there is no chance for the PageNode to be unmounted.
    */
   useEffect(() => {
     node.executeOnMountCallbacks()
   }, [node])
 
-  return <Component node={node as never} {...commonNodeElementProps} />
+  if (!Component) {
+    return <div {...makeNodeProps(node)}>Unsupported component</div>
+  }
+
+  return <Component node={node as never} />
 }
 
 export function renderChildren(children: Node[]) {

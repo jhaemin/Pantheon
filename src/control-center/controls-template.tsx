@@ -2,45 +2,30 @@ import { triggerRerenderGuides } from '@/atoms'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
 import { Node } from '@/node-class/node'
 import { ExtractMapStoreGeneric } from '@/types/extract-generic'
-import { useStore } from '@nanostores/react'
+import { StoreKeys, useStore } from '@nanostores/react'
 import { Flex, Select, Switch, Text, TextField } from '@radix-ui/themes'
-import { MapStore, map } from 'nanostores'
+import { MapStore } from 'nanostores'
 
-function useCommonValue<
-  N extends Node,
-  PK extends keyof N,
-  K extends keyof ExtractMapStoreGeneric<N[PK]>,
->(
-  nodes: N[],
-  atomKey: PK,
+function useCommonValue<M extends MapStore, K extends StoreKeys<M>>(
+  propMapStores: M[],
   key: K,
-  defaultValue: ExtractMapStoreGeneric<N[PK]>[K],
+  defaultValue: ExtractMapStoreGeneric<M>[K],
 ) {
-  // TODO: use `keys` of useStore options
-  const firstProps = useStore((nodes[0]?.[atomKey] as MapStore) ?? map({}))
-  const firstNode = nodes[0]
+  const firstProps = useStore(propMapStores[0], { keys: [key] }) // Only rerender when the key changes
 
-  if (!firstNode) return undefined
-
-  const firstValue = firstProps[key] ?? firstNode.defaultProps[key]
-  const allSame = nodes.every(
-    (node) =>
-      ((node[atomKey] as MapStore).get()[key] ?? defaultValue) === firstValue,
+  const firstValue = firstProps[key] ?? defaultValue
+  const allSame = propMapStores.every(
+    () => (propMapStores[0].get()[key] ?? defaultValue) === firstValue,
   )
 
   return allSame ? firstValue : undefined
 }
 
-type ControlsCommonFormProps<
-  N extends Node,
-  PK extends keyof N,
-  K extends keyof ExtractMapStoreGeneric<N[PK]>,
-> = {
-  nodes: N[]
-  propsAtomKey: PK
+type ControlsCommonFormProps<M extends MapStore, K extends StoreKeys<M>> = {
+  propMapStores: M[]
   controlsLabel: string
   propertyKey: K
-  defaultValue: ExtractMapStoreGeneric<N[PK]>[K]
+  defaultValue: ExtractMapStoreGeneric<M>[K]
 }
 
 export type Option<V> = {
@@ -48,21 +33,16 @@ export type Option<V> = {
   value: V
 }
 
-export function SelectControls<
-  N extends Node,
-  PK extends keyof N,
-  K extends keyof ExtractMapStoreGeneric<N[PK]>,
->({
+export function SelectControls<M extends MapStore, K extends StoreKeys<M>>({
   controlsLabel,
-  nodes,
-  propsAtomKey,
+  propMapStores,
   propertyKey: key,
   options,
   defaultValue,
-}: ControlsCommonFormProps<N, PK, K> & {
-  options: Option<ExtractMapStoreGeneric<N['$props']>[K]>[]
+}: ControlsCommonFormProps<M, K> & {
+  options: Option<ExtractMapStoreGeneric<M>[K]>[]
 }) {
-  const commonValue = useCommonValue(nodes, propsAtomKey, key, defaultValue)
+  const commonValue = useCommonValue(propMapStores, key, defaultValue)
 
   return (
     <Flex direction="row" align="center" justify="between">
@@ -76,12 +56,8 @@ export function SelectControls<
         {...keepNodeSelectionAttribute}
         defaultValue={commonValue}
         onValueChange={(value) => {
-          nodes.forEach((node) => {
-            const store = node[propsAtomKey] as MapStore
-            store.set({
-              ...store.get(),
-              [key]: value,
-            })
+          propMapStores.forEach((store) => {
+            store.setKey(key, value)
           })
 
           triggerRerenderGuides(true)
@@ -100,18 +76,13 @@ export function SelectControls<
   )
 }
 
-export function SwitchControls<
-  N extends Node,
-  PK extends keyof N,
-  K extends keyof ExtractMapStoreGeneric<N[PK]>,
->({
+export function SwitchControls<M extends MapStore, K extends StoreKeys<M>>({
   controlsLabel,
-  nodes,
-  propsAtomKey,
+  propMapStores,
   propertyKey: key,
   defaultValue,
-}: ControlsCommonFormProps<N, PK, K>) {
-  const commonValue = useCommonValue(nodes, propsAtomKey, key, defaultValue)
+}: ControlsCommonFormProps<M, K>) {
+  const commonValue = useCommonValue(propMapStores, key, defaultValue)
 
   return (
     <Flex direction="row" align="center" justify="between">
@@ -119,12 +90,8 @@ export function SwitchControls<
       <Switch
         defaultChecked={commonValue}
         onCheckedChange={(checked) => {
-          nodes.forEach((node) => {
-            const store = node[propsAtomKey] as MapStore
-            store.set({
-              ...store.get(),
-              [key]: checked,
-            })
+          propMapStores.forEach((store) => {
+            store.setKey(key, checked)
           })
 
           triggerRerenderGuides(true)
@@ -134,18 +101,13 @@ export function SwitchControls<
   )
 }
 
-export function TextFieldControls<
-  N extends Node,
-  PK extends keyof N,
-  K extends keyof ExtractMapStoreGeneric<N[PK]>,
->({
+export function TextFieldControls<M extends MapStore, K extends StoreKeys<M>>({
   controlsLabel,
-  nodes,
-  propsAtomKey,
+  propMapStores,
   propertyKey: key,
   defaultValue,
-}: ControlsCommonFormProps<N, PK, K>) {
-  const commonValue = useCommonValue(nodes, propsAtomKey, key, defaultValue)
+}: ControlsCommonFormProps<M, K>) {
+  const commonValue = useCommonValue(propMapStores, key, defaultValue)
 
   return (
     <Flex direction="row" align="center" justify="between">
@@ -154,12 +116,9 @@ export function TextFieldControls<
         defaultValue={commonValue}
         onChange={(e) => {
           const value = e.target.value
-          nodes.forEach((node) => {
-            const store = node[propsAtomKey] as MapStore
-            store.set({
-              ...store.get(),
-              [key]: value,
-            })
+
+          propMapStores.forEach((store) => {
+            store.setKey(key, value)
           })
 
           triggerRerenderGuides(true)

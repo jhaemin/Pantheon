@@ -9,7 +9,7 @@ import { DESIGN_MODE_EDGE_SPACE, DRAG_THRESHOLD } from '@/constants'
 import { PageMoveAction } from './action'
 import { alphanumericId } from './alphanumeric'
 import { commandInsertNodes } from './command'
-import { $contextMenuPosition } from './context-menu/context-menu'
+// import { $contextMenuPosition } from './context-menu/context-menu'
 import { dataAttributes } from './data-attributes'
 import { EASEL_WRAPPER_CLASS_NAME } from './easel/easel-wrapper'
 import { Ground } from './ground'
@@ -622,7 +622,7 @@ export function onMouseDownIframe(
       $selectedNodes.set([node])
     }
 
-    $contextMenuPosition.set({ x: e.clientX, y: e.clientY })
+    // $contextMenuPosition.set({ x: e.clientX, y: e.clientY })
     $isContextMenuOpen.set(true)
   }
 

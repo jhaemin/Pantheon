@@ -1,16 +1,44 @@
 import { atom, computed } from 'nanostores'
-import { Node } from './node-class/node'
-import { PageNode } from './node-class/page'
+import { Node, SerializedNode } from './node-class/node'
+import { PageNode, PageNodeComponent } from './node-class/page'
 import { ViewNode } from './node-class/view'
 
-class StudioApp {
+export const LATEST_LIBRARY = 'radix-themes-2.0.3'
+
+export class StudioApp {
+  public allNodes: Record<string, Node> = {}
+
   private _$pages = atom<PageNode[]>([])
   private _$views = atom<ViewNode[]>([])
 
-  readonly $pages = computed(this._$pages, (pages) => pages)
-  readonly $views = computed(this._$views, (views) => views)
+  readonly $appTitle = atom('Studio App')
+  readonly $library = atom(LATEST_LIBRARY) // TODO: auto set latest version
 
-  public allNodes: Record<string, Node> = {}
+  public readonly $pages = computed(this._$pages, (pages) => pages)
+  public readonly $views = computed(this._$views, (views) => views)
+
+  nodeComponentMap: Record<string, any> = {
+    Page: PageNodeComponent,
+  }
+
+  constructor(serializedApp?: SerializedApp) {
+    if (serializedApp) {
+      this.$appTitle.set(serializedApp.appTitle)
+      this.$library.set(serializedApp.library)
+    }
+
+    this._$pages.subscribe((newPages, oldPages) => {
+      if (oldPages) {
+        oldPages.forEach((page) => {
+          delete this.allNodes[page.id]
+        })
+      }
+
+      newPages.forEach((page) => {
+        this.allNodes[page.id] = page
+      })
+    })
+  }
 
   getNodeById(nodeId: string) {
     const node = this.allNodes[nodeId]
@@ -24,20 +52,6 @@ class StudioApp {
     }
 
     return node
-  }
-
-  constructor() {
-    this._$pages.subscribe((newPages, oldPages) => {
-      if (oldPages) {
-        oldPages.forEach((page) => {
-          delete this.allNodes[page.id]
-        })
-      }
-
-      newPages.forEach((page) => {
-        this.allNodes[page.id] = page
-      })
-    })
   }
 
   get pages() {
@@ -80,6 +94,14 @@ class StudioApp {
   removeView(view: ViewNode) {
     this._$views.set(this.views.filter((v) => v !== view))
   }
+}
+
+export type SerializedApp = {
+  studioVersion: string
+  appTitle: string
+  library: string
+  pages: SerializedNode[]
+  views: SerializedNode[]
 }
 
 /**

@@ -1,6 +1,5 @@
 import { dataAttributes } from './data-attributes'
 import { Node } from './node-class/node'
-import { NodeName } from './node-name'
 import { studioApp } from './studio-app'
 
 /**
@@ -92,13 +91,18 @@ export function getClosestDraggableNodeSet(elm: Element): Node | null {
   return closestNode
 }
 
+/**
+ * TODO: check with node property instead of node name
+ */
 export function isUnwrappableNode(node: Node) {
-  if (node.children.length === 0) return false
+  return false
 
-  const nodeName = node.nodeName
-  const unwrappableNodeNames: NodeName[] = ['RadixFlex', 'RadixContainer']
+  // if (node.children.length === 0) return false
 
-  return unwrappableNodeNames.includes(nodeName)
+  // const nodeName = node.nodeName
+  // const unwrappableNodeNames: NodeName[] = ['RadixFlex', 'RadixContainer']
+
+  // return unwrappableNodeNames.includes(nodeName)
 }
 
 export function getNodeIdFromElement(elm: Element) {

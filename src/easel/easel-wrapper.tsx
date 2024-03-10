@@ -18,7 +18,7 @@ import { useStore } from '@nanostores/react'
 import clsx from 'clsx'
 import { useEffect, useRef } from 'react'
 import styles from './easel-wrapper.module.scss'
-import { PageLabel } from './page-label'
+import { PageTitle } from './page-title'
 import { Resizer } from './resizer'
 import { UnselectableNodes } from './unselectable-nodes'
 
@@ -140,7 +140,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
         }}
       />
 
-      <PageLabel page={page} />
+      <PageTitle page={page} />
       <Resizer page={page} />
       <UnselectableNodes page={page} />
     </div>

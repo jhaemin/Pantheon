@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test'
-import { RadixFlexNode } from './__generated__/radix-flex'
+import { RadixFlexNode } from './__generated__/radix-themes-2.0.3'
 import { commandInsertNodes } from './command'
 import { History } from './history'
 import { PageNode } from './node-class/page'

@@ -1,7 +1,7 @@
 import { RemoveNodeAction } from '@/action'
-import { studioApp } from '@/studio-app'
+import { Prop } from '@/node-definition'
+import { StudioApp, studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
-import { Flex, Text, TextField } from '@radix-ui/themes'
 import { atom, map } from 'nanostores'
 import { renderChildren } from '../node-component'
 import { Node } from './node'
@@ -10,8 +10,21 @@ export const DEFAULT_PAGE_LABEL = 'New Page'
 
 export class PageNode extends Node {
   readonly nodeName = 'Page'
+  public ownerApp: StudioApp = studioApp
 
-  public $pageLabel = atom(DEFAULT_PAGE_LABEL)
+  public $props = map({
+    title: DEFAULT_PAGE_LABEL,
+  })
+  public propsDefinition: Prop[] = [
+    {
+      key: 'title',
+      type: 'string',
+      default: DEFAULT_PAGE_LABEL,
+      label: 'Title',
+      required: true,
+    },
+  ]
+
   public $unselectableNodes = atom<Node[]>([])
 
   public refreshUnselectableNodes() {
@@ -118,7 +131,7 @@ export class PageNode extends Node {
   public serialize() {
     return {
       ...super.serialize(),
-      label: this.$pageLabel.get(),
+      title: this.$props.get().title,
     }
   }
 }
@@ -127,32 +140,4 @@ export function PageNodeComponent({ node }: { node: PageNode }) {
   const children = useStore(node.$children)
 
   return <>{renderChildren(children)}</>
-}
-
-const MAX_PAGE_LABEL_LENGTH = 20
-
-export function PageNodeControls({ nodes }: { nodes: PageNode[] }) {
-  const firstPageLabel = useStore(nodes[0].$pageLabel)
-  const allSame = nodes.every(
-    (node) => node.$pageLabel.get() === firstPageLabel,
-  )
-
-  return (
-    <>
-      <Flex direction="row" align="center" justify="between">
-        <Text size="2">Label</Text>
-        <TextField.Input
-          maxLength={MAX_PAGE_LABEL_LENGTH}
-          autoComplete="off"
-          value={allSame ? firstPageLabel : ''}
-          placeholder={allSame ? undefined : 'Multiple values'}
-          onChange={(e) => {
-            nodes.forEach((node) => {
-              node.$pageLabel.set(e.target.value)
-            })
-          }}
-        />
-      </Flex>
-    </>
-  )
 }

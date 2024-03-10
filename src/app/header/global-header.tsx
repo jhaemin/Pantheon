@@ -1,5 +1,6 @@
 import { $designMode, $interactionMode } from '@/atoms'
 import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
+import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import {
@@ -9,6 +10,7 @@ import {
   Heading,
   IconButton,
   Kbd,
+  Select,
   Separator,
   Switch,
   Text,
@@ -17,6 +19,7 @@ import {
 export function GlobalHeader() {
   const interactionMode = useStore($interactionMode)
   const designMode = useStore($designMode)
+  const library = useStore(studioApp.$library)
 
   return (
     <Flex
@@ -58,6 +61,26 @@ export function GlobalHeader() {
       </Flex>
 
       <Flex align="center" gap="4">
+        <Select.Root
+          size="1"
+          value={library}
+          onValueChange={(value) => {
+            studioApp.$library.set(value)
+          }}
+        >
+          <Select.Trigger />
+          <Select.Content>
+            <Select.Item value="radix-themes-2.0.2">
+              Radix Themes 2.0.2
+            </Select.Item>
+            <Select.Item value="radix-themes-2.0.3">
+              Radix Themes 2.0.3
+            </Select.Item>
+          </Select.Content>
+        </Select.Root>
+
+        <Separator orientation="vertical" />
+
         <Text as="label" size="2">
           <Flex align="center" gap="2">
             Interaction Mode

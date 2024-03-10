@@ -6,8 +6,8 @@ export function Custom(type: string) {
   return new CustomClass(type)
 }
 
-export type Slot = {
-  key: string
+export type Slot<Key extends string = string> = {
+  key: Key
   label?: string
   required?: boolean
   componentName?: string
@@ -40,13 +40,19 @@ export type Prop = {
  */
 export type NodeDefinition = {
   /**
+   * `import { mod } from 'lib'`
+   */
+  mod: string
+  /**
    * Unique identifier for the node.
+   *
+   * Reserved node names are not allowed.
    */
   nodeName: string
-  lib: {
-    mod: string
-    from: string
-  }
+  /**
+   * Display name for the node.
+   */
+  displayName?: string
   /**
    * Used for JSX tag name.
    * If not provided, `lib.mod` will be used.
@@ -54,10 +60,6 @@ export type NodeDefinition = {
    * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
    */
   componentName?: string
-  /**
-   * Display name for the node.
-   */
-  displayName?: string
   fragment?: boolean
   unselectable?: boolean
   allowNested?: boolean

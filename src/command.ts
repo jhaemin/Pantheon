@@ -13,7 +13,7 @@ import { type InferNodeByName } from './infer-node-by-name'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 import { isUnwrappableNode } from './node-lib'
-import { NodeName } from './node-name'
+import { NativeNodeName, NodeName } from './node-name'
 import { nodeNameNodeMap } from './node-name-node-map'
 import { studioApp } from './studio-app'
 
@@ -136,7 +136,10 @@ export function commandWrapNodes<T extends NodeName>(
 
   const actions: Action[] = []
 
-  const newWrapperNode = new nodeNameNodeMap[wrappingNodeName]()
+  // TODO: This is a hack to make TypeScript happy
+  const newWrapperNode = new nodeNameNodeMap[
+    wrappingNodeName as NativeNodeName
+  ]()
 
   removableNodes.forEach((node) => {
     if (node.slotKey) {

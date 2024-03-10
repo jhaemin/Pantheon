@@ -2,7 +2,7 @@
 
 import { GroundComponent } from '@/app/ground'
 import { GlobalHeader } from '@/app/header/global-header'
-import { ControlCenter } from '@/control-center/control-center'
+import { DynamicControlCenter } from '@/control-center/dynamic-control-center'
 import { DevTools } from '@/dev-tools/dev-tools'
 import { useGlobalEvents } from '@/hooks/use-global-events'
 import { ShortcutsDialog } from '@/shortcuts-dialog'
@@ -13,10 +13,10 @@ import 'highlight.js/styles/github.css'
 import dynamic from 'next/dynamic'
 import styles from './page.module.scss'
 
-const ContextMenu = dynamic(
-  () => import('@/context-menu/context-menu').then((mod) => mod.ContextMenu),
-  { ssr: false },
-)
+// const ContextMenu = dynamic(
+//   () => import('@/context-menu/context-menu').then((mod) => mod.ContextMenu),
+//   { ssr: false },
+// )
 
 const Drawer = dynamic(
   () => import('@/drawer/drawer').then((mod) => mod.Drawer),
@@ -37,12 +37,13 @@ export default function Home() {
             <Drawer />
           </div>
           <GroundComponent />
-          <ControlCenter />
+          {/* <ControlCenter /> */}
+          <DynamicControlCenter />
         </div>
 
         <ShortcutsDialog />
 
-        <ContextMenu />
+        {/* <ContextMenu /> */}
 
         <DevTools />
 

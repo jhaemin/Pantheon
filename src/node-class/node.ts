@@ -1,5 +1,5 @@
 import { alphanumericId } from '@/alphanumeric'
-import { NodeDefinition } from '@/node-definition'
+import { NodeDefinition, Prop, Slot } from '@/node-definition'
 import { NodeName } from '@/node-name'
 import { serializeProps } from '@/serialize-props'
 import { studioApp } from '@/studio-app'
@@ -19,7 +19,7 @@ export abstract class Node<SlotKey extends string = string> {
   /** Unique ID */
   readonly id = alphanumericId(7)
   abstract readonly nodeName: NodeName
-  readonly componentName?: string
+  public componentName?: string
 
   readonly isUnselectable: boolean
 
@@ -79,6 +79,10 @@ export abstract class Node<SlotKey extends string = string> {
     })
   }
 
+  private updateComponentName(componentName: string) {
+    this.componentName = componentName
+  }
+
   private onMountCallbacks: ((element: HTMLElement | null) => void)[] = []
 
   onMount(callback: (element: HTMLElement | null) => void) {
@@ -104,11 +108,15 @@ export abstract class Node<SlotKey extends string = string> {
     )
   }
 
+  public readonly propsDefinition: Prop[] = []
+
   /**
    * Default values for props defined by original component author.
    */
   readonly defaultProps?: any
   readonly $props: MapStore<any> = map({})
+  readonly slotProps: Record<string, MapStore<any>> = {}
+
   /**
    * Additional props used by Studio.
    */
@@ -349,7 +357,7 @@ export abstract class Node<SlotKey extends string = string> {
     [key in SlotKey]?: Node | null
   }>({})
 
-  public readonly slotsDefinition: NodeDefinition['slots'] = []
+  public readonly slotsDefinition: NonNullable<NodeDefinition['slots']> = []
 
   get slots() {
     return this.$slots.get()
@@ -361,17 +369,9 @@ export abstract class Node<SlotKey extends string = string> {
       .filter((node) => !!node) as Node[]
   }
 
-  public slotsInfoArray: {
-    required: boolean
-    key: SlotKey
-    label: string
-    componentName?: string
-  }[] = []
+  public slotsInfoArray: Omit<Slot<SlotKey>, 'slots'>[] = []
 
-  private _slotsInfo: Record<
-    string,
-    { required: boolean; key: SlotKey; label: string; componentName?: string }
-  > | null = null
+  private _slotsInfo: Record<string, Omit<Slot<SlotKey>, 'slots'>> | null = null
 
   get slotsInfo() {
     if (this._slotsInfo === null) {
@@ -411,7 +411,7 @@ export abstract class Node<SlotKey extends string = string> {
 
   toggleSlot(slotKey: SlotKey) {
     if (this.slotsInfo[slotKey].required) {
-      throw new Error(`Slot ${slotKey} is required`)
+      throw new Error(`Slot ${slotKey} is required. Cannot be toggled.`)
     }
 
     if (this.$slots.get()[slotKey]) {
@@ -515,9 +515,10 @@ export abstract class Node<SlotKey extends string = string> {
     </${componentName}>`
   }
 
-  public serialize(): any {
+  public serialize(): SerializedNode {
     return {
       nodeName: this.nodeName,
+      componentName: this.componentName,
       props: this.props,
       children: this.children.map((child) => child.serialize()),
       slots: Object.fromEntries(
@@ -530,11 +531,20 @@ export abstract class Node<SlotKey extends string = string> {
   }
 }
 
+export type SerializedNode = {
+  nodeName: string
+  componentName?: string
+  props: Record<string, any>
+  children: SerializedNode[]
+  slots: Record<string, SerializedNode>
+}
+
 /**
  * This class should reside in this file because it extends Node and Node uses it.
  */
 export class FragmentNode extends Node {
   readonly nodeName = 'Fragment'
+  readonly componentName = 'Fragment'
 
   public generateCode(): string {
     if (this.children.length === 0) {
