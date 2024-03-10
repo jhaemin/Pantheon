@@ -7,8 +7,7 @@ import {
 import { Ground } from '@/ground'
 import { History } from '@/history'
 import { PageNode } from '@/node-class/page'
-import { useStore } from '@nanostores/react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import styles from './easel-wrapper.module.scss'
 
 const MIN_EASEL_WIDTH = 100
@@ -16,16 +15,36 @@ const MIN_EASEL_HEIGHT = 100
 
 const MAX_EASEL_WIDTH = 2560
 
+function scaleStyle(scale: number) {
+  return `${1 / scale}`
+}
+
+function translateStyle(scale: number) {
+  return `${-10 / scale}px ${-10 / scale}px`
+}
+
 export function Resizer({ page }: { page: PageNode }) {
+  const ref = useRef<HTMLDivElement>(null!)
   const oldSize = useRef(page.$dimensions.get())
-  const scale = useStore(Ground.$scale)
+
+  useEffect(() => {
+    const unsubscribe = Ground.$scale.subscribe((scale) => {
+      ref.current.style.scale = scaleStyle(scale)
+      ref.current.style.translate = translateStyle(scale)
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   return (
     <div
+      ref={ref}
       className={styles.resizer}
       style={{
-        scale: 1 / scale,
-        translate: `${-10 / scale}px ${-10 / scale}px`,
+        scale: scaleStyle(Ground.scale),
+        translate: translateStyle(Ground.scale),
       }}
       onMouseDown={(e) => {
         e.preventDefault()

@@ -2,33 +2,40 @@ import { EaselWrapper } from '@/easel/easel-wrapper'
 import { Ground } from '@/ground'
 import { studioApp } from '@/studio-app'
 import { useStore } from '@nanostores/react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import styles from './easel-container.module.scss'
 
 export const EASEL_CONTAINER_ID = 'studio-easel-container'
+
+function scaleStyle(scale: number) {
+  return scale.toString()
+}
+
+function translateStyle(translate: { x: number; y: number }) {
+  return `${translate.x}px ${translate.y}px`
+}
 
 /**
  * A container of easels (pages)
  */
 export function EaselContainer() {
   const ref = useRef<HTMLDivElement>(null!)
-  const scale = useStore(Ground.$scale)
-  const translate = useStore(Ground.$translate)
-
   const pages = useStore(studioApp.$pages)
 
-  // TODO: implement focus
-  // useEffect(() => {
-  //   const pageNode = pages[0]
-  //   const groundRect = Ground.element.getBoundingClientRect()
+  useEffect(() => {
+    const unsubscribeScale = Ground.$scale.subscribe((scale) => {
+      ref.current.style.scale = scaleStyle(scale)
+    })
 
-  //   if (pageNode) {
-  //     Ground.setTranslate(
-  //       (groundRect.width - pageNode.$viewportSize.get().width) / 2,
-  //       80,
-  //     )
-  //   }
-  // }, [])
+    const unsubscribeTranslate = Ground.$translate.subscribe((translate) => {
+      ref.current.style.translate = translateStyle(translate)
+    })
+
+    return () => {
+      unsubscribeScale()
+      unsubscribeTranslate()
+    }
+  }, [])
 
   return (
     <div
@@ -36,8 +43,8 @@ export function EaselContainer() {
       id={EASEL_CONTAINER_ID}
       className={styles.easelContainer}
       style={{
-        scale: scale,
-        translate: `${translate.x}px ${translate.y}px`,
+        scale: scaleStyle(Ground.scale),
+        translate: translateStyle(Ground.translate),
       }}
     >
       {pages.map((page) => (

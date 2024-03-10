@@ -43,7 +43,6 @@ $hoveredNode.listen(() => {
 export function EaselWrapper({ page }: { page: PageNode }) {
   const interactionMode = useStore($interactionMode)
   const iframeRef = useRef<HTMLIFrameElement>(null!)
-  const dimensions = useStore(page.$dimensions)
   const coordinates = useStore(page.$coordinates)
 
   useEffect(() => {
@@ -79,6 +78,19 @@ export function EaselWrapper({ page }: { page: PageNode }) {
       PageNode.detachIframeElement(page)
     }
   }, [page])
+
+  useEffect(() => {
+    const unsubscribe = page.$dimensions.subscribe((dimensions) => {
+      if (iframeRef.current) {
+        iframeRef.current.style.width = `${dimensions.width}px`
+        iframeRef.current.style.height = `${dimensions.height}px`
+      }
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [page.$dimensions])
 
   if (!page) {
     return null
@@ -134,8 +146,8 @@ export function EaselWrapper({ page }: { page: PageNode }) {
         src="/easel"
         style={{
           pointerEvents: interactionMode ? 'auto' : 'none',
-          width: dimensions.width,
-          height: dimensions.height,
+          width: page.dimensions.width,
+          height: page.dimensions.height,
           backgroundColor: 'white',
         }}
       />
