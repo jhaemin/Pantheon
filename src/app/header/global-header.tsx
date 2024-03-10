@@ -70,11 +70,11 @@ export function GlobalHeader() {
         >
           <Select.Trigger />
           <Select.Content>
-            <Select.Item value="radix-themes-2.0.2">
-              Radix Themes 2.0.2
-            </Select.Item>
             <Select.Item value="radix-themes-2.0.3">
               Radix Themes 2.0.3
+            </Select.Item>
+            <Select.Item value="radix-themes-2.0.2">
+              Radix Themes 2.0.2
             </Select.Item>
           </Select.Content>
         </Select.Root>
