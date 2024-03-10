@@ -54,9 +54,7 @@ export class RadixGridNode extends Node {
   readonly nodeName = 'RadixGrid'
   readonly componentName = 'Grid'
 
-  public readonly defaultProps: RadixGridNodeProps = {
-    display: 'grid',
-  }
+  public readonly defaultProps: RadixGridNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'display', type: ['none', 'inline-grid', 'grid'], default: 'grid' },

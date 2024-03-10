@@ -13,7 +13,7 @@ function useCommonValue<M extends MapStore, K extends StoreKeys<M>>(
 ) {
   const firstProps = useStore(propMapStores[0], { keys: [key] }) // Only rerender when the key changes
 
-  const firstValue = firstProps[key] ?? defaultValue
+  const firstValue = firstProps[key]
   const allSame = propMapStores.every(
     () => (propMapStores[0].get()[key] ?? defaultValue) === firstValue,
   )
@@ -54,10 +54,10 @@ export function SelectControls<M extends MapStore, K extends StoreKeys<M>>({
       </Flex>
       <Select.Root
         {...keepNodeSelectionAttribute}
-        defaultValue={commonValue}
+        value={commonValue === undefined ? 'undefined' : commonValue}
         onValueChange={(value) => {
           propMapStores.forEach((store) => {
-            store.setKey(key, value)
+            store.setKey(key, value === 'undefined' ? undefined : value)
           })
 
           triggerRerenderGuides(true)
@@ -88,7 +88,7 @@ export function SwitchControls<M extends MapStore, K extends StoreKeys<M>>({
     <Flex direction="row" align="center" justify="between">
       <Text size="2">{controlsLabel}</Text>
       <Switch
-        defaultChecked={commonValue}
+        checked={commonValue ?? false}
         onCheckedChange={(checked) => {
           propMapStores.forEach((store) => {
             store.setKey(key, checked)
@@ -113,7 +113,7 @@ export function TextFieldControls<M extends MapStore, K extends StoreKeys<M>>({
     <Flex direction="row" align="center" justify="between">
       <Text size="2">{controlsLabel}</Text>
       <TextField.Input
-        defaultValue={commonValue}
+        value={commonValue ?? ''}
         onChange={(e) => {
           const value = e.target.value
 

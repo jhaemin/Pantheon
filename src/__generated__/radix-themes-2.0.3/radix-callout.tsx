@@ -55,10 +55,7 @@ export class RadixCalloutNode extends Node<RadixCalloutNodeSlotKey> {
   readonly nodeName = 'RadixCallout'
   readonly componentName = 'Callout.Root'
 
-  public readonly defaultProps: RadixCalloutNodeProps = {
-    size: '2',
-    variant: 'soft',
-  }
+  public readonly defaultProps: RadixCalloutNodeProps = {}
 
   get isDroppable() {
     return false

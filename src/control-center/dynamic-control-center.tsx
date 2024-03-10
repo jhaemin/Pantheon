@@ -160,7 +160,7 @@ export function DynamicControlCenter() {
                             options={[
                               ...(prop.required
                                 ? []
-                                : [{ label: 'Unset', value: undefined }]),
+                                : [{ label: 'Unset', value: 'undefined' }]),
                               ...prop.type.map((option) => {
                                 if (typeof option === 'string') {
                                   return {

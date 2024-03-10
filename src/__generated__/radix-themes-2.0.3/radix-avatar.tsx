@@ -55,8 +55,6 @@ export class RadixAvatarNode extends Node {
   readonly componentName = 'Avatar'
 
   public readonly defaultProps: RadixAvatarNodeProps = {
-    size: '3',
-    variant: 'soft',
     fallback: 'A',
   }
 

@@ -56,9 +56,7 @@ export class RadixTextNode extends Node {
   readonly nodeName = 'RadixText'
   readonly componentName = 'Text'
 
-  public readonly defaultProps: RadixTextNodeProps = {
-    as: 'span',
-  }
+  public readonly defaultProps: RadixTextNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'as', type: ['p', 'label', 'div', 'span'], default: 'span' },

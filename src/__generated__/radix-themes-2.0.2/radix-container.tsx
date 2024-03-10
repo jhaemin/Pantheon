@@ -25,9 +25,7 @@ export class RadixContainerNode extends Node {
   readonly nodeName = 'RadixContainer'
   readonly componentName = 'Container'
 
-  public readonly defaultProps: RadixContainerNodeProps = {
-    size: '4',
-  }
+  public readonly defaultProps: RadixContainerNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3', '4'], default: '4' },

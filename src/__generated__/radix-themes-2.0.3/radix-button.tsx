@@ -53,10 +53,7 @@ export class RadixButtonNode extends Node {
   readonly nodeName = 'RadixButton'
   readonly componentName = 'Button'
 
-  public readonly defaultProps: RadixButtonNodeProps = {
-    size: '2',
-    variant: 'solid',
-  }
+  public readonly defaultProps: RadixButtonNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3'], default: '2' },

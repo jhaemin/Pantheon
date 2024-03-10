@@ -51,10 +51,7 @@ export class RadixFlexNode extends Node {
   readonly nodeName = 'RadixFlex'
   readonly componentName = 'Flex'
 
-  public readonly defaultProps: RadixFlexNodeProps = {
-    display: 'flex',
-    justify: 'start',
-  }
+  public readonly defaultProps: RadixFlexNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'display', type: ['none', 'inline-flex', 'flex'], default: 'flex' },

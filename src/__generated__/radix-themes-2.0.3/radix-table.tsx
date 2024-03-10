@@ -25,10 +25,7 @@ export class RadixTableNode extends Node {
   readonly nodeName = 'RadixTable'
   readonly componentName = 'Table.Root'
 
-  public readonly defaultProps: RadixTableNodeProps = {
-    size: '2',
-    variant: 'ghost',
-  }
+  public readonly defaultProps: RadixTableNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3'], default: '2' },

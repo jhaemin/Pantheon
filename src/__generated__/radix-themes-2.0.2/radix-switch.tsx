@@ -25,10 +25,7 @@ export class RadixSwitchNode extends Node {
   readonly nodeName = 'RadixSwitch'
   readonly componentName = 'Switch'
 
-  public readonly defaultProps: RadixSwitchNodeProps = {
-    size: '2',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixSwitchNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3'], default: '2' },

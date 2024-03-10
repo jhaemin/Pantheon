@@ -376,7 +376,7 @@ function generateDefaultProps(props: Prop[], nodeName: string): string {
             )
           }
 
-          if (!prop.required && defaultValue === undefined) {
+          if (!prop.required) {
             return acc
           }
 

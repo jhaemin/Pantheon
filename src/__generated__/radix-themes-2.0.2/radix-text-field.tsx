@@ -52,10 +52,7 @@ export class RadixTextFieldNode extends Node {
   readonly nodeName = 'RadixTextField'
   readonly componentName = 'TextField.Input'
 
-  public readonly defaultProps: RadixTextFieldNodeProps = {
-    size: '2',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixTextFieldNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'placeholder', type: 'string' },

@@ -90,9 +90,7 @@ export class RadixDialogNode extends Node<RadixDialogNodeSlotKey> {
     },
   ]
 
-  public readonly contentDefaultProps: RadixDialogNodeSlotContentProps = {
-    size: '3',
-  }
+  public readonly contentDefaultProps: RadixDialogNodeSlotContentProps = {}
 
   readonly $contentProps = map(this.contentDefaultProps)
 

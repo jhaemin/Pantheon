@@ -51,10 +51,7 @@ export class RadixCheckboxNode extends Node {
   readonly nodeName = 'RadixCheckbox'
   readonly componentName = 'Checkbox'
 
-  public readonly defaultProps: RadixCheckboxNodeProps = {
-    size: '2',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixCheckboxNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3'], default: '2' },

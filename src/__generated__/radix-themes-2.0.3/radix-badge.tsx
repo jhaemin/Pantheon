@@ -54,10 +54,7 @@ export class RadixBadgeNode extends Node {
   readonly nodeName = 'RadixBadge'
   readonly componentName = 'Badge'
 
-  public readonly defaultProps: RadixBadgeNodeProps = {
-    size: '1',
-    variant: 'soft',
-  }
+  public readonly defaultProps: RadixBadgeNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2'], default: '1' },

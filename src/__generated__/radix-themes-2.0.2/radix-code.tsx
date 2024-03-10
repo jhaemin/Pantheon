@@ -54,9 +54,7 @@ export class RadixCodeNode extends Node {
   readonly nodeName = 'RadixCode'
   readonly componentName = 'Code'
 
-  public readonly defaultProps: RadixCodeNodeProps = {
-    variant: 'soft',
-  }
+  public readonly defaultProps: RadixCodeNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3', '4', '5', '6', '7', '8', '9'] },

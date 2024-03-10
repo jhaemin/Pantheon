@@ -56,11 +56,7 @@ export class RadixHeadingNode extends Node {
   readonly nodeName = 'RadixHeading'
   readonly componentName = 'Heading'
 
-  public readonly defaultProps: RadixHeadingNodeProps = {
-    as: 'h1',
-    size: '6',
-    weight: 'bold',
-  }
+  public readonly defaultProps: RadixHeadingNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'as', type: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], default: 'h1' },

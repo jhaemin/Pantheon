@@ -25,10 +25,7 @@ export class RadixCardNode extends Node {
   readonly nodeName = 'RadixCard'
   readonly componentName = 'Card'
 
-  public readonly defaultProps: RadixCardNodeProps = {
-    size: '1',
-    variant: 'surface',
-  }
+  public readonly defaultProps: RadixCardNodeProps = {}
 
   propsDefinition: Prop[] = [
     { key: 'size', type: ['1', '2', '3', '4', '5'], default: '1' },
