@@ -38,7 +38,7 @@ const TEMP_DROP_ZONE_CLASS_NAME = 'studio-temp-dropzone'
 export function onMouseDownForDragAndDropNode(
   e: React.MouseEvent,
   data: {
-    draggingNode: Node
+    draggingNodes: Node[]
     draggingElm: Element
     cloneTargetElm: Element
     elmX: number
@@ -51,15 +51,13 @@ export function onMouseDownForDragAndDropNode(
   },
 ) {
   const {
-    draggingNode,
+    draggingNodes,
     draggingElm,
     cloneTargetElm,
     elmX,
     elmY,
     elementScale,
   } = data
-
-  if (!draggingNode.isDraggable) return
 
   const scale = Ground.scale
 
@@ -99,9 +97,10 @@ export function onMouseDownForDragAndDropNode(
 
     $isDraggingNode.set(true)
     $hoveredNode.set(null)
-    $selectedNodes.set([])
 
-    const allNestedChildren = draggingNode.allNestedChildrenAndSlots
+    const allNestedChildren = draggingNodes.flatMap(
+      (node) => node.allNestedChildren,
+    )
 
     const clone = cloneTargetElm.cloneNode(true) as HTMLElement
 
@@ -127,7 +126,7 @@ export function onMouseDownForDragAndDropNode(
 
     document.querySelector('main')!.appendChild(clone)
 
-    const onMouseMoveAfterDrag = (e: MouseEvent) => {
+    const onMouseMoveAfterDragTriggered = (e: MouseEvent) => {
       clone.style.left = e.clientX - elmX + 'px'
       clone.style.top = e.clientY - elmY + 'px'
 
@@ -181,7 +180,7 @@ export function onMouseDownForDragAndDropNode(
           // Because it's not possible to drop node into itself or its children.
           if (
             closestNode &&
-            (closestNode === draggingNode ||
+            (draggingNodes.includes(closestNode) ||
               allNestedChildren.includes(closestNode))
           ) {
             $dropZone.set(null)
@@ -206,7 +205,7 @@ export function onMouseDownForDragAndDropNode(
           if (closestNode && closestNode instanceof PageNode) {
             $dropZone.set({
               dropZoneElm: closestNode.iframeElement!,
-              dropNode: draggingNode,
+              droppingNodes: draggingNodes,
               targetNode: closestNode as PageNode,
               before:
                 closestNode.element!.getAttribute(
@@ -243,7 +242,7 @@ export function onMouseDownForDragAndDropNode(
                 $dropZone.set({
                   dropZoneElm: dropZoneElm,
                   targetNode,
-                  dropNode: draggingNode,
+                  droppingNodes: draggingNodes,
                   before,
                 })
               } else {
@@ -254,7 +253,7 @@ export function onMouseDownForDragAndDropNode(
                   $dropZone.set({
                     dropZoneElm: dropZoneElm.ownerDocument.body,
                     targetNode,
-                    dropNode: draggingNode,
+                    droppingNodes: draggingNodes,
                     before,
                   })
                 }
@@ -263,7 +262,7 @@ export function onMouseDownForDragAndDropNode(
                   $dropZone.set({
                     dropZoneElm,
                     targetNode,
-                    dropNode: draggingNode,
+                    droppingNodes: draggingNodes,
                     before,
                   })
                 }
@@ -278,11 +277,11 @@ export function onMouseDownForDragAndDropNode(
       }
     }
 
-    const onMouseUpAfterDrag = () => {
+    const onMouseUpAfterDragFinished = () => {
       callbacks?.onDragEnd?.()
 
-      window.removeEventListener('mousemove', onMouseMoveAfterDrag)
-      window.removeEventListener('mouseup', onMouseUpAfterDrag)
+      window.removeEventListener('mousemove', onMouseMoveAfterDragTriggered)
+      window.removeEventListener('mouseup', onMouseUpAfterDragFinished)
 
       $isDraggingNode.set(false)
 
@@ -293,11 +292,11 @@ export function onMouseDownForDragAndDropNode(
       const dropZone = $dropZone.get()
 
       if (dropZone) {
-        const { targetNode, dropNode, before } = dropZone
+        const { targetNode, droppingNodes, before } = dropZone
 
         commandInsertNodes(
           targetNode,
-          [dropNode],
+          droppingNodes,
           before ? studioApp.allNodes[before] : null,
         )
       }
@@ -305,8 +304,8 @@ export function onMouseDownForDragAndDropNode(
       $dropZone.set(null)
     }
 
-    window.addEventListener('mousemove', onMouseMoveAfterDrag)
-    window.addEventListener('mouseup', onMouseUpAfterDrag)
+    window.addEventListener('mousemove', onMouseMoveAfterDragTriggered)
+    window.addEventListener('mouseup', onMouseUpAfterDragFinished)
   }
 }
 
@@ -458,10 +457,17 @@ function appendTemporaryDropZone(node: Node, nodeElm: Element) {
   Ground.element.appendChild(bottomDropZone)
 }
 
+// If node is already selected.
+// - Only select it on mouse up within DRAG_THRESHOLD.
 export function onMouseDownForSelecting(
   e: React.MouseEvent,
   nodeAtCursor: Node,
 ) {
+  if (!$selectedNodes.get().includes(nodeAtCursor)) {
+    selectNode(e, nodeAtCursor)
+    return
+  }
+
   const startX = e.clientX
   const startY = e.clientY
 
@@ -539,7 +545,7 @@ export function onMouseDownPageForDragging(
   window.addEventListener('mouseup', onMouseUp)
 
   const triggerDragStart = () => {
-    const onMouseMoveOverThreshold = (e: MouseEvent) => {
+    const onMouseMoveAfterDragTriggered = (e: MouseEvent) => {
       $isDraggingNode.set(true)
 
       const deltaX = e.clientX - startX
@@ -558,7 +564,7 @@ export function onMouseDownPageForDragging(
       })
     }
 
-    const onMouseUpAfterDrag = (e: MouseEvent) => {
+    const onMouseUpAfterDragFinished = (e: MouseEvent) => {
       const deltaX = (e.clientX - startX) / Ground.scale
       const deltaY = (e.clientY - startY) / Ground.scale
 
@@ -580,12 +586,12 @@ export function onMouseDownPageForDragging(
         nextSelectedNodes: $selectedNodes.get(),
       })
 
-      window.removeEventListener('mousemove', onMouseMoveOverThreshold)
-      window.removeEventListener('mouseup', onMouseUpAfterDrag)
+      window.removeEventListener('mousemove', onMouseMoveAfterDragTriggered)
+      window.removeEventListener('mouseup', onMouseUpAfterDragFinished)
     }
 
-    window.addEventListener('mousemove', onMouseMoveOverThreshold)
-    window.addEventListener('mouseup', onMouseUpAfterDrag)
+    window.addEventListener('mousemove', onMouseMoveAfterDragTriggered)
+    window.addEventListener('mouseup', onMouseUpAfterDragFinished)
   }
 }
 
@@ -635,15 +641,7 @@ export function onMouseDownIframe(
 
     // Node exists under cursor
     if (nodeAtCursor) {
-      // If node is already selected.
-      // - Only select it on mouse up within DRAG_THRESHOLD.
-      if ($selectedNodes.get().includes(nodeAtCursor)) {
-        onMouseDownForSelecting(e, nodeAtCursor)
-      }
-      // Select node on mouse down that is not already selected
-      else {
-        selectNode(e, nodeAtCursor)
-      }
+      onMouseDownForSelecting(e, nodeAtCursor)
 
       // Find closest moveable node and start dragging it on mouse down
       const movableNode = elementAtCursor
@@ -660,7 +658,9 @@ export function onMouseDownIframe(
         if (!draggingElm) return
 
         onMouseDownForDragAndDropNode(e, {
-          draggingNode: movableNode,
+          draggingNodes: $selectedNodes
+            .get()
+            .filter((node) => !(node instanceof PageNode)),
           draggingElm,
           cloneTargetElm: movableElement,
           elmX: e.clientX - rect.left - movableElmRect.left * scale,
