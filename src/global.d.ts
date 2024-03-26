@@ -1,5 +1,6 @@
 import { WritableAtom } from 'nanostores'
 import { PageNode } from './node-class/node'
+import { StudioApp } from './studio-app'
 
 type Shared = {
   /**
@@ -9,6 +10,7 @@ type Shared = {
    * They're injected from `EaselWrapper` component.
    */
   $designMode: WritableAtom<boolean>
+  $massMode: WritableAtom<boolean>
 }
 
 declare global {
@@ -23,6 +25,8 @@ declare global {
      * If you want to access from top window, just import modules.
      */
     shared: Shared
+
+    ownerApp: StudioApp
 
     // Node class
     pageNode: PageNode
