@@ -1,3 +1,5 @@
+import { StoreKeys } from '@nanostores/react'
+import { MapStore } from 'nanostores'
 import { $selectedNodes } from './atoms'
 import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
@@ -71,11 +73,11 @@ export class InsertNodeAction extends Action {
   }
 
   undo(): void {
-    // Inserted from other parent
+    // Move to old parent
     if (this.oldParent) {
       this.oldParent.insertBefore(this.insertedNode, this.oldNextSibling)
     }
-    // Inserted newly
+    // Remove if old parent doesn't exist
     else {
       this.insertedNode.remove()
     }
@@ -124,44 +126,6 @@ export class RemoveNodeAction extends Action {
   redo(): void {
     this.removedNode.remove()
     $selectedNodes.set([])
-  }
-}
-
-export class EnableSlotAction extends Action {
-  private slotParent: Node
-  private slot: Node
-
-  constructor({ slotParent, slot }: { slotParent: Node; slot: Node }) {
-    super()
-    this.slotParent = slotParent
-    this.slot = slot
-  }
-
-  undo(): void {
-    this.slotParent.disableSlot(this.slot)
-  }
-
-  redo(): void {
-    this.slotParent.setSlot(this.slot.slotKey!, this.slot)
-  }
-}
-
-export class DisableSlotAction extends Action {
-  private slotParent: Node
-  private slot: Node
-
-  constructor({ slotParent, slot }: { slotParent: Node; slot: Node }) {
-    super()
-    this.slotParent = slotParent
-    this.slot = slot
-  }
-
-  undo(): void {
-    this.slotParent.setSlot(this.slot.slotKey!, this.slot)
-  }
-
-  redo(): void {
-    this.slotParent.disableSlot(this.slot)
   }
 }
 
@@ -226,5 +190,34 @@ export class PageMoveAction extends Action {
         y: page.coordinates.y + this.delta.y,
       }
     })
+  }
+}
+
+export class PropChangeAction extends Action {
+  private propMapStore: MapStore
+  private oldProp: { key: StoreKeys<MapStore>; value: any }
+  private newProp: { key: StoreKeys<MapStore>; value: any }
+
+  constructor({
+    propMapStore,
+    oldProp,
+    newProp,
+  }: {
+    propMapStore: MapStore
+    oldProp: { key: StoreKeys<MapStore>; value: any }
+    newProp: { key: StoreKeys<MapStore>; value: any }
+  }) {
+    super()
+    this.propMapStore = propMapStore
+    this.oldProp = oldProp
+    this.newProp = newProp
+  }
+
+  undo(): void {
+    this.propMapStore.setKey(this.oldProp.key, this.oldProp.value)
+  }
+
+  redo(): void {
+    this.propMapStore.setKey(this.newProp.key, this.newProp.value)
   }
 }
