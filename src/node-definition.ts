@@ -1,38 +1,28 @@
-export class CustomClass {
-  constructor(public type: string) {}
-}
+import { Node } from './node-class/node'
 
-export function Custom(type: string) {
-  return new CustomClass(type)
-}
-
-export type Slot<Key extends string = string> = {
-  key: Key
-  label?: string
-  required?: boolean
-  componentName?: string
-  props?: NodeDefinition['props']
-  slots?: Slot[]
-}
-
-export type Prop = {
-  key: string
-  label?: string
-  type:
-    | 'string'
-    | 'number'
-    | 'boolean'
-    | 'ReactNode'
-    | (
-        | string
+export type PropFormat =
+  | {
+      type: 'string' | 'number' | 'boolean' | 'object'
+    }
+  | {
+      type: 'options'
+      options: (
         | {
             value: string
             label: string
           }
+        | string
       )[]
-    | CustomClass
+    }
+
+export type Prop = {
+  key: string
+  label?: string
+  // TODO: union
+  format: PropFormat
   required?: boolean
-  default?: any | CustomClass
+  default?: any
+  props?: Prop[]
 }
 
 /**
@@ -40,9 +30,17 @@ export type Prop = {
  */
 export type NodeDefinition = {
   /**
+   * Component signature.
+   *
    * `import { mod } from 'lib'`
    */
   mod: string
+  /**
+   * Sub component signature.
+   *
+   * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
+   */
+  sub?: string
   /**
    * Unique identifier for the node.
    *
@@ -53,29 +51,22 @@ export type NodeDefinition = {
    * Display name for the node.
    */
   displayName?: string
-  /**
-   * Used for JSX tag name.
-   * If not provided, `lib.mod` will be used.
-   *
-   * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
-   */
-  componentName?: string
   fragment?: boolean
   unselectable?: boolean
-  allowNested?: boolean
   /**
    * If true, it is not droppable which means it can't have children.
    */
   leaf?: boolean
   portal?: boolean
-  arbitraryChildren?: boolean
+  /**
+   * If true, it should be rendered inside parent directly instead of passing through renderChildren function.
+   */
+  directChild?: boolean
+  /**
+   * If true, every child should be rendered directly inside parent.
+   */
+  allChildrenDirect?: boolean
+  gapless?: boolean
   props?: Prop[]
-  // additionalData?:
-  slots?: Array<{
-    key: string
-    required?: boolean
-    componentName?: string
-    props?: Prop[]
-    slots?: Slot[]
-  }>
+  generateCode?: (node: Node) => string
 }
