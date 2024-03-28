@@ -16,7 +16,7 @@ export const keepNodeSelectionAttribute = {
   [dataAttributes.keepNodeSelection]: 'true',
 }
 
-export function makeNodeAttributes(node: Node) {
+export function makeNodeBaseAttrs(node: Node) {
   return {
     [dataAttributes.node]: 'true',
     [dataAttributes.nodeId]: node.id,
@@ -24,7 +24,7 @@ export function makeNodeAttributes(node: Node) {
   }
 }
 
-export function makeNodeDropZoneAttributes(node: Node) {
+export function makeNodeDropZoneAttrs(node: Node) {
   return {
     [dataAttributes.dropZone]: 'true',
     [dataAttributes.dropZoneId]: node.id,
@@ -56,10 +56,10 @@ export function shouldKeepNodeSelection(target: Element) {
   return target.closest(`[${dataAttributes.keepNodeSelection}]`)
 }
 
-export function makeNodeProps(node: Node) {
+export function makeNodeAttrs(node: Node) {
   return {
     id: `node-${node.id}`,
-    ...makeNodeAttributes(node),
-    ...(node.isDroppable ? makeNodeDropZoneAttributes(node) : undefined),
+    ...makeNodeBaseAttrs(node),
+    ...(node.isDroppable ? makeNodeDropZoneAttrs(node) : undefined),
   }
 }
