@@ -1,9 +1,14 @@
 import { atom, computed } from 'nanostores'
+import { Library } from './library'
 import { Node, SerializedNode } from './node-class/node'
-import { PageNode, PageNodeComponent } from './node-class/page'
+import { PageNode } from './node-class/page'
 import { ViewNode } from './node-class/view'
+import { NodeDefinition } from './node-definition'
 
-export const LATEST_LIBRARY = 'radix-themes-2.0.3'
+type InitApp = Omit<SerializedApp, 'pages' | 'views'> & {
+  pages?: PageNode[]
+  views?: ViewNode[]
+}
 
 export class StudioApp {
   public allNodes: Record<string, Node> = {}
@@ -12,21 +17,16 @@ export class StudioApp {
   private _$views = atom<ViewNode[]>([])
 
   readonly $appTitle = atom('Studio App')
-  readonly $library = atom(LATEST_LIBRARY) // TODO: auto set latest version
+  readonly $libraries = atom<Library[]>([]) // TODO: auto set latest version
 
   public readonly $pages = computed(this._$pages, (pages) => pages)
   public readonly $views = computed(this._$views, (views) => views)
 
-  nodeComponentMap: Record<string, any> = {
-    Page: PageNodeComponent,
-  }
+  $isReady = atom(false)
 
-  constructor(serializedApp?: SerializedApp) {
-    if (serializedApp) {
-      this.$appTitle.set(serializedApp.appTitle)
-      this.$library.set(serializedApp.library)
-    }
+  private nodeDefinitions: Record<string, Record<string, NodeDefinition>> = {}
 
+  constructor() {
     this._$pages.subscribe((newPages, oldPages) => {
       if (oldPages) {
         oldPages.forEach((page) => {
@@ -38,6 +38,53 @@ export class StudioApp {
         this.allNodes[page.id] = page
       })
     })
+  }
+
+  initialize(initApp: InitApp) {
+    this.$appTitle.set(initApp.appTitle)
+    this.$libraries.set(initApp.libraries)
+
+    if (initApp.pages) {
+      this._$pages.set(initApp.pages)
+    }
+
+    if (initApp.views) {
+      this._$views.set(initApp.views)
+    }
+
+    Promise.allSettled(
+      initApp.libraries.map((library) => StudioApp.loadDefinition(library)),
+    ).then((definitions) => {
+      if (definitions.some((def) => def.status === 'rejected')) {
+        throw new Error('Failed to load node definitions')
+      }
+
+      this.nodeDefinitions = definitions.reduce((acc, def, i) => {
+        const library = initApp.libraries[i]
+        const key = `${library.name}-${library.version}`
+
+        if (def.status === 'fulfilled') {
+          return { ...acc, [key]: def.value }
+        }
+
+        return acc
+      }, {})
+
+      this.$isReady.set(true)
+    })
+  }
+
+  getNodeDefinition(library: Library, nodeName: string) {
+    const libraryKey = `${library.name}-${library.version}`
+    const nodeDefinition = this.nodeDefinitions[libraryKey]?.[nodeName]
+
+    if (!nodeDefinition) {
+      throw new Error(
+        `Node definition is not found: ${library.name}-${library.version} ${nodeName}`,
+      )
+    }
+
+    return nodeDefinition
   }
 
   getNodeById(nodeId: string) {
@@ -94,12 +141,37 @@ export class StudioApp {
   removeView(view: ViewNode) {
     this._$views.set(this.views.filter((v) => v !== view))
   }
+
+  serialize(): SerializedApp {
+    return {
+      studioVersion: '1.0.0',
+      appTitle: this.$appTitle.get(),
+      libraries: this.$libraries.get(),
+      pages: this.pages.map((page) => page.serialize()),
+      views: this.views.map((view) => view.serialize()),
+    }
+  }
+
+  static async loadDefinition(library: Library) {
+    try {
+      const libraryKey = `${library.name}-${library.version}`
+      const { nodeDefinitions } = await import(
+        `@/libraries/${libraryKey}/node-definitions`
+      )
+
+      return nodeDefinitions as Record<string, NodeDefinition>
+    } catch (e) {
+      throw new Error(
+        `Failed to load node definitions from ${library.name}-${library.version}`,
+      )
+    }
+  }
 }
 
 export type SerializedApp = {
   studioVersion: string
   appTitle: string
-  library: string
+  libraries: Library[]
   pages: SerializedNode[]
   views: SerializedNode[]
 }
