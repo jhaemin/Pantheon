@@ -25,19 +25,29 @@ export function DrawerItemWrapper({
           const rect = cloneTargetElm.getBoundingClientRect()
 
           onMouseDownForDragAndDropNode(e, {
+            draggingNodes: [createNode()],
             cloneTargetElm: ref.current.firstElementChild!,
             elmX: e.clientX - rect.left,
             elmY: e.clientY - rect.top,
             elementScale: 1,
-            draggingNode: createNode(),
             draggingElm: ref.current.firstElementChild!,
           })
         }}
         onClick={() => {
           const selectedNodes = $selectedNodes.get()
           if (selectedNodes.length !== 1) return
-          if (selectedNodes[0].isDroppable) {
+          if (
+            !selectedNodes[0].parent ||
+            (selectedNodes[0].isDroppable &&
+              selectedNodes[0].children.length === 0)
+          ) {
             commandInsertNodes(selectedNodes[0], [createNode()], null)
+          } else if (selectedNodes[0].parent) {
+            commandInsertNodes(
+              selectedNodes[0].parent,
+              [createNode()],
+              selectedNodes[0].nextSibling,
+            )
           }
         }}
       >
