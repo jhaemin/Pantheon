@@ -24,11 +24,11 @@ export async function generateSourceCode(node: Node) {
   const componentName =
     node instanceof PageNode
       ? pascalCase(node.$props.get().title.trim() || 'UntitledPage')
-      : pascalCase(node.componentName ?? node.nodeName)
+      : pascalCase(node.nodeName)
 
   const sourceCode = `
     function ${componentName}() {
-      return ${node.generateCode()}
+      return ${await node.generateCode()}
     }
   `
 
@@ -41,8 +41,6 @@ export async function generateSourceCode(node: Node) {
  * TODO: Add large view button
  */
 export function TSX({ node }: { node: Node }) {
-  const slots = useStore(node.$slots)
-  const additionalProps = useStore(node.$additionalProps)
   const props = useStore(node.$props)
   const pageTitle = node instanceof PageNode ? props.title : undefined
   const copyTimeout = useRef<number>(0)
@@ -58,7 +56,7 @@ export function TSX({ node }: { node: Node }) {
       }).value
       setSyntaxHighlighted(highlighted)
     })
-  }, [node, props, additionalProps, slots, pageTitle])
+  }, [node, props, pageTitle])
 
   function copyToClipboard() {
     navigator.clipboard.writeText(sourceCode.current)
@@ -72,7 +70,10 @@ export function TSX({ node }: { node: Node }) {
   }
 
   return (
-    <Flex direction="column">
+    <Flex
+      direction="column"
+      style={{ width: 'calc(279px - var(--space-3) * 2)' }}
+    >
       <Flex align="center" justify="between">
         <Text size="2">TSX</Text>
 
