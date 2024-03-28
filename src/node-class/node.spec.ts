@@ -1,11 +1,16 @@
+import { Library } from '@/library'
 import { PageNode } from '@/node-class/page'
-import { TextNode } from '@/node-class/text'
 import { studioApp } from '@/studio-app'
 import { expect, test } from 'bun:test'
-import { FragmentNode, Node } from './node'
+import { Node } from './node'
+
+const library: Library = {
+  name: 'studio',
+  version: '1.0.0',
+}
 
 test('Node creation', () => {
-  const frag = new FragmentNode()
+  const frag = new Node({ library, nodeName: '' })
   expect(frag.children.length).toBe(0)
   expect(frag.parent).toBe(null)
   expect(frag.previousSibling).toBe(null)
@@ -13,31 +18,31 @@ test('Node creation', () => {
 })
 
 test('Children', () => {
-  const frag = new FragmentNode()
-  const text = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text = new Node({ library, nodeName: 'Text' })
   frag.append(text)
   expect(frag.children.length).toBe(1)
   expect(frag.children[0]).toBe(text)
   expect(text.parent).toBe(frag)
 
-  const frag2 = new FragmentNode()
+  const frag2 = new Node({ library, nodeName: '' })
   frag.append(frag2)
   expect(frag.children.length).toBe(2)
   expect(frag.allNestedChildren.length).toBe(2)
 
-  const text2 = new TextNode()
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag2.append(text2)
   expect(frag.allNestedChildren.length).toBe(3)
   expect(frag2.allNestedChildren.length).toBe(1)
 })
 
 test('Append children', () => {
-  const frag = new FragmentNode()
-  const text1 = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text1 = new Node({ library, nodeName: 'Text' })
   frag.append(text1)
   expect(frag.children.length).toBe(1)
 
-  const text2 = new TextNode()
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag.append(text2)
   expect(frag.children.length).toBe(2)
 
@@ -51,38 +56,20 @@ test('Append children', () => {
 })
 
 test('All nodes', () => {
-  const page = new PageNode()
+  const page = new PageNode({ library, nodeName: 'Page' })
   studioApp.addPage(page)
   expect(studioApp.allNodes[page.id]).toBe(page)
-  const text = new TextNode()
+  const text = new Node({ library, nodeName: 'Text' })
   page.append(text)
   expect(studioApp.allNodes[text.id]).toBe(text)
-
-  class TestNode extends Node {
-    readonly nodeName = 'Fragment'
-
-    slotsInfoArray = [
-      {
-        required: false,
-        key: 'content',
-        label: 'Content',
-      },
-    ]
-  }
-
-  const frag = new TestNode()
-  const text2 = new TextNode()
-  frag.setSlot('content', text2)
-
-  expect(studioApp.allNodes[text2.id]).toBe(text2)
 
   studioApp.removePage(page)
 })
 
 test('Move', () => {
-  const frag = new FragmentNode()
-  const frag2 = new FragmentNode()
-  const text = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const frag2 = new Node({ library, nodeName: '' })
+  const text = new Node({ library, nodeName: 'Text' })
 
   frag.append(text)
   frag2.append(text)
@@ -91,7 +78,7 @@ test('Move', () => {
   expect(frag2.children.length).toBe(1)
   expect(frag2.children[0]).toBe(text)
 
-  const text2 = new TextNode()
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag2.append(text2)
 
   frag.append(text, text2)
@@ -102,9 +89,9 @@ test('Move', () => {
 })
 
 test('Remove children', () => {
-  const frag = new FragmentNode()
-  const text1 = new TextNode()
-  const text2 = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text1 = new Node({ library, nodeName: 'Text' })
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag.append(text1, text2)
   expect(frag.children.length).toBe(2)
 
@@ -119,9 +106,9 @@ test('Remove children', () => {
 })
 
 test('Remove', () => {
-  const frag = new FragmentNode()
-  const text1 = new TextNode()
-  const text2 = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text1 = new Node({ library, nodeName: 'Text' })
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag.append(text1, text2)
   expect(frag.children.length).toBe(2)
 
@@ -136,9 +123,9 @@ test('Remove', () => {
 })
 
 test('Insert before', () => {
-  const frag = new FragmentNode()
-  const text1 = new TextNode()
-  const text2 = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text1 = new Node({ library, nodeName: 'Text' })
+  const text2 = new Node({ library, nodeName: 'Text' })
   frag.append(text1)
   frag.insertBefore([text2], text1)
   expect(frag.children.length).toBe(2)
@@ -147,7 +134,7 @@ test('Insert before', () => {
   expect(text2.nextSibling).toBe(text1)
   expect(text1.previousSibling).toBe(text2)
 
-  const text3 = new TextNode()
+  const text3 = new Node({ library, nodeName: 'Text' })
   frag.append(text3)
   frag.insertBefore([text3], text3.previousSibling)
   expect(frag.children.length).toBe(3)
@@ -167,13 +154,13 @@ test('Page creation, removal', () => {
   expect(studioApp.pages.length).toBe(0)
   expect(studioApp.$pages.get().length).toBe(0)
 
-  const page1 = new PageNode()
+  const page1 = new PageNode({ library, nodeName: 'Page' })
   studioApp.addPage(page1)
 
   expect(studioApp.$pages.get().length).toBe(1)
   expect(studioApp.pages[0]).toBe(page1)
 
-  const page2 = new PageNode()
+  const page2 = new PageNode({ library, nodeName: 'Page' })
   studioApp.addPage(page2)
 
   expect(studioApp.$pages.get().length).toBe(2)
@@ -190,14 +177,14 @@ test('Page creation, removal', () => {
 })
 
 test('Owner page', () => {
-  const frag = new FragmentNode()
-  const text = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text = new Node({ library, nodeName: 'Text' })
   frag.append(text)
 
   expect(frag.ownerPage).toBe(null)
   expect(text.ownerPage).toBe(null)
 
-  const page = new PageNode()
+  const page = new PageNode({ library, nodeName: 'Page' })
   page.append(frag)
 
   expect(frag.ownerPage).toBe(page)
@@ -208,9 +195,9 @@ test('Owner page', () => {
 })
 
 test('Siblings', () => {
-  const frag = new FragmentNode()
-  const text1 = new TextNode()
-  const text2 = new TextNode()
+  const frag = new Node({ library, nodeName: '' })
+  const text1 = new Node({ library, nodeName: 'Text' })
+  const text2 = new Node({ library, nodeName: 'Text' })
 
   frag.append(text1, text2)
 
@@ -221,12 +208,12 @@ test('Siblings', () => {
 })
 
 test('Tree', () => {
-  const page = new PageNode()
-  const frag = new FragmentNode()
+  const page = new PageNode({ library, nodeName: 'Page' })
+  const frag = new Node({ library, nodeName: '' })
 
   page.append(frag)
 
-  const text = new TextNode()
+  const text = new Node({ library, nodeName: 'Text' })
 
   frag.append(text)
 
@@ -243,6 +230,7 @@ test('Tree', () => {
 
 class TestNode extends Node {
   readonly nodeName = 'Fragment'
+  componentName: string | null = null
 
   slotsInfoArray = [
     {
@@ -253,33 +241,33 @@ class TestNode extends Node {
   ]
 }
 
-test('Slot', () => {
-  const frag = new TestNode()
+test('Clone', () => {
+  const node = new Node({ library, nodeName: '' })
+  node.$style.setKey('color', 'red')
 
-  const content = new FragmentNode({ slotKey: 'content', slotLabel: 'Content' })
-  frag.setSlot('content', content)
+  expect(node.$style.get().color).toBe('red')
 
-  expect(frag.slots.content).toBe(content)
-  expect(frag.slots.content?.parent).toBe(frag)
-  expect(content.parent).toBe(frag)
-  expect(content.slotKey).toBe('content')
+  const cloned = node.clone()
+  expect(cloned.$style.get().color).toBe('red')
+})
 
-  frag.disableSlot(content)
-  expect(frag.slots.content).toBe(null)
-  expect(content.parent).toBe(null)
+test('Nested clone', () => {
+  const parent = new Node({ library, nodeName: '' })
+  const child = new Node({ library, nodeName: '' })
+  parent.append(child)
+  child.$style.setKey('color', 'red')
+  child.$style.setKey('flex', '1')
 
-  frag.setSlot('content', content)
-  content.remove()
-  expect(frag.slots.content).toBe(null)
+  const textChild = new Node({
+    library,
+    nodeName: 'Text',
+    props: {
+      value: 'Hello, world!',
+    },
+  })
+  parent.append(textChild)
 
-  frag.setSlot('content', content)
-  frag.removeChild(content)
-  expect(frag.slots.content).toBe(null)
-
-  frag.setSlot('content', content)
-  expect(frag.slotsArray.length).toBe(1)
-  expect(frag.childrenAndSlots.length).toBe(1)
-
-  frag.removeAllChildren()
-  expect(frag.slots.content).toBe(content)
+  const cloned = parent.clone()
+  expect(cloned.children[0].$style.get().color).toBe('red')
+  expect(cloned.children[1].nodeName).toBe('Text')
 })

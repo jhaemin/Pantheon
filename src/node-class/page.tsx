@@ -1,46 +1,25 @@
 import { RemoveNodeAction } from '@/action'
-import { Prop } from '@/node-definition'
 import { StudioApp, studioApp } from '@/studio-app'
-import { useStore } from '@nanostores/react'
-import { atom, map } from 'nanostores'
-import { renderChildren } from '../node-component'
+import { map } from 'nanostores'
 import { Node } from './node'
 
 export const DEFAULT_PAGE_LABEL = 'New Page'
 
 export class PageNode extends Node {
-  readonly nodeName = 'Page'
   public ownerApp: StudioApp = studioApp
 
   public $props = map({
     title: DEFAULT_PAGE_LABEL,
   })
-  public propsDefinition: Prop[] = [
-    {
-      key: 'title',
-      type: 'string',
-      default: DEFAULT_PAGE_LABEL,
-      label: 'Title',
-      required: true,
-    },
-  ]
 
-  public $unselectableNodes = atom<Node[]>([])
-
-  public refreshUnselectableNodes() {
-    this.$unselectableNodes.set(
-      this.allNestedChildren.filter((child) => child.isUnselectable),
-    )
-  }
-
-  private _iframeElement: HTMLIFrameElement | null = null
+  #iframeElement: HTMLIFrameElement | null = null
 
   get iframeElement() {
-    return this._iframeElement
+    return this.#iframeElement
   }
 
   get element() {
-    return this._iframeElement?.contentDocument?.body ?? null
+    return this.#iframeElement?.contentDocument?.body ?? null
   }
 
   private onIframeMountCallbacks: ((
@@ -66,14 +45,14 @@ export class PageNode extends Node {
     pageNode: PageNode,
     iframeElement: HTMLIFrameElement,
   ) {
-    pageNode._iframeElement = iframeElement
+    pageNode.#iframeElement = iframeElement
     pageNode.onIframeMountCallbacks.forEach((callback) =>
       callback(iframeElement),
     )
   }
 
   static detachIframeElement(pageNode: PageNode) {
-    pageNode._iframeElement = null
+    pageNode.#iframeElement = null
   }
 
   readonly $dimensions = map<{ width: number; height: number }>({
@@ -117,7 +96,7 @@ export class PageNode extends Node {
     })
   }
 
-  public generateCode(): string {
+  generateCode(): string {
     if (this.children.length === 0) {
       return 'null'
     }
@@ -128,16 +107,13 @@ export class PageNode extends Node {
     return `${openTag}${this.children.map((child) => child.generateCode()).join('')}${closeTag}`
   }
 
-  public serialize() {
-    return {
-      ...super.serialize(),
-      title: this.$props.get().title,
-    }
+  clone(): PageNode {
+    return new PageNode({
+      library: this.library,
+      nodeName: this.nodeName,
+      props: this.$props.get(),
+      style: this.$style.get(),
+      children: this.children.map((child) => child.clone()),
+    })
   }
-}
-
-export function PageNodeComponent({ node }: { node: PageNode }) {
-  const children = useStore(node.$children)
-
-  return <>{renderChildren(children)}</>
 }
