@@ -1,13 +1,14 @@
 import {
   $designMode,
-  $interactionMode,
+  $interactiveMode,
   $isContextMenuOpen,
+  $massMode,
   $selectedNodes,
   $selectionRerenderFlag,
-  $showDevTools,
 } from '@/atoms'
-import { commandAddPage, commandRemoveNodes } from '@/command'
+import { Command, commandRemoveNodes } from '@/command'
 import { shouldKeepNodeSelection } from '@/data-attributes'
+import { EditorState } from '@/editor-state'
 import { Ground } from '@/ground'
 import { History } from '@/history'
 import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
@@ -46,6 +47,10 @@ export function useGlobalEvents() {
         e.preventDefault()
         if ($selectedNodes.get().length === 0) {
           $selectedNodes.set(studioApp.pages)
+        } else {
+          $selectedNodes.set(
+            $selectedNodes.get().flatMap((node) => node.children),
+          )
         }
       } else if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
@@ -53,17 +58,26 @@ export function useGlobalEvents() {
       } else if (e.key === 'd' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         $designMode.set(!$designMode.get())
+      } else if (e.key === 'e' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        EditorState.$drawerOpen.set(!EditorState.$drawerOpen.get())
+      } else if (e.key === 'g' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        $massMode.set(!$massMode.get())
       } else if (e.key === 'i' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        $interactionMode.set(!$interactionMode.get())
+        $interactiveMode.set(!$interactiveMode.get())
+      } else if (e.key === 'c' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        Command.copyNodes()
       } else if (e.key === 'v' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        $showDevTools.set(!$showDevTools.get())
+        Command.pasteNodes()
       } else if (e.key === 'r' && (e.metaKey || e.ctrlKey)) {
         window.location.reload()
       } else if (e.key === 'p' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        commandAddPage()
+        Command.addPage()
       } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
 
@@ -118,10 +132,10 @@ export function useGlobalEvents() {
         activeElement.tagName === 'IFRAME'
       ) {
         // Allow focus on iframe when in interaction mode
-        if (!$interactionMode.get()) {
-          setTimeout(() => {
+        if (!$interactiveMode.get()) {
+          process.nextTick(() => {
             activeElement.blur()
-          }, 0)
+          })
         }
       }
     }

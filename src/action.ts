@@ -44,6 +44,9 @@ export class RemovePageAction extends Action {
   }
 }
 
+/**
+ * TODO: store multiple nodes in the action
+ */
 export class InsertNodeAction extends Action {
   private insertedNode: Node
   private oldParent: Node | null
