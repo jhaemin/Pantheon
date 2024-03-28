@@ -21,21 +21,23 @@ bun run dev
 
 ## Roadmap
 
-- [ ] Declare drawer item with node then clone node when drag and drop to easel
+- [x] Declare drawer item with node then clone node when drag and drop to easel
 - [ ] Re-write UI guides in Vanilla
 - [ ] Routing
   - [ ] Connect to other pages
 - [x] Focus on the page on creation
-- [ ] Handle ground overscroll
+- [x] Handle ground overscroll
+  - Double click page to focus
 - [x] Keyboard shortcuts
 - [x] Improve design mode
 - [x] Multiple pages
   - [x] Render multiple pages inside a single ground
-- [ ] Click drawer item to add node to easel
+- [x] Click drawer item to add node to easel
 - [ ] Stop unnecessary css animations of components
 - [x] Tree view
 - [ ] Lock/unlock nodes
-- [ ] Improve text-based nodes controlling experience
+- [x] Improve text-based nodes controlling experience
+  - Introduce mass mode
 - [x] Seamless panning from inside iframe to outside iframe
 - [ ] View (Template)
   - [ ] Labeling
@@ -60,17 +62,18 @@ bun run dev
       - [x] Prevent moving outer container to inner container (tree violation)
         - [x] Improve logic. Check contains -> Just ignore pointer events on the dragging elements
     - [x] Move to another index of container
-- [ ] Multi selection, dragging, editing
+- [x] Multi selection, dragging, editing
   - [x] Multi selection
-  - [ ] Drag and drop multiple nodes
+  - [x] Drag and drop multiple nodes
+    - [ ] Improve ghost
   - [x] Delete multiple nodes
   - [x] Multiple node editing
 - [x] Context menu
-- [ ] Copy and paste nodes
-  - [ ] Copy nodes
-  - [ ] Paste nodes
-  - [ ] Paste nodes to another container
-  - [ ] Paste nodes to another index of container
+- [x] Copy and paste nodes
+  - [x] Copy nodes
+  - [x] Paste nodes
+  - [x] Paste nodes to another container
+  - [x] Paste nodes to another index of container
 - [ ] Generate tsx code
   - [ ] Download file
     - [x] Download single file
@@ -78,32 +81,33 @@ bun run dev
   - [x] Props
   - [x] Self closing tag when there is no children
   - [x] Generate part of code
-- [ ] Type meta data
-  - [ ] Record components version
+- [x] Type meta data
+  - [x] Record components version
 - [x] Separate node properties to props key
 - ~~Use `map` or `deepMap` for node atoms~~
-- [ ] Declarative application generation
-  - [ ] Generate Studio code itself from component language server
-  - [ ] Generate type guard functions
-- [ ] Solution for handling components version up
+- ~~Declarative application generation~~
+  - ~~Generate Studio code itself from component language server~~
+  - ~~Generate type guard functions~~
+- [x] Solution for handling components version up
+  - Introduce Library
 - [x] Improve rendering performance on bulk node update
   - For example, when inserting multiple nodes, it should not re-render the easel for each node insertion.
   - This is not a problem for now. But it will be a problem when we have a lot of nodes.
 - [x] Flexible easel positioning
   - [x] Zoom in/out
   - [x] Pan
-- [ ] Undo/Redo
+- [x] Undo/Redo
   - [x] Action-based instead of state-based
   - [x] Bundle multiple actions into a single action bundle
   - [x] Insert
   - [x] Remove
   - [x] Move nodes (Insert)
-  - [ ] Properties
-  - [ ] Slots
+  - [x] Properties
+  - ~~Slots~~
   - [x] Wrap (Insert)
   - [x] Unwrap (Insert + Remove)
   - [x] Resize pages
-  - [ ] Move pages (translate)
+  - [x] Move pages (translate)
 - [x] Composition components are not containable nodes
 - [x] Don't add custom style or class to components. Instead use `data-*` attributes for custom styling.
 - ~~Pass shared data from top window to iframe through postMessage instead of window injecting.~~
