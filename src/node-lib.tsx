@@ -1,26 +1,16 @@
-import { dataAttributes } from './data-attributes'
 import { Node } from './node-class/node'
 import { studioApp } from './studio-app'
 
-/**
- * Calculates the index of a child node in its parent's children array
- *
- * If the given node is not a child of any node, `undefined` is returned
- */
-export function getChildNodeIndex(child: Node) {
-  const parent = child.parent
-
-  if (!parent) {
-    return undefined
-  }
-
-  return parent.children.indexOf(child)
-}
+// TODO: handle direct children. display: contents vs direct
 
 export function getClosestNodeFromElm(elm: Element): Node | null {
   // If the target is the body element, it means the target is the page node itself
   if (elm.isSameNode(elm.ownerDocument.body)) {
-    const nodeId = getNodeIdFromElement(elm.ownerDocument.body)
+    if (!elm.ownerDocument.body.id.startsWith('node-')) {
+      return null
+    }
+
+    const nodeId = elm.ownerDocument.body.id.split('-')[1]
 
     if (!nodeId) {
       return null
@@ -29,13 +19,13 @@ export function getClosestNodeFromElm(elm: Element): Node | null {
     return studioApp.getNodeById(nodeId)!
   }
 
-  const elmWithNodeAttribute = elm.closest(`[${dataAttributes.node}]`)
+  const idElm = elm.closest(`[id^="node-"]`)
 
-  if (!elmWithNodeAttribute) {
+  if (idElm === null) {
     return null
   }
 
-  const nodeId = elmWithNodeAttribute.getAttribute(dataAttributes.nodeId)!
+  const nodeId = idElm.id.split('-')[1]
 
   if (!nodeId) {
     throw new Error('Node does not have an id')
@@ -62,11 +52,11 @@ export function getClosestSelectableNodeFromElm(elm: Element): Node | null {
     return null
   }
 
-  if (closestNode.isUnselectable) {
+  if (!closestNode.isSelectable) {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
     return getClosestSelectableNodeFromElm(
-      closestNode.element?.parentElement ?? document.body,
+      closestNode.element?.parentElement?.parentElement ?? document.body,
     )
   }
 
@@ -84,7 +74,7 @@ export function getClosestDraggableNodeSet(elm: Element): Node | null {
     // Page node element is always body element.
     // But other node elements are first element child of the node wrapper element.
     return getClosestDraggableNodeSet(
-      closestNode.element?.parentElement ?? document.body,
+      closestNode.element?.parentElement?.parentElement ?? document.body,
     )
   }
 
@@ -103,8 +93,4 @@ export function isUnwrappableNode(node: Node) {
   // const unwrappableNodeNames: NodeName[] = ['RadixFlex', 'RadixContainer']
 
   // return unwrappableNodeNames.includes(nodeName)
-}
-
-export function getNodeIdFromElement(elm: Element) {
-  return elm.getAttribute(dataAttributes.nodeId)
 }
