@@ -1,15 +1,12 @@
 import {
   $designMode,
   $hoveredNode,
-  $interactionMode,
+  $interactiveMode,
   $isDraggingNode,
   $isResizingIframe,
+  $massMode,
 } from '@/atoms'
-import {
-  keepNodeSelectionAttribute,
-  makeNodeAttributes,
-  makeNodeDropZoneAttributes,
-} from '@/data-attributes'
+import { keepNodeSelectionAttribute, makeNodeAttrs } from '@/data-attributes'
 import { onMouseDownIframe } from '@/events'
 import { Ground } from '@/ground'
 import { PageNode } from '@/node-class/page'
@@ -20,7 +17,6 @@ import { useEffect, useRef } from 'react'
 import styles from './easel-wrapper.module.scss'
 import { PageTitle } from './page-title'
 import { Resizer } from './resizer'
-import { UnselectableNodes } from './unselectable-nodes'
 
 export const EASEL_WRAPPER_CLASS_NAME = 'studio-easel-wrapper'
 
@@ -41,7 +37,7 @@ $hoveredNode.listen(() => {
 })
 
 export function EaselWrapper({ page }: { page: PageNode }) {
-  const interactionMode = useStore($interactionMode)
+  const interactiveMode = useStore($interactiveMode)
   const iframeRef = useRef<HTMLIFrameElement>(null!)
   const coordinates = useStore(page.$coordinates)
 
@@ -54,18 +50,14 @@ export function EaselWrapper({ page }: { page: PageNode }) {
 
     // Inject global references to iframe's window object.
     iframeWindow.parentFrame = iframeRef.current
+    iframeWindow.ownerApp = page.ownerApp
     iframeWindow.pageNode = page
 
     // Inject shared data
-    iframeWindow.shared = {
-      $designMode,
-    }
+    iframeWindow.shared = { $designMode, $massMode }
 
     iframeWindow.addEventListener('DOMContentLoaded', () => {
-      const attributes = {
-        ...makeNodeAttributes(page),
-        ...makeNodeDropZoneAttributes(page),
-      }
+      const attributes = makeNodeAttrs(page)
 
       Object.entries(attributes).forEach(([key, value]) => {
         if (value) {
@@ -145,7 +137,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
         ref={iframeRef}
         src="/easel"
         style={{
-          pointerEvents: interactionMode ? 'auto' : 'none',
+          pointerEvents: interactiveMode ? 'auto' : 'none',
           width: page.dimensions.width,
           height: page.dimensions.height,
           backgroundColor: 'white',
@@ -154,7 +146,6 @@ export function EaselWrapper({ page }: { page: PageNode }) {
 
       <PageTitle page={page} />
       <Resizer page={page} />
-      <UnselectableNodes page={page} />
     </div>
   )
 }
