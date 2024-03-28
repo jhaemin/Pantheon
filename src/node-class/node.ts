@@ -1,49 +1,43 @@
 import { alphanumericId } from '@/alphanumeric'
-import { NodeDefinition, Prop, Slot } from '@/node-definition'
-import { NodeName } from '@/node-name'
+import { Library } from '@/library'
+import { NodeDefinition } from '@/node-definition'
 import { serializeProps } from '@/serialize-props'
 import { studioApp } from '@/studio-app'
-import { MapStore, atom, computed, map } from 'nanostores'
-import { type PageNode } from './page'
+import { MapStore, atom, map } from 'nanostores'
+import { ReactNode } from 'react'
+import { PageNode } from './page'
 
-export type NodePreOptions = {
-  isRemovable?: boolean
-  isDraggable?: boolean
-  isUnselectable?: boolean
-  slotKey?: string
-  slotLabel?: string
-  componentName?: string
+export type NodeName = 'Page' | 'Text' | (string & {})
+
+export type InitNode = Omit<SerializedNode, 'id' | 'children'> & {
+  id?: string
+  children?: Node[]
 }
 
-export abstract class Node<SlotKey extends string = string> {
+export class Node {
   /** Unique ID */
-  readonly id = alphanumericId(7)
-  abstract readonly nodeName: NodeName
-  public componentName?: string
+  id = alphanumericId(7)
 
-  readonly isUnselectable: boolean
+  library: Library
+  nodeName: NodeName
 
-  constructor(preOptions?: NodePreOptions) {
-    if (preOptions) {
-      this._isRemovable = preOptions.isRemovable ?? true
-      this._isDraggable = preOptions.isDraggable ?? true
-      this.slotKey = preOptions.slotKey
-      this.slotLabel = preOptions.slotLabel
-      this.componentName = preOptions.componentName
-    }
+  $studioProps: MapStore<{
+    label: string
+  }> = map({})
 
-    this.isUnselectable = preOptions?.isUnselectable ?? false
+  $props: MapStore<any> = map({})
+  $style: MapStore<any> = map({})
 
-    this._$children.listen((children) => {
-      if (this.ownerPage) {
-        this.ownerPage.refreshUnselectableNodes()
-      }
-    })
+  /**
+   * Do not override this property in subclasses because it has a subscription in the constructor.
+   */
+  $children = atom<Node[]>([])
 
+  constructor(initNode: InitNode) {
     /**
      * Automatically update parent and ownerPage when children are changed.
      */
-    this._$children.subscribe((newChildren, oldChildren) => {
+    this.$children.subscribe((newChildren, oldChildren) => {
       if (oldChildren) {
         oldChildren.forEach((child) => {
           Node.releaseParent(child)
@@ -57,30 +51,35 @@ export abstract class Node<SlotKey extends string = string> {
       })
     })
 
-    /**
-     * Automatically update parent and ownerPage when slots are changed.
-     */
-    this.$slots.subscribe((newSlots, oldSlots) => {
-      if (oldSlots) {
-        Object.values(oldSlots).forEach((slot) => {
-          if (slot) {
-            Node.releaseParent(slot)
-            delete studioApp.allNodes[slot.id]
-          }
-        })
-      }
+    const { id, library, nodeName, children, props, style } = initNode
 
-      Object.values(newSlots).forEach((slot) => {
-        if (slot) {
-          Node.assignParent(slot, this)
-          studioApp.allNodes[slot.id] = slot
-        }
-      })
-    })
+    this.library = library
+    this.nodeName = nodeName
+
+    if (id) {
+      this.id = id
+    }
+
+    if (props) {
+      this.$props.set(props)
+    }
+
+    if (style) {
+      this.$style.set(style)
+    }
+
+    // NOTE: assigning children should be done after subscribing $children
+    if (children) {
+      this.$children.set(children.map((child) => child.clone()))
+    }
   }
 
-  private updateComponentName(componentName: string) {
-    this.componentName = componentName
+  get definition(): NodeDefinition {
+    return this.#getDefinition()
+  }
+
+  #getDefinition(): NodeDefinition {
+    return studioApp.getNodeDefinition(this.library, this.nodeName)
   }
 
   private onMountCallbacks: ((element: HTMLElement | null) => void)[] = []
@@ -99,58 +98,58 @@ export abstract class Node<SlotKey extends string = string> {
    * Otherwise, it is the first child of the wrapper element.
    *
    * TODO: What about overlay?
+   *
+   * Find the element by id from the ownerPage's iframe.
+   * If the element has display: contents, its first child is the real element.
+   * Otherwise, the found element is the real element itself.
    */
   get element(): HTMLElement | null {
-    return (
+    const element =
       this.ownerPage?.iframeElement?.contentDocument?.getElementById(
         `node-${this.id}`,
-      ) ?? null
-    )
+      )
+
+    if (!element) {
+      return null
+    }
+
+    if (element?.style.display === 'contents') {
+      return element.firstElementChild as HTMLElement
+    }
+
+    return element
   }
 
-  public readonly propsDefinition: Prop[] = []
-
-  /**
-   * Default values for props defined by original component author.
-   */
-  readonly defaultProps?: any
-  readonly $props: MapStore<any> = map({})
-  readonly slotProps: Record<string, MapStore<any>> = {}
-
-  /**
-   * Additional props used by Studio.
-   */
-  readonly $additionalProps: MapStore<any> = map({})
+  get style() {
+    return this.$style.get()
+  }
 
   get props() {
-    return this.$props?.get() ?? undefined
+    return this.$props.get()
   }
 
   set props(any) {
     this.$props?.set(any)
   }
 
-  private _isRemovable = true
-
   get isRemovable() {
-    return this._isRemovable
-  }
-
-  get isDroppable() {
     return true
   }
 
-  private _isDraggable = true
-
-  get isDraggable() {
-    return this._isDraggable
+  get isMovable() {
+    return true
   }
 
-  get closestSlotOwner(): Node | null {
-    if (Object.keys(this.$slots.get()).length > 0) {
-      return this
-    }
-    return this.parent?.closestSlotOwner ?? null
+  get isDroppable() {
+    return this.definition.leaf !== true
+  }
+
+  get isDraggable() {
+    return true
+  }
+
+  get isSelectable() {
+    return true
   }
 
   private _ownerPage: PageNode | null = null
@@ -180,7 +179,7 @@ export abstract class Node<SlotKey extends string = string> {
    * Release parent and ownerPage from the node and its children including slots.
    */
   private static releaseParent(node: Node) {
-    const updateTargets = [node, ...node.allNestedChildrenAndSlots]
+    const updateTargets = [node, ...node.allNestedChildren]
 
     updateTargets.forEach((child) => {
       child._ownerPage = null
@@ -194,7 +193,7 @@ export abstract class Node<SlotKey extends string = string> {
    */
   private static assignParent(node: Node, parent: Node) {
     if (parent.ownerPage) {
-      const updateTargets = [node, ...node.allNestedChildrenAndSlots]
+      const updateTargets = [node, ...node.allNestedChildren]
       updateTargets.forEach((child) => {
         child._ownerPage = parent.ownerPage
         studioApp.allNodes[child.id] = child
@@ -205,40 +204,18 @@ export abstract class Node<SlotKey extends string = string> {
   }
 
   /**
-   * Do not override this property in subclasses because it has a subscription in the constructor.
-   */
-  protected _$children = atom<Node[]>([])
-  public readonly $children = computed(this._$children, (children) => children)
-
-  /**
    * Return only iterable children, excluding slots.
    */
   get children() {
     return this.$children.get()
   }
 
-  /**
-   * Return all children including slots.
-   */
-  get childrenAndSlots() {
-    const slots = this.$slots.get()
-
-    return [...this.$children.get(), ...this.slotsArray]
-  }
-
   set children(children: Node[]) {
-    this._$children.set(children)
+    this.$children.set(children)
   }
 
   get allNestedChildren(): Node[] {
     return this.children.flatMap((child) => [child, ...child.allNestedChildren])
-  }
-
-  get allNestedChildrenAndSlots(): Node[] {
-    return this.childrenAndSlots.flatMap((child) => [
-      child,
-      ...child.allNestedChildrenAndSlots,
-    ])
   }
 
   get previousSibling(): Node | null {
@@ -291,7 +268,8 @@ export abstract class Node<SlotKey extends string = string> {
     const referenceNodeNextSibling = referenceNode.nextSibling
 
     removableChildren.forEach((child) => {
-      child.remove() // TODO: bulk remove by parent to avoid unnecessary re-render
+      // TODO: bulk remove by parent to avoid unnecessary re-render
+      child.remove()
     })
 
     // After removing inserting nodes,
@@ -329,14 +307,6 @@ export abstract class Node<SlotKey extends string = string> {
 
     const removableChildren = children.filter((child) => child.isRemovable)
 
-    removableChildren.forEach((child) => {
-      const isSlot = child.slotKey !== undefined
-
-      if (isSlot && !this.slotsInfo[child.slotKey].required) {
-        this.disableSlot(child)
-      }
-    })
-
     this.children = this.children.filter((c) => !removableChildren.includes(c))
   }
 
@@ -345,115 +315,6 @@ export abstract class Node<SlotKey extends string = string> {
    */
   public removeAllChildren() {
     this.removeChildren(this.children)
-  }
-
-  public readonly slotKey?: string
-  public readonly slotLabel?: string
-
-  /**
-   * Do not override this property in subclasses because it has a subscription in the constructor.
-   */
-  public readonly $slots = atom<{
-    [key in SlotKey]?: Node | null
-  }>({})
-
-  public readonly slotsDefinition: NonNullable<NodeDefinition['slots']> = []
-
-  get slots() {
-    return this.$slots.get()
-  }
-
-  get slotsArray() {
-    return this.slotsInfoArray
-      .map(({ key }) => this.$slots.get()[key])
-      .filter((node) => !!node) as Node[]
-  }
-
-  public slotsInfoArray: Omit<Slot<SlotKey>, 'slots'>[] = []
-
-  private _slotsInfo: Record<string, Omit<Slot<SlotKey>, 'slots'>> | null = null
-
-  get slotsInfo() {
-    if (this._slotsInfo === null) {
-      this._slotsInfo = Object.fromEntries(
-        this.slotsInfoArray.map((slotInfo) => [slotInfo.key, slotInfo]),
-      )
-    }
-
-    return this._slotsInfo
-  }
-
-  enableSlot(slotKey: string) {
-    const slotInfo = this.slotsInfo[slotKey]
-    const { required, key, label, componentName } = slotInfo
-
-    if (slotInfo) {
-      const newSlot = new FragmentNode({
-        slotKey: key,
-        slotLabel: label ?? key,
-        isRemovable: !required,
-        isDraggable: false,
-        componentName,
-      })
-
-      this.setSlot(slotKey, newSlot)
-
-      this.$slots.set({
-        ...this.$slots.get(),
-        [slotKey]: newSlot,
-      })
-
-      return newSlot
-    } else {
-      throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
-    }
-  }
-
-  toggleSlot(slotKey: SlotKey) {
-    if (this.slotsInfo[slotKey].required) {
-      throw new Error(`Slot ${slotKey} is required. Cannot be toggled.`)
-    }
-
-    if (this.$slots.get()[slotKey]) {
-      this.disableSlotByKey(slotKey)
-    } else {
-      this.enableSlot(slotKey)
-    }
-  }
-
-  setSlot(slotKey: string, node: Node | null) {
-    if (this.slotsInfo[slotKey] === undefined) {
-      throw new Error(`Slot ${slotKey} is not defined in ${this.nodeName}`)
-    }
-
-    this.$slots.set({
-      ...this.$slots.get(),
-      [slotKey]: node,
-    })
-  }
-
-  disableSlot(node: Node) {
-    const newSlots = { ...this.$slots.get() }
-    const slotName = Object.keys(newSlots).find(
-      (key) => newSlots[key as SlotKey] === node,
-    )
-
-    if (slotName) {
-      const slotInfo = this.slotsInfo[slotName]
-
-      if (slotInfo.required) {
-        throw new Error(`Slot ${slotName} is required. Cannot be disabled.`)
-      }
-
-      this.setSlot(slotName, null)
-    }
-  }
-
-  disableSlotByKey(slotKey: SlotKey) {
-    const slot = this.$slots.get()[slotKey]
-    if (slot) {
-      this.disableSlot(slot)
-    }
   }
 
   /**
@@ -465,88 +326,74 @@ export abstract class Node<SlotKey extends string = string> {
     }
   }
 
-  /**
-   * TODO: slots
-   */
-  public generateCode(): string {
-    const props = this.props
-    const serializedProps = serializeProps(props)
-    const componentName = this.componentName ?? this.nodeName
+  generateCode(): string {
+    const definition = this.#getDefinition()
 
-    const generateSlots = (
-      slotsDefinition: NodeDefinition['slots'],
-    ): string => {
-      if (!slotsDefinition || slotsDefinition.length === 0) {
-        return ''
-      }
-
-      return slotsDefinition
-        .map((slotDef) => {
-          const slotNode = this.$slots.get()[slotDef.key as SlotKey]
-
-          const openTag = slotDef.componentName
-            ? `<${slotDef.componentName} ${serializeProps(slotNode?.props ?? {})}>`
-            : ''
-          const closeTag = slotDef.componentName
-            ? `</${slotDef.componentName}>`
-            : ''
-
-          if (slotNode) {
-            return `${openTag}
-              ${generateSlots(slotDef.slots)}
-              ${slotNode.generateCode()}
-            ${closeTag}`
-          }
-
-          return ''
-        })
-        .join('')
+    if (definition.generateCode) {
+      return definition.generateCode(this)
     }
 
-    const slots = generateSlots(this.slotsDefinition)
+    const props = this.props
+    const serializedProps = serializeProps(props, definition.props ?? [])
+    const componentName = `${definition.mod}${definition.sub ? `.${definition.sub}` : ''}`
 
-    if (this.childrenAndSlots.length === 0) {
+    if (this.children.length === 0) {
       return `<${componentName} ${serializedProps} />`
     }
 
     return `<${componentName} ${serializedProps}>
-      ${slots}
       ${this.children.map((child) => child.generateCode()).join('')}
     </${componentName}>`
   }
 
-  public serialize(): SerializedNode {
-    return {
+  clone(): Node {
+    return new Node({
+      library: this.library,
       nodeName: this.nodeName,
-      componentName: this.componentName,
       props: this.props,
-      children: this.children.map((child) => child.serialize()),
-      slots: Object.fromEntries(
-        Object.entries(this.$slots.get()).map(([key, value]) => [
-          key,
-          (value as Node)?.serialize(),
-        ]),
-      ),
+      style: this.style,
+      children: this.children.map((child) => child.clone()),
+    })
+  }
+
+  serialize(): SerializedNode {
+    return {
+      id: this.id,
+      library: this.library,
+      nodeName: this.nodeName,
+      props: this.props,
+      style: this.$style.get(),
+      children:
+        this.children === undefined || this.children.length === 0
+          ? undefined
+          : this.children.map((child) => child.serialize()),
     }
+  }
+
+  render = (): ReactNode => {
+    return null
   }
 }
 
 export type SerializedNode = {
-  nodeName: string
-  componentName?: string
-  props: Record<string, any>
-  children: SerializedNode[]
-  slots: Record<string, SerializedNode>
+  id: string
+  library: Library
+  nodeName: NodeName
+  props?: Record<string, any>
+  style?: Record<string, any>
+  children?: SerializedNode[]
 }
+
+export type NodeComponent<N extends Node> = (props: { node: N }) => JSX.Element
 
 /**
  * This class should reside in this file because it extends Node and Node uses it.
  */
 export class FragmentNode extends Node {
-  readonly nodeName = 'Fragment'
-  readonly componentName = 'Fragment'
+  nodeName = 'Fragment'
+  componentName = 'Fragment'
 
-  public generateCode(): string {
+  generateCode(): string {
     if (this.children.length === 0) {
       return ''
     }
