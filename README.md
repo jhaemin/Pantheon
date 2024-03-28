@@ -84,10 +84,10 @@ bun run dev
 - [x] Type meta data
   - [x] Record components version
 - [x] Separate node properties to props key
-- ~~Use `map` or `deepMap` for node atoms~~
-- ~~Declarative application generation~~
-  - ~~Generate Studio code itself from component language server~~
-  - ~~Generate type guard functions~~
+- [ ] ~~Use `map` or `deepMap` for node atoms~~
+- [ ] ~~Declarative application generation~~
+  - [ ] ~~Generate Studio code itself from component language server~~
+  - [ ] ~~Generate type guard functions~~
 - [x] Solution for handling components version up
   - Introduce Library
 - [x] Improve rendering performance on bulk node update
@@ -103,16 +103,16 @@ bun run dev
   - [x] Remove
   - [x] Move nodes (Insert)
   - [x] Properties
-  - ~~Slots~~
+  - [ ] ~~Slots~~
   - [x] Wrap (Insert)
   - [x] Unwrap (Insert + Remove)
   - [x] Resize pages
   - [x] Move pages (translate)
 - [x] Composition components are not containable nodes
 - [x] Don't add custom style or class to components. Instead use `data-*` attributes for custom styling.
-- ~~Pass shared data from top window to iframe through postMessage instead of window injecting.~~
+- [ ] ~~Pass shared data from top window to iframe through postMessage instead of window injecting.~~
 - [x] Wrap common node props to a single object. (instead of rest props)
-- ~~Inject node attributes to the outermost element of components.~~
+- [ ] ~~Inject node attributes to the outermost element of components.~~
 - [ ] State management
 
 ## License
