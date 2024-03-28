@@ -1,22 +1,18 @@
-import { commandAddPage } from '@/command'
 import { keepNodeSelectionAttribute } from '@/data-attributes'
+import { EditorState } from '@/editor-state'
 import { Ground } from '@/ground'
 import { History } from '@/history'
 import { useStore } from '@nanostores/react'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  CubeIcon,
   MagnifyingGlassIcon,
-  PlusIcon,
 } from '@radix-ui/react-icons'
 import { Button, Flex, IconButton, Tooltip } from '@radix-ui/themes'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
-import {
-  $interactionMode,
-  $isAnimatingGround,
-  $selectionRerenderFlag,
-} from '../atoms'
+import { $interactiveMode, $isAnimatingGround } from '../atoms'
 import { EaselContainer } from '../easel/easel-container'
 
 const SelectionGuide = dynamic(
@@ -35,7 +31,7 @@ const SCALE_FACTOR = 0.004
 
 export function GroundComponent() {
   const ref = useRef<HTMLDivElement>(null!)
-  const interactionMode = useStore($interactionMode)
+  const interactiveMode = useStore($interactiveMode)
 
   useEffect(() => {
     const groundElm = document.getElementById(GROUND_ID)!
@@ -54,7 +50,7 @@ export function GroundComponent() {
         })
       }
       // Scroll
-      else if (!e.altKey) {
+      else {
         const { deltaX, deltaY } = e
 
         const { x: translateX, y: translateY } = Ground.translate
@@ -75,13 +71,13 @@ export function GroundComponent() {
       id={GROUND_ID}
       ref={ref}
       style={{
-        position: 'fixed',
-        top: 'var(--space-8)',
-        left: 300,
-        right: 300,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 280,
         bottom: 0,
         transition: 'background-color 300ms ease',
-        backgroundColor: interactionMode ? 'var(--gray-10)' : 'var(--gray-4)',
+        backgroundColor: interactiveMode ? 'var(--gray-10)' : 'var(--gray-4)',
         overflow: 'hidden',
       }}
     >
@@ -90,9 +86,8 @@ export function GroundComponent() {
       <SelectionGuide />
       <HoverGuide />
 
-      <Actions />
-      <UndoRedo />
       <ScaleBadge />
+      <OpenDrawerButton />
     </div>
   )
 }
@@ -104,74 +99,57 @@ function ScaleBadge() {
     <Flex
       style={{
         position: 'absolute',
-        top: 10,
-        right: 10,
+        top: 'var(--space-3)',
+        left: 'var(--space-3)',
         zIndex: 100,
         cursor: scale !== 1 ? 'pointer' : undefined,
       }}
       gap="5"
-      onClick={() => {
-        Ground.setScale(1, 'center', true)
-
-        setTimeout(() => {
-          $selectionRerenderFlag.set(!$selectionRerenderFlag.get())
-        }, 0)
-      }}
     >
       <div {...keepNodeSelectionAttribute}>
-        {scale === 1 ? (
-          <Button variant="soft" color="gray">
-            <MagnifyingGlassIcon />
-            <span
-              style={{
-                fontVariantNumeric: 'tabular-nums',
-              }}
-            >
-              {/* 1.2345678 -> 1.23 */}
-              {scale.toFixed(2)}
-            </span>
-          </Button>
-        ) : (
-          <Tooltip content="Press to Reset">
-            <Button variant="soft" color="blue">
-              <MagnifyingGlassIcon />
-              <span
-                style={{
-                  fontVariantNumeric: 'tabular-nums',
-                }}
-              >
-                {/* 1.2345678 -> 1.23 */}
-                {scale.toFixed(2)}
-              </span>
-            </Button>
-          </Tooltip>
-        )}
+        <Button
+          variant="soft"
+          color="gray"
+          size="2"
+          style={{
+            backgroundColor: 'var(--gray-3)',
+          }}
+          onClick={() => {
+            Ground.setScale(1, 'center', true)
+          }}
+        >
+          <MagnifyingGlassIcon />
+          <span
+            style={{
+              fontVariantNumeric: 'tabular-nums',
+            }}
+          >
+            {/* 1.2345678 -> 1.23 */}
+            {scale.toFixed(2)}
+          </span>
+        </Button>
       </div>
     </Flex>
   )
 }
 
-function Actions() {
+function OpenDrawerButton() {
   return (
-    <Flex
-      style={{
-        position: 'absolute',
-        top: 10,
-        left: 10,
-        zIndex: 100,
-      }}
-    >
-      <Flex {...keepNodeSelectionAttribute} gap="2">
-        <Button onClick={commandAddPage} variant="soft" color="gray">
-          <PlusIcon />
-          Page
-        </Button>
-        <Button onClick={commandAddPage} variant="soft" color="gray">
-          <PlusIcon />
-          View
-        </Button>
-      </Flex>
-    </Flex>
+    <Tooltip content="Open drawer">
+      <IconButton
+        {...keepNodeSelectionAttribute}
+        style={{
+          position: 'absolute',
+          top: 'var(--space-3)',
+          right: 'var(--space-3)',
+        }}
+        onClick={() => {
+          EditorState.$drawerOpen.set(true)
+        }}
+      >
+        <CubeIcon />
+      </IconButton>
+    </Tooltip>
   )
 }
 
