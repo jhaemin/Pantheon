@@ -30,23 +30,23 @@ export type Prop = {
  */
 export type NodeDefinition = {
   /**
-   * Component signature.
+   * Unique identifier for the node.
+   */
+  nodeName: string
+  /**
+   * Component import signature.
    *
    * `import { mod } from 'lib'`
+   *
+   * If `mod` is not provided, `nodeName` will be used.
    */
-  mod: string
+  mod?: string
   /**
    * Sub component signature.
    *
    * @example lib.mod = 'Dialog', componentName = 'Dialog.Root'
    */
   sub?: string
-  /**
-   * Unique identifier for the node.
-   *
-   * Reserved node names are not allowed.
-   */
-  nodeName: string
   /**
    * Display name for the node.
    */
