@@ -3,6 +3,8 @@ import { Action } from './action'
 import { $hoveredNode, $selectedNodes } from './atoms'
 import { Node } from './node-class/node'
 
+// TODO: limit the history stack for performance
+
 export type HistoryStackItem = {
   actions: Action[]
   previousSelectedNodes: Node[]
@@ -47,11 +49,11 @@ export class History {
     if (History.historyPointer >= 0) {
       const stackItem = History.historyStack[History.historyPointer]
 
-      stackItem.actions.reverse().forEach((action) => action.undo())
+      stackItem.actions.toReversed().forEach((action) => action.undo())
 
-      setTimeout(() => {
+      process.nextTick(() => {
         $selectedNodes.set([...stackItem.previousSelectedNodes])
-      }, 0)
+      })
 
       History.historyPointer -= 1
     }
@@ -67,9 +69,9 @@ export class History {
 
       stackItem.actions.forEach((action) => action.redo())
 
-      setTimeout(() => {
+      process.nextTick(() => {
         $selectedNodes.set([...stackItem.nextSelectedNodes])
-      }, 0)
+      })
     }
   }
 }
