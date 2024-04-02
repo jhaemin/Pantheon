@@ -145,7 +145,7 @@ export function NodeComponent({ node }: { node: Node }) {
   // )
 
   return createElement(
-    'div',
+    'span',
     {
       style: {
         display: 'contents',
