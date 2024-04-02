@@ -62,6 +62,7 @@ export function ControlCenter() {
           <Flex {...keepNodeSelectionAttribute} direction="column">
             {!firstSelectedNode && (
               <Button
+                highContrast
                 onClick={() => {
                   const serial = studioApp.serialize()
 

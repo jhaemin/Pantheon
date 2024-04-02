@@ -72,6 +72,7 @@ export function GlobalHeader() {
           <Flex align="center" gap="2">
             Mass mode
             <Switch
+              highContrast
               checked={massMode}
               onCheckedChange={(checked) => {
                 $massMode.set(checked)
@@ -86,6 +87,7 @@ export function GlobalHeader() {
           <Flex align="center" gap="2">
             Interactive mode
             <Switch
+              highContrast
               checked={interactiveMode}
               onCheckedChange={(checked) => {
                 $interactiveMode.set(checked)
@@ -100,6 +102,7 @@ export function GlobalHeader() {
           <Flex align="center" gap="2">
             Design mode
             <Switch
+              highContrast
               checked={designMode}
               onCheckedChange={(checked) => {
                 $designMode.set(checked)
