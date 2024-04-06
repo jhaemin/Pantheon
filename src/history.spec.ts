@@ -3,7 +3,7 @@ import { InsertNodeAction } from './action'
 import { commandInsertNodes } from './command'
 import { History } from './history'
 import { Library } from './library'
-import { FragmentNode, Node } from './node-class/node'
+import { Node } from './node-class/node'
 import { PageNode } from './node-class/page'
 
 const library: Library = {
@@ -53,7 +53,7 @@ test('Command insert nodes', () => {
   expect(History.$historyStack.get().length).toBe(2)
   expect(History.$historyPointer.get()).toBe(1)
 
-  const flex = new FragmentNode({ library, nodeName: '' })
+  const flex = new Node({ library, nodeName: '' })
   commandInsertNodes(page, [flex], text2)
 
   expect(page.children[0]).toBe(flex)

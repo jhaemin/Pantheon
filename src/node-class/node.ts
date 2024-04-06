@@ -385,23 +385,3 @@ export type SerializedNode = {
 }
 
 export type NodeComponent<N extends Node> = (props: { node: N }) => JSX.Element
-
-/**
- * This class should reside in this file because it extends Node and Node uses it.
- */
-export class FragmentNode extends Node {
-  nodeName = 'Fragment'
-  componentName = 'Fragment'
-
-  generateCode(): string {
-    if (this.children.length === 0) {
-      return ''
-    }
-
-    if (this.children.length === 1) {
-      return this.children[0].generateCode()
-    }
-
-    return `<>${this.children.map((child) => child.generateCode()).join('')}</>`
-  }
-}
