@@ -52,10 +52,10 @@ export function EaselInIframe() {
         const result = await import(`@/libraries/${libraryKey}/components`)
 
         $dynamicComponents.setKey(libraryKey, result.components)
-
-        setIsLibrariesLoaded(true)
       }),
-    )
+    ).then(() => {
+      setIsLibrariesLoaded(true)
+    })
   }, [libraries])
 
   if (!isLibrariesLoaded) {
