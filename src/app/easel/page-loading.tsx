@@ -1,4 +1,4 @@
-import { RocketIcon } from '@radix-ui/react-icons'
+import { Spinner } from '@radix-ui/themes'
 
 export function PageLoading() {
   return (
@@ -14,7 +14,7 @@ export function PageLoading() {
         justifyContent: 'center',
       }}
     >
-      <RocketIcon width={50} height={50} />
+      <Spinner size="3" />
     </div>
   )
 }
