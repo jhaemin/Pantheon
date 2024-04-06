@@ -1,4 +1,4 @@
-import { WritableAtom } from 'nanostores'
+import { type ReadableAtom, type WritableAtom } from 'nanostores'
 import { PageNode } from './node-class/node'
 import { StudioApp } from './studio-app'
 
@@ -11,6 +11,7 @@ type Shared = {
    */
   $designMode: WritableAtom<boolean>
   $massMode: WritableAtom<boolean>
+  $scale: ReadableAtom<number>
 }
 
 declare global {

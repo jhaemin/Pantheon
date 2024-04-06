@@ -54,7 +54,7 @@ export function EaselWrapper({ page }: { page: PageNode }) {
     iframeWindow.pageNode = page
 
     // Inject shared data
-    iframeWindow.shared = { $designMode, $massMode }
+    iframeWindow.shared = { $designMode, $massMode, $scale: Ground.$scale }
 
     iframeWindow.addEventListener('DOMContentLoaded', () => {
       const attributes = makeNodeAttrs(page)
