@@ -1,6 +1,10 @@
-import { $designMode, $interactiveMode, $massMode } from '@/atoms'
+import {
+  $designMode,
+  $interactiveMode,
+  $massMode,
+  $shortcutsDialogOpen,
+} from '@/atoms'
 import { Command } from '@/command'
-import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
 import { useStore } from '@nanostores/react'
 import { FilePlusIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
 import {
@@ -27,7 +31,7 @@ export function GlobalHeader() {
       justify="between"
       style={{
         height: 'var(--space-8)',
-        backgroundColor: 'var(--color-page-background)',
+        backgroundColor: 'var(--color-background)',
         borderBottom: '1px solid var(--accent-a6)',
         zIndex: 200,
       }}

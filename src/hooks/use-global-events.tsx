@@ -5,13 +5,13 @@ import {
   $massMode,
   $selectedNodes,
   $selectionRerenderFlag,
+  $shortcutsDialogOpen,
 } from '@/atoms'
 import { Command, commandRemoveNodes } from '@/command'
 import { shouldKeepNodeSelection } from '@/data-attributes'
 import { EditorState } from '@/editor-state'
 import { Ground } from '@/ground'
 import { History } from '@/history'
-import { $shortcutsDialogOpen } from '@/shortcuts-dialog'
 import { studioApp } from '@/studio-app'
 import { useEffect } from 'react'
 

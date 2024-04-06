@@ -1,8 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { Box, Button, Dialog, Flex, Grid, Kbd, Text } from '@radix-ui/themes'
-import { atom } from 'nanostores'
-
-export const $shortcutsDialogOpen = atom(false)
+import { $shortcutsDialogOpen } from './atoms'
 
 const shortcuts: { action: string; key: string }[] = [
   {
@@ -76,7 +74,7 @@ export function ShortcutsDialog() {
 
         <Flex mt="6" justify="end">
           <Dialog.Close>
-            <Button>Close</Button>
+            <Button highContrast>Close</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>

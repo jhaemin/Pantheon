@@ -76,3 +76,8 @@ export const $dynamicLibrary = map<
     }
   >
 >({})
+
+/**
+ * Whether the shortcuts dialog is open.
+ */
+export const $shortcutsDialogOpen = atom(false)
