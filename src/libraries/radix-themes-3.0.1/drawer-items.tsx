@@ -1,5 +1,6 @@
 import { Library } from '@/library'
 import { Node } from '@/node-class/node'
+import { NodeUtil } from '@/node-class/node-util'
 import { Blockquote, Code, Heading, Text } from '@radix-ui/themes-3.0.1'
 import { nodeDefinitions as def } from './node-definitions'
 
@@ -13,12 +14,11 @@ const library: Library = {
   version: '3.0.1',
 }
 
+const createStudioNode = NodeUtil.createNodeFactory(studioLibrary)
+const createRadixNode = NodeUtil.createNodeFactory(library)
+
 function createTextNode(value: string) {
-  return new Node({
-    library: studioLibrary,
-    nodeName: 'Text',
-    props: { value },
-  })
+  return createStudioNode({ nodeName: 'Text', props: { value } })
 }
 
 export const drawerItems: {
@@ -27,8 +27,7 @@ export const drawerItems: {
 }[] = [
   {
     createNode: () =>
-      new Node({
-        library,
+      createRadixNode({
         nodeName: def.RadixText.nodeName,
         children: [createTextNode('Radix Text')],
       }),
@@ -36,8 +35,7 @@ export const drawerItems: {
   },
   {
     createNode: () =>
-      new Node({
-        library,
+      createRadixNode({
         nodeName: def.Heading.nodeName,
         children: [createTextNode('Heading')],
       }),
@@ -45,8 +43,7 @@ export const drawerItems: {
   },
   {
     createNode: () =>
-      new Node({
-        library,
+      createRadixNode({
         nodeName: def.Code.nodeName,
         children: [createTextNode('Radix Code')],
       }),
@@ -54,8 +51,7 @@ export const drawerItems: {
   },
   {
     createNode: () =>
-      new Node({
-        library,
+      createRadixNode({
         nodeName: def.Blockquote.nodeName,
         children: [createTextNode('Blockquote')],
       }),

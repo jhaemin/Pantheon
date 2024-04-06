@@ -1,4 +1,5 @@
-import { Node, NodeName, type SerializedNode } from './node'
+import { Library } from '@/library'
+import { InitNode, Node, NodeName, type SerializedNode } from './node'
 import { PageNode } from './page'
 
 const nodeClassMap: Record<NodeName, typeof Node> = {
@@ -18,5 +19,14 @@ export namespace NodeUtil {
       style: serialized.style,
       children: serialized.children?.map((child) => deserialize(child, clone)),
     })
+  }
+
+  /**
+   * Create a node factory function with the library.
+   * This helps you to create a node without passing the library every time.
+   */
+  export function createNodeFactory(library: Library) {
+    return (initNodeWithoutLibrary: Omit<InitNode, 'library'>): Node =>
+      new Node({ library, ...initNodeWithoutLibrary })
   }
 }
