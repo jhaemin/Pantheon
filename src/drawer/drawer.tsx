@@ -3,14 +3,7 @@ import { EditorState } from '@/editor-state'
 import { Library, stringifyLibraryKey } from '@/library'
 import { Node } from '@/node-class/node'
 import { CubeIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons'
-import {
-  Flex,
-  Heading,
-  IconButton,
-  ScrollArea,
-  Separator,
-  Text,
-} from '@radix-ui/themes'
+import { Flex, Heading, IconButton, ScrollArea, Text } from '@radix-ui/themes'
 import { useEffect, useRef, useState } from 'react'
 import { DrawerItemWrapper } from './drawer-item-wrapper'
 import styles from './drawer.module.scss'
@@ -72,7 +65,18 @@ export function Drawer({ library }: { library: Library }) {
       className={styles.drawer}
       {...keepNodeSelectionAttribute}
     >
-      <Flex position="sticky" top="0" p="3" align="center" justify="between">
+      <Flex
+        flexShrink="0"
+        position="sticky"
+        top="0"
+        px="3"
+        align="center"
+        justify="between"
+        height="var(--space-7)"
+        style={{
+          boxShadow: 'inset 0 -1px 0 0 var(--gray-a5)',
+        }}
+      >
         <Heading size="3" weight="medium">
           <Flex align="center" gap="2">
             <CubeIcon />
@@ -88,8 +92,6 @@ export function Drawer({ library }: { library: Library }) {
           <DoubleArrowRightIcon />
         </IconButton>
       </Flex>
-
-      <Separator size="4" />
 
       <ScrollArea style={{ width: 280 }}>
         <Flex direction="column" p="4" gap="5" align="center">
