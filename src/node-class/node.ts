@@ -329,13 +329,16 @@ export class Node {
   generateCode(): string {
     const definition = this.#getDefinition()
 
+    // If generateCode is defined in the definition, use it.
     if (definition.generateCode) {
       return definition.generateCode(this)
     }
 
+    /** Node's props data */
     const props = this.props
+    /** Convert props data to tsx */
     const serializedProps = serializeProps(props, definition.props ?? [])
-    const componentName = `${definition.mod}${definition.sub ? `.${definition.sub}` : ''}`
+    const componentName = `${definition.mod ?? definition.nodeName}${definition.sub ? `.${definition.sub}` : ''}`
 
     if (this.children.length === 0) {
       return `<${componentName} ${serializedProps} />`
