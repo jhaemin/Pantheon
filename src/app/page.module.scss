@@ -19,8 +19,8 @@
     right: 0;
     bottom: 0;
     width: 280px;
-    background-color: #fff;
+    background-color: var(--color-background);
     z-index: 100;
-    border-left: 1px solid var(--accent-a6);
+    border-left: 1px solid var(--gray-a6);
   }
 }

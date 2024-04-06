@@ -3,8 +3,9 @@
   top: 50%;
   right: 0;
   bottom: 0;
-  border-top: 1px solid var(--accent-a6);
+  border-top: 1px solid var(--gray-a6);
   width: 100%;
+  background-color: var(--color-background);
 }
 
 .treeNodeContainer {

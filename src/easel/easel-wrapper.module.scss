@@ -26,6 +26,8 @@
 
   transition: opacity 200ms ease;
 
+  will-change: opacity transform;
+
   &:hover {
     opacity: 1;
   }
