@@ -112,7 +112,9 @@ export function SelectionGuide() {
         key={i}
         className={styles.selectionGuide}
         style={{
-          ...dimension,
+          transform: `translate(${dimension.left}px, ${dimension.top}px)`,
+          width: dimension.width,
+          height: dimension.height,
           zIndex: hoveredNode === dimension.node ? 2 : 0,
           opacity: isInvisible ? 0 : undefined,
         }}

@@ -88,7 +88,9 @@ export function HoverGuide() {
     <div
       className={styles.hoverGuide}
       style={{
-        ...dimension,
+        transform: `translate(${dimension.left}px, ${dimension.top}px)`,
+        width: dimension.width,
+        height: dimension.height,
         opacity: isInvisible ? 0 : undefined,
       }}
     />
