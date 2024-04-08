@@ -3,20 +3,20 @@ import type { Metadata } from 'next'
 import './global-styles.scss'
 
 export const metadata: Metadata = {
-  title: 'Radix Studio',
+  title: 'Pantheon',
   description: 'A WYSIWYG web design editor',
   openGraph: {
     type: 'website',
     locale: 'en',
-    siteName: 'Radix Studio',
-    title: 'Radix Studio',
+    siteName: 'Pantheon',
+    title: 'Pantheon',
     description: 'A WYSIWYG web design editor',
     images: [
       {
         url: 'https://radix-ui.studio/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Radix Studio',
+        alt: 'Pantheon',
       },
     ],
   },
@@ -27,17 +27,17 @@ export const metadata: Metadata = {
     },
     {
       rel: 'icon',
-      url: '/favicon-black.svg',
+      url: '/favicon.svg',
     },
     {
       media: '(prefers-color-scheme: light)',
       rel: 'icon',
-      url: '/favicon-black.svg',
+      url: '/favicon.svg',
     },
     {
       media: '(prefers-color-scheme: dark)',
       rel: 'icon',
-      url: '/favicon-white.svg',
+      url: '/favicon.svg',
     },
   ],
 }

@@ -15,7 +15,7 @@ export function ControlCenter() {
         backgroundColor: 'var(--color-background)',
       }}
     >
-      <Tabs.List>
+      <Tabs.List highContrast size="2">
         <Tabs.Trigger value="node">Node</Tabs.Trigger>
         <Tabs.Trigger value="store">Store</Tabs.Trigger>
       </Tabs.List>

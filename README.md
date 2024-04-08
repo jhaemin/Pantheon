@@ -1,8 +1,8 @@
 ![Demo](images/demo.gif)
 
-# Radix Studio
+# Pantheon
 
-Radix Studio is an open-source WYSIWYG web design editor with real-time interaction and code generation.
+Pantheon is an open-source WYSIWYG web design editor with real-time interaction and code generation.
 
 The main goal is to destroy the barrier between design and development by eliminating the time and effort to convert the design to code.
 
@@ -117,4 +117,4 @@ bun run dev
 
 ## License
 
-Radix Studio is licensed under the [MIT License](LICENSE).
+Pantheon is licensed under the [MIT License](LICENSE).
