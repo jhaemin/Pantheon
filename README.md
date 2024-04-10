@@ -1,8 +1,8 @@
-![Demo](images/demo.gif)
+![Demo](images/pantheon-hero.png)
 
 # Pantheon
 
-Pantheon is an open-source WYSIWYG web design editor with real-time interaction and code generation.
+Pantheon is an open-source WYSIWYG web application editor with real-time interaction and code generation.
 
 The main goal is to destroy the barrier between design and development by eliminating the time and effort to convert the design to code.
 
